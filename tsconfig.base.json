@@ -4,7 +4,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "jsx": "preserve",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowJs": true,
     "strict": true,
@@ -16,9 +16,18 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
+    "baseUrl": ".",
     "paths": {
-      "@repo/*": ["./packages/*/src"],
-      "@modules/*": ["./modules/*/src"]
+      "@repo/ui": ["./packages/ui/src"],
+      "@repo/database": ["./packages/database/src"],
+      "@repo/email": ["./packages/email/src"],
+      "@repo/auth": ["./packages/auth/src"],
+      "@repo/analytics": ["./packages/analytics/src"],
+      "@repo/newsletter": ["./packages/newsletter/src"],
+      "@repo/shipping": ["./packages/shipping/src"],
+      "@repo/config": ["./packages/config/src"],
+      "@repo/utils": ["./packages/utils/src"],
+      "@repo/admin-shell": ["./packages/admin-shell/src"]
     }
   },
   "exclude": ["node_modules", "dist", ".next", ".turbo"]
