@@ -140,7 +140,7 @@ export async function sendOrderConfirmationEmail(
     }
   }
 ) {
-  const { OrderConfirmationEmail } = await import('./order-confirmation')
+  const { OrderConfirmationEmail } = await import('../templates/order-confirmation')
   return sendEmail({
     to: email,
     subject: `Confirmation de commande #${orderData.orderNumber}`,
@@ -163,7 +163,7 @@ export async function sendOrderShippedEmail(
     estimatedDelivery?: string
   }
 ) {
-  const { OrderShippedEmail } = await import('./order-shipped')
+  const { OrderShippedEmail } = await import('../templates/order-shipped')
   return sendEmail({
     to: email,
     subject: `Votre commande #${orderData.orderNumber} a été expédiée`,
@@ -183,7 +183,7 @@ export async function sendOrderDeliveredEmail(
     deliveredAt: string
   }
 ) {
-  const { OrderDeliveredEmail } = await import('./order-delivered')
+  const { OrderDeliveredEmail } = await import('../templates/order-delivered')
   return sendEmail({
     to: email,
     subject: `Votre commande #${orderData.orderNumber} a été livrée`,
@@ -202,7 +202,7 @@ export async function sendPasswordResetEmail(
     expiresIn: string
   }
 ) {
-  const { PasswordResetEmail } = await import('./password-reset')
+  const { PasswordResetEmail } = await import('../templates/password-reset')
   return sendEmail({
     to: email,
     subject: 'Réinitialisation de votre mot de passe',
@@ -220,7 +220,7 @@ export async function sendWelcomeEmail(
     firstName: string
   }
 ) {
-  const { WelcomeEmail } = await import('./welcome')
+  const { WelcomeEmail } = await import('../templates/welcome')
   return sendEmail({
     to: email,
     subject: 'Bienvenue chez Blanche Renaudin',
@@ -236,7 +236,7 @@ export async function sendNewsletterConfirmationEmail(
     confirmUrl: string
   }
 ) {
-  const NewsletterConfirmation = (await import('./newsletter-confirmation'))
+  const NewsletterConfirmation = (await import('../templates/newsletter-confirmation'))
     .default
   return sendEmail({
     to: email,

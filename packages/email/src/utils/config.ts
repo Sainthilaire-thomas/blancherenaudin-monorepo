@@ -31,12 +31,16 @@ export const EMAIL_CONFIG = {
     noreply: 'noreply@blancherenaudin.com',
     orders: 'contact@blancherenaudin.com',
     support: 'contact@blancherenaudin.com',
-    newsletter: 'contact@blancherenaudin.com', // ✅ Ajouté pour newsletter
+    newsletter: 'contact@blancherenaudin.com',
   },
 
-  // ✅ Ajouté pour les templates email
-  logoUrl: 'https://www.blancherenaudin.com/logo.png', // Remplace par l'URL réelle de ton logo
+  // ✅ Pour les templates email
+  logoUrl: 'https://www.blancherenaudin.com/logo.png',
   brandName: 'Blanche Renaudin',
+  logoWidth: 200,
+  logoHeight: 80,
+
+  
 } as const
 
 /**
