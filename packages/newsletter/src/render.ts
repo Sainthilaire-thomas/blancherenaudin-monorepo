@@ -1,9 +1,17 @@
-// src/lib/newsletter/render.ts
-
+// packages/newsletter/src/render.ts
 import { render } from '@react-email/render'
-import { NewsletterCampaignEmail } from '@repo/email/templates'
+import { NewsletterCampaignEmail } from '@repo/email' // ✅ Corrigé
 import { generateNewsletterLink, generateUnsubscribeLink } from './utils'
-import { supabaseAdmin } from '@/lib/supabase-admin'
+import { createClient } from '@supabase/supabase-js' // ✅ Corrigé
+
+// ✅ Créer l'instance supabaseAdmin localement
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: { autoRefreshToken: false, persistSession: false },
+  }
+)
 
 interface Campaign {
   id: string
@@ -29,9 +37,23 @@ interface Subscriber {
   last_name?: string
 }
 
+// ✅ Type pour les produits
+interface ProductImage {
+  image_url: string
+  is_primary: boolean | null
+  sort_order: number | null
+}
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  slug: string
+  product_images?: ProductImage[]
+}
+
 /**
  * Génère le HTML complet d'un email de campagne newsletter
- * avec tous les liens UTM et les produits enrichis
  */
 export async function renderNewsletterCampaignEmail(
   campaign: Campaign,
@@ -42,8 +64,8 @@ export async function renderNewsletterCampaignEmail(
       `📧 Rendering email for campaign ${campaign.id} to ${subscriber.email}`
     )
 
-    // 1. Récupérer les détails des produits depuis la DB
-    const productIds = campaign.content.products.map((p) => p.id)
+    // 1. Récupérer les détails des produits
+    const productIds = campaign.content.products.map((p: { id: string; position: number }) => p.id)
 
     const { data: productsData, error: productsError } = await supabaseAdmin
       .from('products')
@@ -69,8 +91,9 @@ export async function renderNewsletterCampaignEmail(
 
     console.log(`✅ Found ${productsData.length} products`)
 
-    // 2. Mapper les produits avec leurs images et positions
-    const productsMap = new Map(productsData.map((p) => [p.id, p]))
+    // 2. Typer et mapper les produits
+    const typedProductsData = productsData as Product[]
+    const productsMap = new Map(typedProductsData.map((p) => [p.id, p]))
 
     const enrichedProducts = await Promise.all(
       campaign.content.products.map(async (campaignProduct) => {
@@ -82,7 +105,7 @@ export async function renderNewsletterCampaignEmail(
 
         // Récupérer l'image principale
         const primaryImage = product.product_images?.find(
-          (img: any) => img.is_primary
+          (img) => img.is_primary
         )
         const imageUrl =
           primaryImage?.image_url || product.product_images?.[0]?.image_url
@@ -92,10 +115,10 @@ export async function renderNewsletterCampaignEmail(
           return null
         }
 
-        // ✅ CORRECTION : Générer signed URL pour l'image (AWAIT ajouté)
+        // Générer signed URL
         const { data: signedData } = await supabaseAdmin.storage
           .from('product-images')
-          .createSignedUrl(imageUrl, 60 * 60 * 24 * 7) // 7 jours
+          .createSignedUrl(imageUrl, 60 * 60 * 24 * 7)
 
         const imagePublicUrl = signedData?.signedUrl || ''
 
@@ -117,8 +140,8 @@ export async function renderNewsletterCampaignEmail(
       })
     )
 
-    // ✅ Filtrer les null après Promise.all
-    const validProducts = enrichedProducts.filter(Boolean)
+    // Filtrer les null
+    const validProducts = enrichedProducts.filter((p): p is NonNullable<typeof p> => p !== null)
 
     if (validProducts.length === 0) {
       throw new Error('No valid products after enrichment')
@@ -140,14 +163,14 @@ export async function renderNewsletterCampaignEmail(
     const unsubscribeLink = generateUnsubscribeLink(subscriber.id)
 
     // 5. Rendre le template React en HTML
-    const html = render(
+    const html = await render(
       NewsletterCampaignEmail({
         campaign: {
           subject: campaign.subject,
           content: {
             ...campaign.content,
             cta_link: ctaLink,
-            products: validProducts as any,
+            products: validProducts,
           },
         },
         subscriber: {
@@ -168,8 +191,7 @@ export async function renderNewsletterCampaignEmail(
 }
 
 /**
- * Génère une version preview (sans subscriber spécifique)
- * Utilisé pour les emails de test et la preview dans l'admin
+ * Génère une version preview
  */
 export async function renderNewsletterPreview(
   campaign: Campaign,

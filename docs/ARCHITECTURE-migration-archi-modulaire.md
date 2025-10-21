@@ -1630,45 +1630,45 @@ pnpmadd -D eslint-config-turbo
 
 ### Package Email
 
-- [ ] Créer `packages/email/` avec structure
-- [ ] Copier `src/lib/email/` → `src/`
-- [ ] Organiser en `templates/`, `utils/`, `config/`
-- [ ] Créer `src/index.ts`
-- [ ] `pnpm install` + `pnpm type-check`
+- [X] Créer `packages/email/` avec structure
+- [X] Copier `src/lib/email/` → `src/`
+- [X] Organiser en `templates/`, `utils/`, `config/`
+- [X] Créer `src/index.ts`
+- [X] `pnpm install` + `pnpm type-check`
 
 ### Package Auth
 
-- [ ] Créer `packages/auth/`
-- [ ] Copier `src/lib/auth/requireAdmin.ts`
-- [ ] Créer `src/index.ts`
-- [ ] `pnpm install` + `pnpm type-check`
+- [X] Créer `packages/auth/`
+- [X] Copier `src/lib/auth/requireAdmin.ts`
+- [X] Créer `src/index.ts`
+- [X] `pnpm install` + `pnpm type-check`
 
 ### Package Analytics
 
-- [ ] Créer `packages/analytics/`
-- [ ] Copier `src/lib/analytics/`
-- [ ] Copier `src/components/analytics/AnalyticsTracker.tsx`
-- [ ] Créer `src/index.ts`
-- [ ] `pnpm install` + `pnpm type-check`
+- [X] Créer `packages/analytics/`
+- [X] Copier `src/lib/analytics/`
+- [X] Copier `src/components/analytics/AnalyticsTracker.tsx`
+- [X] Créer `src/index.ts`
+- [X] `pnpm install` + `pnpm type-check`
 
 ### Package Newsletter
 
-- [ ] Créer `packages/newsletter/`
-- [ ] Copier `src/lib/newsletter/`
-- [ ] Créer `src/index.ts`
-- [ ] `pnpm install` + `pnpm type-check`
+- [X] Créer `packages/newsletter/`
+- [X] Copier `src/lib/newsletter/`
+- [X] Créer `src/index.ts`
+- [X] `pnpm install` + `pnpm type-check`
 
 ### Package Shipping
 
-- [ ] Créer `packages/shipping/`
-- [ ] Copier `src/lib/shipping/`
-- [ ] Créer `src/index.ts`
-- [ ] `pnpm install` + `pnpm type-check`
+- [X] Créer `packages/shipping/`
+- [X] Copier `src/lib/shipping/`
+- [X] Créer `src/index.ts`
+- [X] `pnpm install` + `pnpm type-check`
 
 ### Commit
 
-- [ ] `git add packages/{email,auth,analytics,newsletter,shipping}`
-- [ ] `git commit -m "feat(packages): add utility packages"`
+- [X] `git add packages/{email,auth,analytics,newsletter,shipping}`
+- [X] `git commit -m "feat(packages): add utility packages"`
 
 ---
 

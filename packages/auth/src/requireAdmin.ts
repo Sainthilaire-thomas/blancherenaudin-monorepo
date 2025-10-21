@@ -1,16 +1,16 @@
 // packages/auth/src/requireAdmin.ts
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database } from '@repo/database'
-import type { SupabaseClient, User } from '@supabase/supabase-js'
 
-// ✅ Type de retour explicite
+import type { User } from '@supabase/supabase-js'
+import type { Database } from './types' 
+
+// ✅ Type simplifié sans spécifier le type exact de SupabaseClient
 type RequireAdminResult =
   | { ok: false; status: 401 | 403 | 500; message: string }
-  | { ok: true; user: User; supabase: SupabaseClient<Database> }
+  | { ok: true; user: User; supabase: ReturnType<typeof createServerClient<Database>> }
 
 export async function requireAdmin(): Promise<RequireAdminResult> {
-  // ✅ Next 15 : cookies() est async
   const cookieStore = await cookies()
 
   const supabase = createServerClient<Database>(

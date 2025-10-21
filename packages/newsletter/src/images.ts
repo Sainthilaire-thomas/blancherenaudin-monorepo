@@ -1,8 +1,16 @@
-// src/lib/newsletter/images.ts
-
-import { createAdminClient } from '@repo/database'
+// packages/newsletter/src/images.ts
+import { createClient } from '@supabase/supabase-js'
 import sharp from 'sharp'
 import { randomUUID } from 'crypto'
+
+// ✅ Créer l'instance supabaseAdmin localement
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: { autoRefreshToken: false, persistSession: false },
+  }
+)
 
 /**
  * Structure des tailles pour images newsletter
@@ -17,8 +25,6 @@ const NEWSLETTER_SIZES = {
 
 /**
  * Upload et génère les variantes d'une image hero de campagne
- *
- * @returns Object avec image_id et URLs des variantes
  */
 export async function uploadNewsletterHeroImage(
   campaignId: string,
@@ -51,7 +57,7 @@ export async function uploadNewsletterHeroImage(
     const originalPath = `newsletter-campaigns/${campaignId}/hero/original/${imageId}.jpg`
 
     const { error: uploadError } = await supabaseAdmin.storage
-      .from('product-images') // Réutilisation du même bucket
+      .from('product-images')
       .upload(originalPath, buffer, {
         contentType: file.type,
         upsert: false,
@@ -109,7 +115,7 @@ async function generateNewsletterVariants(
   for (const [sizeKey, maxWidth] of Object.entries(NEWSLETTER_SIZES)) {
     const basePath = `newsletter-campaigns/${campaignId}/hero/${sizeKey}/${imageId}`
 
-    // AVIF (uniquement pour xl et lg - meilleure compression)
+    // AVIF
     if (sizeKey === 'xl' || sizeKey === 'lg') {
       try {
         const avifBuffer = await sharp(buffer)
@@ -134,7 +140,7 @@ async function generateNewsletterVariants(
       }
     }
 
-    // WebP (uniquement pour xl et lg)
+    // WebP
     if (sizeKey === 'xl' || sizeKey === 'lg') {
       try {
         const webpBuffer = await sharp(buffer)
@@ -159,7 +165,7 @@ async function generateNewsletterVariants(
       }
     }
 
-    // JPEG (pour toutes les tailles - fallback universel)
+    // JPEG
     try {
       const jpegBuffer = await sharp(buffer)
         .resize(maxWidth, undefined, {
@@ -205,7 +211,7 @@ export async function deleteNewsletterCampaignImages(
     if (listError) throw listError
 
     if (files && files.length > 0) {
-      const filePaths = files.map((file) => `${folderPath}/${file.name}`)
+      const filePaths = files.map((file: any) => `${folderPath}/${file.name}`)
 
       const { error: deleteError } = await supabaseAdmin.storage
         .from('product-images')
