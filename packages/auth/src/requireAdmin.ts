@@ -37,8 +37,8 @@ export async function requireAdmin() {
     .single()
 
   if (pErr) return { ok: false as const, status: 500, message: pErr.message }
-  if (profile?.role !== 'admin')
-    return { ok: false as const, status: 403, message: 'Forbidden' }
+ if (!profile || (profile as { role: string | null }).role !== 'admin')
+  return { ok: false as const, status: 403, message: 'Forbidden' }
 
   return { ok: true as const, user, supabase }
 }
