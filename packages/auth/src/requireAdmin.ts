@@ -1,9 +1,15 @@
-// src/lib/auth/requireAdmin.ts
+// packages/auth/src/requireAdmin.ts
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { Database } from '@repo/database'
+import type { SupabaseClient, User } from '@supabase/supabase-js'
 
-export async function requireAdmin() {
+// ✅ Type de retour explicite
+type RequireAdminResult =
+  | { ok: false; status: 401 | 403 | 500; message: string }
+  | { ok: true; user: User; supabase: SupabaseClient<Database> }
+
+export async function requireAdmin(): Promise<RequireAdminResult> {
   // ✅ Next 15 : cookies() est async
   const cookieStore = await cookies()
 
@@ -11,8 +17,6 @@ export async function requireAdmin() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      // ⚠️ En Server Component, on ne peut pas set/delete.
-      // On fournit des no-ops pour satisfaire les types d'@supabase/ssr.
       cookies: {
         get(name: string) {
           return cookieStore.get(name)?.value
@@ -27,8 +31,9 @@ export async function requireAdmin() {
     data: { user },
     error,
   } = await supabase.auth.getUser()
+  
   if (error || !user)
-    return { ok: false as const, status: 401, message: 'Unauthorized' }
+    return { ok: false, status: 401, message: 'Unauthorized' }
 
   const { data: profile, error: pErr } = await supabase
     .from('profiles')
@@ -36,9 +41,10 @@ export async function requireAdmin() {
     .eq('id', user.id)
     .single()
 
-  if (pErr) return { ok: false as const, status: 500, message: pErr.message }
- if (!profile || (profile as { role: string | null }).role !== 'admin')
-  return { ok: false as const, status: 403, message: 'Forbidden' }
+  if (pErr) return { ok: false, status: 500, message: pErr.message }
+  
+  if (!profile || (profile as { role: string | null }).role !== 'admin')
+    return { ok: false, status: 403, message: 'Forbidden' }
 
-  return { ok: true as const, user, supabase }
+  return { ok: true, user, supabase }
 }
