@@ -70,3 +70,27 @@ export interface CheckoutFormData {
   sameAsBilling: boolean
   shipping_method: string
 }
+
+// 🔧 Helper : Récupérer l'image principale d'un produit
+// 🔧 Helper : Récupérer l'image principale d'un produit
+// 🔧 Helper : Récupérer l'image principale d'un produit
+export function getPrimaryImage(product: ProductWithDetails): ProductImage | null {
+  if (!product.images || product.images.length === 0) {
+    return null
+  }
+  
+  // Chercher l'image marquée comme primaire
+  const primaryImage = product.images.find((img: ProductImage) => img.is_primary)
+  if (primaryImage) {
+    return primaryImage
+  }
+  
+  // Sinon, prendre la première par ordre de sort_order
+  const sortedImages = [...product.images].sort(
+    (a: ProductImage, b: ProductImage) => (a.sort_order ?? 999) - (b.sort_order ?? 999)
+  )
+  return sortedImages[0] || null
+}
+
+// Type alias pour compatibilité
+export type ProductWithDetails = ProductWithImagesAndVariants

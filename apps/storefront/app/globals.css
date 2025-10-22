@@ -4,21 +4,224 @@
 
 @layer base {
   :root {
-    --font-display: var(--font-archivo-black);
-    --font-sans: var(--font-archivo-narrow);
+    /* === COULEURS JACQUEMUS === */
+    --white: hsl(0 0% 100%);
+    --black: hsl(0 0% 0%);
+    --grey-light: hsl(0 0% 95%);
+    --grey-medium: hsl(0 0% 60%);
+    --grey-dark: hsl(0 0% 30%);
+
+    /* Accent brand .blancherenaudin */
+    --violet: hsl(271 74% 37%);
+    --violet-soft: hsl(271 74% 45%);
+    --violet-subtle: hsl(271 30% 92%);
+
+    /* Variables système */
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(0 0% 0%);
+    --border: hsl(0 0% 95%);
+    --muted: hsl(0 0% 98%);
+    --muted-foreground: hsl(0 0% 60%);
+    --ring: hsl(271 74% 37%);
+    --radius: 0;
   }
-  
+
+  .dark {
+    --background: hsl(0 0% 10%);
+    --foreground: hsl(0 0% 100%);
+    --border: hsl(0 0% 30%);
+    --muted: hsl(0 0% 20%);
+    --muted-foreground: hsl(0 0% 80%);
+    --ring: hsl(271 74% 60%);
+  }
+
+  * {
+    box-sizing: border-box;
+    @apply border-border;
+  }
+
+  body, h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd {
+    margin: 0;
+  }
+
+  html, body {
+    @apply bg-background text-foreground;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
   body {
-    @apply bg-white text-black;
+    font-family: var(--font-archivo-narrow);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0 !important;
   }
 }
 
-@layer utilities {
-  .font-display {
-    font-family: var(--font-display);
+/* === TYPOGRAPHIE JACQUEMUS === */
+.text-hero {
+  font-family: var(--font-archivo-black);
+  font-size: clamp(4rem, 10vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+
+.text-section {
+  font-family: var(--font-archivo-black);
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+
+.text-product {
+  font-family: var(--font-archivo-narrow);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.text-body {
+  font-family: var(--font-archivo-narrow);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* === BOUTONS JACQUEMUS === */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-10 py-4;
+  @apply bg-black text-white;
+  font-family: var(--font-archivo-narrow);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  @apply bg-gray-600;
+  transform: translateY(-2px);
+}
+
+.btn-primary-inverse {
+  @apply inline-flex items-center justify-center px-10 py-4;
+  @apply bg-white text-black;
+  font-family: var(--font-archivo-narrow);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-10 py-4;
+  @apply bg-transparent text-black border border-black;
+  font-family: var(--font-archivo-narrow);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  @apply bg-black text-white;
+}
+
+.btn-text {
+  @apply inline-flex items-center gap-2 p-0;
+  @apply bg-transparent text-black border-b border-black;
+  font-family: var(--font-archivo-narrow);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* === ANIMATIONS === */
+.floating-letter {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes letter-appear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.88);
   }
-  
-  .font-sans {
-    font-family: var(--font-sans);
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* === UTILITAIRES === */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--violet-subtle);
+  color: var(--black);
+}
+
+*:focus-visible:not(input):not(textarea):not(select) {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.font-title {
+  font-family: var(--font-archivo-black);
+}
+
+.font-text {
+  font-family: var(--font-archivo-narrow);
+}
+
+.section-spacing {
+  padding: clamp(4rem, 10vw, 10rem) clamp(1rem, 5vw, 2rem);
 }

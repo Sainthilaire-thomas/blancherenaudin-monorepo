@@ -1,0 +1,253 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    ARBORESCENCE DU PROJET - MONOREPO                        ║
+║                                                                              ║
+║  Généré le: 22/10/2025 17:34:51                                       ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🌳 Structure du projet :
+
+📁 blancherenaudin-monorepo/
+└── 📁 blancherenaudin-monorepo/
+    ├── 📁 apps/
+    │   └── 📁 storefront/
+    │       ├── 📁 app/
+    │       │   ├── 🎨 globals.css
+    │       │   ├── ⚛️ layout.tsx
+    │       │   └── ⚛️ page.tsx
+    │       ├── 📁 components/
+    │       │   ├── 📁 common/
+    │       │   │   ├── ⚛️ LazyImage.tsx
+    │       │   │   └── ⚛️ RichTextRenderer.tsx
+    │       │   ├── 📁 layout/
+    │       │   │   ├── ⚛️ FooterMinimal.tsx
+    │       │   │   ├── ⚛️ HeaderMinimal.tsx
+    │       │   │   └── ⚛️ Homepage.tsx
+    │       │   ├── 📁 products/
+    │       │   │   ├── ⚛️ ProductCardJacquemus.tsx
+    │       │   │   ├── ⚛️ ProductGridJacquemus.tsx
+    │       │   │   └── ⚛️ ProductImage.tsx
+    │       │   └── 📁 search/
+    │       │       └── ⚛️ SearchModal.tsx
+    │       ├── 📁 hooks/
+    │       │   ├── 🔷 use-mobile.ts
+    │       │   ├── 🔷 use-toast.ts
+    │       │   └── 🔷 useSupabaseAuth.ts
+    │       ├── 📁 lib/
+    │       │   ├── 🔷 design-tokens.ts
+    │       │   ├── 🔷 products.ts
+    │       │   ├── 🔷 types.ts
+    │       │   └── 🔷 utils.ts
+    │       ├── 📁 public/
+    │       │   ├── 🖼️ blancherenaudin-ajuste.svg
+    │       │   ├── 🖼️ file.svg
+    │       │   ├── 🖼️ globe.svg
+    │       │   ├── 🖼️ logo-blancherenaudin.png
+    │       │   ├── 🖼️ logo-blancherenaudin2.png
+    │       │   ├── 🖼️ logo-blancherenaudin3.png
+    │       │   ├── 🖼️ next.svg
+    │       │   ├── 🖼️ vercel.svg
+    │       │   └── 🖼️ window.svg
+    │       ├── 📁 store/
+    │       │   ├── 🔷 index.ts
+    │       │   ├── 🔷 useAuthStore.ts
+    │       │   ├── 🔷 useCartStore.ts
+    │       │   ├── 🔷 useCollectionStore.ts
+    │       │   ├── 🔷 useProductStore.ts
+    │       │   └── 🔷 useWishListStore.ts
+    │       ├── 🔷 next-env.d.ts
+    │       ├── 🔷 next.config.ts
+    │       ├── 📋 package.json
+    │       ├── 📝 README.md
+    │       ├── 📄 storefront-env.example
+    │       ├── 🔷 tailwind.config.ts
+    │       └── 📋 tsconfig.json
+    ├── 📁 docs/
+    │   ├── 📄 arborescence-projet.txt
+    │   ├── 📝 ARCHITECTURE-maj-phase5.md
+    │   ├── 📝 ARCHITECTURE-migration-archi-modulaire.md
+    │   └── 📝 ARCHITECTURE-migrtion-phase-5.md
+    ├── 📁 modules/
+    ├── 📁 packages/
+    │   ├── 📁 analytics/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 analytics.ts
+    │   │   │   ├── ⚛️ AnalyticsTracker.tsx
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 track.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 auth/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   ├── 🔷 requireAdmin.ts
+    │   │   │   └── 🔷 types.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 config/
+    │   │   ├── 📁 src/
+    │   │   │   └── 🔷 index.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 database/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 client-admin.ts
+    │   │   │   ├── 🔷 client-browser.ts
+    │   │   │   ├── 🔷 client-server.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 types.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 email/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 📁 templates/
+    │   │   │   │   ├── 🔷 index.ts
+    │   │   │   │   ├── ⚛️ newsletter-campaign.tsx
+    │   │   │   │   ├── ⚛️ newsletter-confirmation.tsx
+    │   │   │   │   ├── ⚛️ order-confirmation.tsx
+    │   │   │   │   ├── ⚛️ order-delivered.tsx
+    │   │   │   │   ├── ⚛️ order-shipped.tsx
+    │   │   │   │   ├── ⚛️ password-reset.tsx
+    │   │   │   │   └── ⚛️ welcome.tsx
+    │   │   │   ├── 📁 utils/
+    │   │   │   │   ├── 🔷 config.ts
+    │   │   │   │   ├── 🔷 send-order-confirmation-hook.ts
+    │   │   │   │   └── 🔷 send.ts
+    │   │   │   └── 🔷 index.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 newsletter/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 images.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   ├── 🔷 render.ts
+    │   │   │   ├── 🔷 types.ts
+    │   │   │   ├── 🔷 utils.ts
+    │   │   │   └── 🔷 validation.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 sanity/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 📁 lib/
+    │   │   │   │   ├── 🔷 client.ts
+    │   │   │   │   ├── 🔷 image-helpers.ts
+    │   │   │   │   └── 🔷 queries.ts
+    │   │   │   ├── 📁 schemas/
+    │   │   │   │   ├── 📁 types/
+    │   │   │   │   │   ├── 🔷 blockContent.ts
+    │   │   │   │   │   ├── 🔷 collectionEditoriale.ts
+    │   │   │   │   │   ├── 🔷 homepage.ts
+    │   │   │   │   │   ├── 🔷 impactPage.ts
+    │   │   │   │   │   ├── 🔷 lookbook.ts
+    │   │   │   │   │   ├── 🔷 page.ts
+    │   │   │   │   │   └── 🔷 seo.ts
+    │   │   │   │   └── 🔷 index.ts
+    │   │   │   ├── 🔷 config.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 structure.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📝 README.md
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 shipping/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 calculator.ts
+    │   │   │   ├── 🔷 config.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 types.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 ui/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 📁 components/
+    │   │   │   │   ├── ⚛️ accordion.tsx
+    │   │   │   │   ├── ⚛️ alert.tsx
+    │   │   │   │   ├── ⚛️ aspect-ratio.tsx
+    │   │   │   │   ├── ⚛️ avatar.tsx
+    │   │   │   │   ├── ⚛️ badge.tsx
+    │   │   │   │   ├── ⚛️ breadcrumb.tsx
+    │   │   │   │   ├── ⚛️ button.tsx
+    │   │   │   │   ├── ⚛️ calendar.tsx
+    │   │   │   │   ├── ⚛️ card.tsx
+    │   │   │   │   ├── ⚛️ carousel.tsx
+    │   │   │   │   ├── ⚛️ chart.tsx
+    │   │   │   │   ├── ⚛️ checkbox.tsx
+    │   │   │   │   ├── ⚛️ collapsible.tsx
+    │   │   │   │   ├── ⚛️ command.tsx
+    │   │   │   │   ├── ⚛️ context-menu.tsx
+    │   │   │   │   ├── ⚛️ drawer.tsx
+    │   │   │   │   ├── ⚛️ dropdown-menu.tsx
+    │   │   │   │   ├── ⚛️ form.tsx
+    │   │   │   │   ├── ⚛️ hover-card.tsx
+    │   │   │   │   ├── ⚛️ input-otp.tsx
+    │   │   │   │   ├── ⚛️ input.tsx
+    │   │   │   │   ├── ⚛️ label.tsx
+    │   │   │   │   ├── ⚛️ menubar.tsx
+    │   │   │   │   ├── ⚛️ navigation-menu.tsx
+    │   │   │   │   ├── ⚛️ pagination.tsx
+    │   │   │   │   ├── ⚛️ popover.tsx
+    │   │   │   │   ├── ⚛️ progress.tsx
+    │   │   │   │   ├── ⚛️ radio-group.tsx
+    │   │   │   │   ├── ⚛️ resizable.tsx
+    │   │   │   │   ├── ⚛️ scroll-area.tsx
+    │   │   │   │   ├── ⚛️ select.tsx
+    │   │   │   │   ├── ⚛️ separator.tsx
+    │   │   │   │   ├── ⚛️ sheet.tsx
+    │   │   │   │   ├── ⚛️ sidebar.tsx
+    │   │   │   │   ├── ⚛️ skeleton.tsx
+    │   │   │   │   ├── ⚛️ slider.tsx
+    │   │   │   │   ├── ⚛️ sonner.tsx
+    │   │   │   │   ├── ⚛️ switch.tsx
+    │   │   │   │   ├── ⚛️ table.tsx
+    │   │   │   │   ├── ⚛️ tabs.tsx
+    │   │   │   │   ├── ⚛️ textarea.tsx
+    │   │   │   │   ├── ⚛️ toast.tsx
+    │   │   │   │   ├── ⚛️ toaster.tsx
+    │   │   │   │   ├── ⚛️ toggle-group.tsx
+    │   │   │   │   ├── ⚛️ toggle.tsx
+    │   │   │   │   └── ⚛️ tooltip.tsx
+    │   │   │   ├── 📁 hooks/
+    │   │   │   │   ├── 🔷 use-mobile.ts
+    │   │   │   │   └── 🔷 use-toast.ts
+    │   │   │   ├── 📁 lib/
+    │   │   │   │   └── 🔷 utils.ts
+    │   │   │   └── 🔷 index.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📜 tailwind.preset.js
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
+    │   └── 📁 utils/
+    │       ├── 📁 src/
+    │       │   ├── 🔷 formatters.ts
+    │       │   ├── 🔷 index.ts
+    │       │   └── 🔷 validators.ts
+    │       ├── 📋 package.json
+    │       ├── 📋 tsconfig.json
+    │       └── 📄 tsconfig.tsbuildinfo
+    ├── 📁 public/
+    ├── 📁 scripts/
+    │   └── 📜 generate-tree.js
+    ├── 📄 .env.example
+    ├── 📄 .gitignore
+    ├── 📋 package.json
+    ├── 📄 package.json.bak
+    ├── ⚙️ pnpm-workspace.yaml
+    ├── 📝 README.md
+    ├── 📄 setup-monorepo.ps1
+    ├── 📋 tsconfig.base.json
+    └── 📋 turbo.json
+
+
+📈 Statistiques :
+   • Dossiers : 45
+   • Fichiers : 189
+   • Total : 234 éléments
+
+💡 Fichiers ignorés : node_modules, .next, .turbo, dist, build, .git, etc.

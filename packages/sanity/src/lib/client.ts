@@ -7,3 +7,5 @@ export const sanityClient = createClient({
   useCdn: process.env.NODE_ENV === 'production',
   perspective: 'published',
 })
+
+export const client = sanityClient

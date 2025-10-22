@@ -28,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={`${archivoBlack.variable} ${archivoNarrow.variable}`}>
-      <body className="font-sans antialiased">
+      <body className="font-text antialiased">
         {children}
       </body>
     </html>
