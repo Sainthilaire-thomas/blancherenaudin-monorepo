@@ -2,19 +2,26 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": ".next",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "jsx": "preserve",
     "incremental": true,
-     "moduleResolution": "bundler",
+    "moduleResolution": "bundler",
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "baseUrl": ".",  // ← Ajouter cette ligne
+    "baseUrl": ".", // ← Ajouter cette ligne
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": [
+        "./*"
+      ]
+    },
+    "isolatedModules": true
   },
   "include": [
     "next-env.d.ts",

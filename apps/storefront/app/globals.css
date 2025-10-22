@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: var(--font-archivo-black);
+    --font-sans: var(--font-archivo-narrow);
+  }
+  
+  body {
+    @apply bg-white text-black;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+}
