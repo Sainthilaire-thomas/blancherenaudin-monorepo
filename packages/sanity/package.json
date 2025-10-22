@@ -1,0 +1,31 @@
+{
+  "name": "@repo/sanity",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./queries": "./src/lib/queries.ts",
+    "./client": "./src/lib/client.ts",
+    "./image": "./src/lib/image-helpers.ts",
+    "./config": "./src/config.ts",
+    "./structure": "./src/structure.ts",
+    "./schemas": "./src/schemas/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.12.0",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^4.11.0",
+    "next-sanity": "^9.0.0",
+    "sanity": "^3.0.0"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "typescript": "^5.3.0"
+  }
+}

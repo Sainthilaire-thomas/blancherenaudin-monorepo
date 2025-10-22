@@ -1672,92 +1672,177 @@ pnpmadd -D eslint-config-turbo
 
 ---
 
-## 🏪 Phase 5 : App Storefront (Jour 5-6)
+# 📋 Phase 5 : App Storefront (Jour 5-6)
 
-### Structure Next.js
+## Setup package Sanity
 
-- [ ] Créer `apps/storefront/` avec structure Next.js 15
-- [ ] Créer `package.json`
-- [ ] Créer `next.config.ts` avec `transpilePackages`
-- [ ] Créer `tailwind.config.js` utilisant le preset
-- [ ] Créer `tsconfig.json` avec references
+* [X] Créer `packages/sanity/` avec structure
+* [X] Créer `package.json` et `tsconfig.json`
+* [X] Copier `sanity/schemas/` → `packages/sanity/src/schemas/`
+* [X] Copier `sanity/sanity.config.ts` → `packages/sanity/src/config.ts`
+* [X] Copier `sanity/structure.ts` → `packages/sanity/src/structure.ts`
+* [X] Copier `src/lib/queries.ts` → `packages/sanity/src/lib/queries.ts`
+* [X] Copier `src/lib/sanity.client.ts` → `packages/sanity/src/lib/client.ts`
+* [X] Copier `src/lib/sanity.image.ts` → `packages/sanity/src/lib/image-helpers.ts`
+* [X] Créer `packages/sanity/src/index.ts` (exports)
+* [X] `pnpm install` et vérifier `pnpm type-check`
 
-### Migration routes publiques
+## Setup app Storefront
 
-- [ ] Copier `src/app/page.tsx` (homepage)
-- [ ] Copier `src/app/about/`
-- [ ] Copier `src/app/account/`
-- [ ] Copier `src/app/cart/`
-- [ ] Copier `src/app/checkout/`
-- [ ] Copier `src/app/collections/`
-- [ ] Copier `src/app/collections-editoriales/`
-- [ ] Copier `src/app/contact/`
-- [ ] Copier `src/app/impact/`
-- [ ] Copier `src/app/legal-notice/`
-- [ ] Copier `src/app/privacy/`
-- [ ] Copier `src/app/product/`
-- [ ] Copier `src/app/products/`
-- [ ] Copier `src/app/returns/`
-- [ ] Copier `src/app/search/`
-- [ ] Copier `src/app/shipping/`
-- [ ] Copier `src/app/silhouettes/`
-- [ ] Copier `src/app/newsletter/confirmed/`
+* [ ] Créer `apps/storefront/` avec structure Next.js 15
+* [ ] Créer `package.json`
+* [ ] Créer `next.config.ts` avec `transpilePackages`
+* [ ] Créer `tailwind.config.ts` utilisant preset `@repo/config`
+* [ ] Créer `tsconfig.json` avec project references
+* [ ] Créer `.env.local` avec variables
+* [ ] `pnpm install`
 
-### Migration composants
+## Migration utilitaires
 
-- [ ] Copier `src/components/account/`
-- [ ] Copier `src/components/auth/AuthModal.tsx`
-- [ ] Copier `src/components/common/`
-- [ ] Copier `src/components/editorial/`
-- [ ] Copier `src/components/layout/` (FooterMinimal, HeaderMinimal, Homepage, InteractiveEntry)
-- [ ] Copier `src/components/newsletter/NewsletterSubscribe.tsx`
-- [ ] Copier `src/components/products/`
-- [ ] Copier `src/components/search/`
+* [ ] Copier `src/hooks/` → `apps/storefront/hooks/`
+* [ ] Copier `src/lib/products.ts` → `apps/storefront/lib/products.ts`
+* [ ] Copier `src/lib/design-tokens.ts` → `apps/storefront/lib/design-tokens.ts`
+* [ ] Créer `apps/storefront/lib/api/` (handlers purs pour API routes)
+* [ ] Copier `src/components/common/` → `apps/storefront/components/common/`
+* [ ] Copier `src/components/search/SearchModal.tsx` → `apps/storefront/components/search/`
 
-### Migration APIs publiques
+## Migration stores
 
-- [ ] Copier `src/app/api/auth/`
-- [ ] Copier `src/app/api/checkout/`
-- [ ] Copier `src/app/api/collections/`
-- [ ] Copier `src/app/api/launch-notifications/`
-- [ ] Copier `src/app/api/newsletter/` (public)
-- [ ] Copier `src/app/api/orders/by-session/`
-- [ ] Copier `src/app/api/products/`
-- [ ] Copier `src/app/api/webhooks/stripe/`
-- [ ] Copier `src/app/api/wishlist/`
+* [ ] Copier `src/store/` → `apps/storefront/store/`
+* [ ] Adapter imports (types → `@repo/database`)
 
-### Migration stores
+## Migration layout & homepage
 
-- [ ] Copier `src/store/` → `apps/storefront/store/`
+* [ ] Copier `src/app/layout.tsx` → `apps/storefront/app/layout.tsx`
+* [ ] Copier `src/app/globals.css` → `apps/storefront/app/globals.css`
+* [ ] Copier `src/app/page.tsx` → `apps/storefront/app/page.tsx`
+* [ ] Copier `public/*` → `apps/storefront/public/`
+* [ ] Adapter imports (HeaderMinimal, FooterMinimal, InteractiveEntry → `@repo/ui`)
+* [ ] Tester : `pnpm dev --filter storefront`
 
-### Ajustement imports
+## Migration pages statiques
 
-- [ ] Remplacer imports UI : `@/components/ui` → `@repo/ui`
-- [ ] Remplacer imports Database : `@/lib/supabase-*` → `@repo/database`
-- [ ] Remplacer imports Email : `@/lib/email` → `@repo/email`
-- [ ] Remplacer imports Auth : `@/lib/auth` → `@repo/auth`
-- [ ] Remplacer imports Analytics : `@/lib/analytics` → `@repo/analytics`
-- [ ] Remplacer imports Shipping : `@/lib/shipping` → `@repo/shipping`
+* [ ] Copier `src/app/about/` → `apps/storefront/app/about/`
+* [ ] Copier `src/app/contact/` → `apps/storefront/app/contact/`
+* [ ] Copier `src/app/impact/` → `apps/storefront/app/impact/`
+* [ ] Copier `src/app/legal-notice/` → `apps/storefront/app/legal-notice/`
+* [ ] Copier `src/app/privacy/` → `apps/storefront/app/privacy/`
+* [ ] Copier `src/app/returns/` → `apps/storefront/app/returns/`
+* [ ] Copier `src/app/shipping/` → `apps/storefront/app/shipping/`
+* [ ] Adapter imports (Sanity → `@repo/sanity`)
 
-### Configuration
+## Migration catalogue produits
 
-- [ ] Copier `.env` variables storefront
-- [ ] Configurer Sanity Studio (`/studio`)
-- [ ] Copier `public/` assets
+* [ ] Copier `src/app/products/` → `apps/storefront/app/products/`
+* [ ] Copier `src/app/product/[id]/` → `apps/storefront/app/product/[id]/`
+* [ ] Copier `src/app/collections/` → `apps/storefront/app/collections/`
+* [ ] Copier `src/app/collections-editoriales/` → `apps/storefront/app/collections-editoriales/`
+* [ ] Copier `src/app/lookbooks/` → `apps/storefront/app/lookbooks/`
+* [ ] Copier `src/app/silhouettes/` → `apps/storefront/app/silhouettes/`
+* [ ] Adapter imports (ProductImage, ProductCard → `@repo/ui/products`)
+* [ ] Tester navigation, détail produit, galerie, variantes, ajout panier
 
-### Tests
+## Migration recherche
 
-- [ ] `pnpm dev --filter storefront`
-- [ ] Tester homepage
-- [ ] Tester catalogue produits
-- [ ] Tester panier
-- [ ] Tester checkout (mode test)
-- [ ] Vérifier webhooks Stripe
+* [ ] Copier `src/app/search/` → `apps/storefront/app/search/`
+* [ ] Adapter imports (SearchModal depuis `@/components/search/`)
+* [ ] Tester recherche et filtres
 
-### Commit
+## Migration authentification
 
-- [ ] `git add apps/storefront`
-- [ ] `git commit -m "feat(apps): add storefront application"`
+* [ ] Copier `src/app/auth/login/` → `apps/storefront/app/auth/login/`
+* [ ] Vérifier `AuthModal` dans `@repo/ui/auth` ou copier
+* [ ] Adapter imports (Auth → `@repo/auth`, Supabase → `@repo/database`)
+* [ ] Tester signup, login, logout
+
+## Migration espace compte
+
+* [ ] Copier `src/app/account/` → `apps/storefront/app/account/`
+* [ ] Copier `src/app/account/orders/` → `apps/storefront/app/account/orders/`
+* [ ] Copier `src/app/account/settings/` → `apps/storefront/app/account/settings/`
+* [ ] Copier `src/app/account/wishlist/` → `apps/storefront/app/account/wishlist/`
+* [ ] Vérifier `AccountSidebar` dans `@repo/ui/account` ou copier
+* [ ] Adapter imports
+* [ ] Tester accès compte, commandes, profil, wishlist
+
+## Migration panier & checkout
+
+* [ ] Copier `src/app/cart/` → `apps/storefront/app/cart/`
+* [ ] Copier `src/app/checkout/` → `apps/storefront/app/checkout/`
+* [ ] Adapter imports (useCartStore, Stripe, Supabase)
+* [ ] Tester panier, localStorage, checkout
+
+## Migration API Routes
+
+### Créer handlers purs
+
+* [ ] Créer `apps/storefront/lib/api/auth.ts`
+* [ ] Créer `apps/storefront/lib/api/collections.ts`
+* [ ] Créer `apps/storefront/lib/api/products.ts`
+* [ ] Créer `apps/storefront/lib/api/wishlist.ts`
+* [ ] Créer `apps/storefront/lib/api/checkout.ts`
+* [ ] Créer `apps/storefront/lib/api/orders.ts`
+
+### Migrer routes
+
+* [ ] Copier `src/app/api/auth/` → `apps/storefront/app/api/auth/`
+* [ ] Copier `src/app/api/collections/` → `apps/storefront/app/api/collections/`
+* [ ] Copier `src/app/api/products/` → `apps/storefront/app/api/products/`
+* [ ] Copier `src/app/api/wishlist/` → `apps/storefront/app/api/wishlist/`
+* [ ] Copier `src/app/api/checkout/` → `apps/storefront/app/api/checkout/`
+* [ ] Copier `src/app/api/orders/by-session/` → `apps/storefront/app/api/orders/by-session/`
+* [ ] Copier `src/app/api/newsletter/` → `apps/storefront/app/api/newsletter/`
+* [ ] Copier `src/app/api/launch-notifications/` → `apps/storefront/app/api/launch-notifications/`
+* [ ] Copier `src/app/api/webhooks/stripe/` → `apps/storefront/app/api/webhooks/stripe/`
+
+### Adapter routes
+
+* [ ] Refactoriser chaque route pour appeler les handlers purs
+* [ ] Adapter imports (Supabase → `@repo/database`, Email → `@repo/email`)
+* [ ] Tester chaque endpoint
+
+### Webhook Stripe
+
+* [ ] Vérifier logique décrémentation stock
+* [ ] Vérifier parsing adresses JSONB
+* [ ] Tester avec Stripe CLI : `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
+
+## Migration Sanity Studio
+
+* [ ] Copier `src/app/studio/` → `apps/storefront/app/studio/`
+* [ ] Adapter imports (config → `@repo/sanity/config`)
+* [ ] Tester `/studio` : connexion, édition homepage, création lookbook
+
+## Tests finaux
+
+* [ ] `pnpm build --filter storefront` (0 erreur)
+* [ ] Homepage avec animation lettres flottantes
+* [ ] Hotspot Sanity sur images homepage
+* [ ] Navigation complète
+* [ ] Détail produit + galerie + variantes
+* [ ] Ajout panier + localStorage
+* [ ] Checkout (session Stripe)
+* [ ] Login/signup
+* [ ] Espace compte
+* [ ] Recherche
+* [ ] Wishlist
+* [ ] Collections Sanity
+* [ ] Lookbooks
+* [ ] Sanity Studio
+* [ ] Responsive (mobile, tablet, desktop)
+* [ ] Bundle size < 600KB
+
+## Documentation
+
+* [ ] Créer `apps/storefront/README.md`
+* [ ] Documenter variables d'environnement
+* [ ] Documenter scripts disponibles
+
+## Commit
+
+* [ ] `git add apps/storefront packages/sanity`
+* [ ] `git commit -m "feat(apps): add storefront application"`
+* [ ] `git push origin main`
 
 ---
 
