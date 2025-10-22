@@ -1,16 +1,17 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "outDir": ".next",
     "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "preserve",
     "incremental": true,
+     "moduleResolution": "bundler",
     "plugins": [
       {
         "name": "next"
       }
     ],
+    "baseUrl": ".",  // ← Ajouter cette ligne
     "paths": {
       "@/*": ["./*"]
     }
@@ -23,6 +24,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
- 
+  ]
 }

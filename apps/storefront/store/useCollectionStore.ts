@@ -1,6 +1,8 @@
 import { create } from "zustand";
-import { supabase } from "@/lib/supabase";
-import type { Database } from '../lib/database.types'
+import { createBrowserClient } from "@repo/database";
+import type { Database } from "@repo/database";
+
+const supabase = createBrowserClient();
 
 // ---- Helpers logging ----
 const L = {
@@ -186,23 +188,26 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
         return null;
       }
 
-      if (!data) {
-        L.warn("no row for slug:", slug);
-        set({ isLoadingDetail: false, current: null });
-        return null;
-      }
+   if (!data) {
+  L.warn("no row for slug:", slug);
+  set({ isLoadingDetail: false, current: null });
+  return null;
+}
 
-      set({
-        current: data as Collection,
-        isLoadingDetail: false,
-        productsOfCurrent: [],
-      });
+const collection = data as Collection;
 
-      L.log("current set to:", {
-        id: data.id,
-        slug: data.slug,
-        name: data.name,
-      });
+set({
+  current: collection,
+  isLoadingDetail: false,
+  productsOfCurrent: [],
+});
+
+L.log("current set to:", {
+  id: collection.id,
+  slug: collection.slug,
+  name: collection.name,
+});
+
       L.log("state(after):", {
         current: get().current?.slug,
         isLoadingDetail: get().isLoadingDetail,

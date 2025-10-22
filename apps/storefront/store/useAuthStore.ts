@@ -1,8 +1,11 @@
 // src/store/useAuthStore.ts
 import { create } from "zustand";
-import { supabase } from "@/lib/supabase";
+
 import type { User } from "@supabase/supabase-js";
-import type { Database } from "../lib/database.types"; // <— chemin corrigé
+
+import { createBrowserClient } from "@repo/database";
+import type { Database } from "@repo/database";
+   const supabase = createBrowserClient()
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
@@ -21,7 +24,7 @@ interface AuthState {
   ) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  updateProfile: (updates: Partial<Profile>) => Promise<void>;
+   updateProfile: (updates: Record<string, any>) => Promise<void>;
 }
 
 // Garde globale pour éviter plusieurs subscriptions
@@ -127,18 +130,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Le listener mettra à jour le store automatiquement
   },
 
-  updateProfile: async (updates) => {
-    const { user } = get();
-    if (!user) throw new Error("No user authenticated");
+ updateProfile: async (updates) => {
+  const { user } = get();
+  if (!user) throw new Error("No user authenticated");
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .update(updates)
-      .eq("id", user.id)
-      .select()
-      .single();
+  const { data, error } = await (supabase as any)
+    .from("profiles")
+    .update(updates)
+    .eq("id", user.id)
+    .select()
+    .single();
 
-    if (error) throw error;
-    set({ profile: data });
-  },
+  if (error) throw error;
+  set({ profile: data as any });
+},
 }));

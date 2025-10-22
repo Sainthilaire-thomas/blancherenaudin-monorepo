@@ -1,5 +1,5 @@
 // src/components/common/RichTextRenderer.tsx
-import { urlFor } from '@/lib/sanity.image'
+import { urlFor } from '@repo/sanity/image'
 
 interface RichTextRendererProps {
   content: any[]

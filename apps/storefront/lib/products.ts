@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/supabase' // tu utilises bien ce nom d'import dans ton projet
+import { createBrowserClient } from '@repo/database'
+   const supabase = createBrowserClient()
 
 export async function fetchProductsByIds(ids: string[]) {
   if (!ids?.length) return []
