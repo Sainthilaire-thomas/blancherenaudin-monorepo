@@ -1,21 +1,99 @@
 // packages/database/src/index.ts
 
-// Export types de base (depuis database.types.ts via types.ts)
+// ============================================================================
+// EXPORTS DE BASE (depuis types.ts)
+// ============================================================================
 export * from "./types"
 
-// Export types helpers (relations Supabase - NOUVEAU)
-export * from "./types-helpers"
+// ============================================================================
+// EXPORTS TYPES HELPERS (avec résolution du conflit ApiResponse)
+// ============================================================================
+// ✅ Export des TYPES uniquement avec "export type"
+export type {
+  // Types avec relations
+  OrderWithItems,
+  OrderWithDetails,
+  OrderWithFullItems,
+  ProductWithImages,
+  VariantWithProduct,
+  CustomerWithAddresses,
+  CustomerWithOrders,
+  CollectionWithProducts,
+  WishlistItemWithProduct,
+  
+  // Inserts avec relations
+  OrderWithItemsInsert,
+  ProductWithRelationsInsert,
+  
+  // Utilities
+  AddressJson,
+  OrderWithTypedAddresses,
+  SupabaseQuery,
+  
+  // Enums types
+  OrderStatusType,
+  PaymentStatusType,
+  FulfillmentStatusType,
+  
+  // ✅ Types API (avec des noms différents pour éviter les conflits)
+  ApiSuccessResponse,
+  ApiErrorResponse,
+  ApiResponseUnion,  // Au lieu de ApiResponse qui existe déjà dans types.ts
+  NextApiHandler,
+  PaginatedApiResponse,
+  PaginatedData,
+  PaginationMeta,
+  
+  // Request types
+  CreateOrderRequest,
+  UpdateProductStockRequest,
+  CreateProductRequest,
+  SearchProductsQuery,
+  AddToWishlistRequest,
+  
+  // Type export
+  DatabaseHelperTypes
+} from "./types-helpers"
 
-// Export clients Supabase
+// ✅ Export des VALEURS (enums, functions) avec "export"
+export {
+  // Enums (ce sont des objets, pas des types)
+  OrderStatusEnum,
+  PaymentStatusEnum,
+  FulfillmentStatusEnum,
+  
+  // Type guards (ce sont des fonctions)
+  isOrderWithItems,
+  isProductWithImages,
+  isApiSuccess,
+  isApiError,
+  
+  // Helpers (ce sont des fonctions)
+  createApiSuccess,
+  createApiError,
+  createPaginatedResponse,
+} from "./types-helpers"
+
+// ============================================================================
+// EXPORTS CLIENTS SUPABASE
+// ============================================================================
 export { createBrowserClient } from "./client-browser"
 export { getServerSupabase, createServerClient } from "./client-server"
 export { supabaseAdmin } from "./client-admin"
-
-// Re-export sous un alias plus cohérent
 export { supabaseAdmin as createAdminClient } from "./client-admin"
 
-// Export stock management (si activé)
- export * from './stock/decrement-stock'
+// ============================================================================
+// EXPORTS STOCK MANAGEMENT
+// ============================================================================
+export * from './stock/decrement-stock'
 
-// Export Stripe
+// ============================================================================
+// EXPORTS STRIPE
+// ============================================================================
 export * from './stripe'
+
+// ============================================================================
+// RE-EXPORT EXPLICITE POUR COMPATIBILITÉ
+// ============================================================================
+// Si le code existant utilise ApiResponse, on peut garder les deux noms
+export type { ApiResponseUnion as ApiResponseHelper } from './types-helpers'

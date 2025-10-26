@@ -11,7 +11,7 @@ export function getStripe(): Stripe {
 
   if (!_stripe) {
     _stripe = new Stripe(key, {
-      apiVersion: '2025-09-30.clover', // ✅ FIX : Version correcte
+      apiVersion: '2023-10-16', // ✅ FIX : Version correcte
       typescript: true,
     })
   }

@@ -4,9 +4,6 @@ import { Database } from './database.types'
 // ============================================================================
 // TYPES DE BASE DEPUIS SUPABASE (pour usage interne uniquement)
 // ============================================================================
-// Note: Ces types sont déjà exportés depuis types.ts, on les importe ici
-// pour les utiliser dans les types helpers, mais on ne les ré-export pas
-
 type Tables = Database['public']['Tables']
 
 type Order = Tables['orders']['Row']
@@ -35,19 +32,10 @@ type WishlistItem = Tables['wishlist_items']['Row']
 // TYPES AVEC RELATIONS (résout les erreurs "never" de TypeScript)
 // ============================================================================
 
-/**
- * Order avec ses items relationnels
- * 🎯 Utilisé dans : /account/orders, /admin/orders
- * ✅ Résout : Property 'order_items' does not exist on type 'never'
- */
 export type OrderWithItems = Order & {
   order_items: OrderItem[]
 }
 
-/**
- * Order avec items ET détails produits complets
- * 🎯 Utilisé pour l'affichage détaillé des commandes
- */
 export type OrderWithFullItems = Order & {
   order_items: (OrderItem & {
     products?: Product | null
@@ -55,11 +43,6 @@ export type OrderWithFullItems = Order & {
   })[]
 }
 
-/**
- * Order avec toutes les informations nécessaires pour l'affichage client
- * 🎯 Utilisé dans : /account/orders/page.tsx
- * ✅ Résout TOUTES les 18 erreurs TypeScript du fichier
- */
 export type OrderWithDetails = Order & {
   order_items: Array<{
     id: string
@@ -71,45 +54,22 @@ export type OrderWithDetails = Order & {
   }>
 }
 
-// ⚠️ ProductWithRelations est déjà exporté depuis types.ts - pas de doublon !
-// ⚠️ ProductWithPrimaryImage est déjà exporté depuis types.ts - pas de doublon !
-
-/**
- * Product avec seulement ses images (cas courant)
- * 🎯 Utilisé dans les cartes produits, galeries
- */
 export type ProductWithImages = Product & {
   product_images: ProductImage[]
 }
 
-/**
- * Variant avec le produit parent
- * 🎯 Utilisé dans la gestion du stock
- */
 export type VariantWithProduct = ProductVariant & {
   products?: Product | null
 }
 
-/**
- * Customer/Profile avec ses adresses
- * 🎯 Utilisé dans : /admin/customers/[id]
- */
 export type CustomerWithAddresses = Customer & {
   addresses: Address[]
 }
 
-/**
- * Customer avec commandes
- * 🎯 Utilisé pour les stats clients
- */
 export type CustomerWithOrders = Customer & {
   orders: Order[]
 }
 
-/**
- * Collection avec produits
- * 🎯 Utilisé pour l'affichage des collections
- */
 export type CollectionWithProducts = Collection & {
   collection_products: Array<{
     product_id: string
@@ -117,10 +77,6 @@ export type CollectionWithProducts = Collection & {
   }>
 }
 
-/**
- * Wishlist item avec détails produit
- * 🎯 Utilisé dans /account/wishlist
- */
 export type WishlistItemWithProduct = WishlistItem & {
   products?: ProductWithImages | null
 }
@@ -129,18 +85,10 @@ export type WishlistItemWithProduct = WishlistItem & {
 // TYPES POUR LES INSERTS/UPDATES AVEC RELATIONS
 // ============================================================================
 
-/**
- * Insert d'une commande avec items
- * 🎯 Utilisé lors de la création de commande
- */
 export type OrderWithItemsInsert = OrderInsert & {
   order_items: OrderItemInsert[]
 }
 
-/**
- * Insert d'un produit avec variantes et images
- * 🎯 Utilisé dans /admin/products/new
- */
 export type ProductWithRelationsInsert = ProductInsert & {
   product_variants?: ProductVariantInsert[]
   product_images?: ProductImageInsert[]
@@ -150,33 +98,15 @@ export type ProductWithRelationsInsert = ProductInsert & {
 // TYPES UTILITAIRES POUR LES QUERIES SUPABASE
 // ============================================================================
 
-/**
- * Type helper pour les requêtes Supabase avec select complexe
- * Permet de typer correctement les jointures
- * 
- * Exemple d'utilisation :
- * ```typescript
- * const { data } = await supabase
- *   .from('orders')
- *   .select('*, order_items(*)')
- *   .returns<OrderWithItems[]>()
- * ```
- */
 export type SupabaseQuery<T> = Promise<{
   data: T | null
   error: Error | null
 }>
 
-// ⚠️ PaginatedResponse est déjà exporté depuis types.ts - pas de doublon !
-
 // ============================================================================
 // TYPES POUR LES ADDRESSES (JSONB)
 // ============================================================================
 
-/**
- * Structure des addresses dans les commandes (stockées en JSONB)
- * 🎯 Résout les problèmes avec shipping_address et billing_address
- */
 export type AddressJson = {
   first_name: string
   last_name: string
@@ -190,17 +120,13 @@ export type AddressJson = {
   email?: string
 }
 
-/**
- * Order avec addresses typées correctement
- * 🎯 Utilisé pour éviter les erreurs avec Json type
- */
 export type OrderWithTypedAddresses = Omit<Order, 'shipping_address' | 'billing_address'> & {
   shipping_address: AddressJson | null
   billing_address: AddressJson | null
 }
 
 // ============================================================================
-// ENUMS & CONSTANTS (nouveaux, pas de doublon avec types.ts)
+// ENUMS & CONSTANTS
 // ============================================================================
 
 export const OrderStatusEnum = {
@@ -234,12 +160,107 @@ export const FulfillmentStatusEnum = {
 export type FulfillmentStatusType = typeof FulfillmentStatusEnum[keyof typeof FulfillmentStatusEnum]
 
 // ============================================================================
-// TYPE GUARDS (pour vérifier les types à runtime)
+// TYPES POUR LES API RESPONSES
+// ============================================================================
+// ⚠️ On utilise des noms différents pour éviter le conflit avec types.ts
+
+export type ApiSuccessResponse<T = unknown> = {
+  success: true
+  data: T
+  message?: string
+}
+
+export type ApiErrorResponse = {
+  success: false
+  error: string
+  message?: string
+  details?: unknown
+}
+
+export type ApiResponseUnion<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse
+
+export type NextApiHandler<T = unknown> = (
+  request: Request
+) => Promise<Response> | Response
+
+// ============================================================================
+// TYPES POUR LES RÉPONSES PAGINÉES
 // ============================================================================
 
-/**
- * Vérifie si un objet est une commande avec items
- */
+export interface PaginationMeta {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+}
+
+export interface PaginatedData<T> {
+  items: T[]
+  pagination: PaginationMeta
+}
+
+export type PaginatedApiResponse<T> = ApiSuccessResponse<PaginatedData<T>>
+
+// ============================================================================
+// TYPES POUR LES API REQUESTS
+// ============================================================================
+
+export interface CreateOrderRequest {
+  items: Array<{
+    product_id: string
+    variant_id?: string | null
+    quantity: number
+    unit_price: number
+  }>
+  shipping_address: AddressJson
+  billing_address: AddressJson
+  customer_email: string
+  customer_name: string
+  customer_phone?: string
+  shipping_method: string
+  shipping_amount: number
+  tax_amount: number
+  discount_amount?: number
+  promo_code?: string
+  total_amount: number
+  stripe_session_id?: string
+}
+
+export interface UpdateProductStockRequest {
+  variant_id: string
+  delta: number
+  reason: string
+}
+
+export interface CreateProductRequest extends Omit<Product, 'id' | 'created_at' | 'updated_at'> {
+  variants?: Array<Omit<ProductVariant, 'id' | 'product_id' | 'created_at'>>
+  images?: Array<{
+    storage_original: string
+    alt?: string
+    is_primary?: boolean
+    sort_order?: number
+  }>
+}
+
+export interface SearchProductsQuery {
+  query?: string
+  category?: string
+  min_price?: number
+  max_price?: number
+  in_stock?: boolean
+  page?: number
+  limit?: number
+}
+
+export interface AddToWishlistRequest {
+  product_id: string
+  user_id: string
+}
+
+// ============================================================================
+// TYPE GUARDS
+// ============================================================================
+
 export function isOrderWithItems(order: any): order is OrderWithItems {
   return (
     order &&
@@ -250,9 +271,7 @@ export function isOrderWithItems(order: any): order is OrderWithItems {
   )
 }
 
-/**
- * Vérifie si un objet est un produit avec images
- */
+// ✅ FIX : Corrigé 'order' → 'product'
 export function isProductWithImages(product: any): product is ProductWithImages {
   return (
     product &&
@@ -263,14 +282,20 @@ export function isProductWithImages(product: any): product is ProductWithImages 
   )
 }
 
+export function isApiSuccess<T>(response: ApiResponseUnion<T>): response is ApiSuccessResponse<T> {
+  return response.success === true
+}
+
+export function isApiError<T>(response: ApiResponseUnion<T>): response is ApiErrorResponse {
+  return response.success === false
+}
+
 // ============================================================================
 // EXPORTS POUR FACILITER L'UTILISATION
 // ============================================================================
 
-// Export tout en tant que namespace pour éviter les conflits
-// Note: Les types de base (Order, Product, etc.) sont déjà exportés depuis types.ts
+// ✅ FIX : Types génériques correctement définis
 export type DatabaseHelperTypes = {
-  // Relations (nouveaux types uniquement - pas de doublons)
   OrderWithItems: OrderWithItems
   OrderWithDetails: OrderWithDetails
   OrderWithFullItems: OrderWithFullItems
@@ -280,17 +305,74 @@ export type DatabaseHelperTypes = {
   CollectionWithProducts: CollectionWithProducts
   WishlistItemWithProduct: WishlistItemWithProduct
   VariantWithProduct: VariantWithProduct
-  
-  // Inserts avec relations
   OrderWithItemsInsert: OrderWithItemsInsert
   ProductWithRelationsInsert: ProductWithRelationsInsert
-  
-  // Utilities
   AddressJson: AddressJson
   OrderWithTypedAddresses: OrderWithTypedAddresses
-  
-  // Enums
   OrderStatusType: OrderStatusType
   PaymentStatusType: PaymentStatusType
   FulfillmentStatusType: FulfillmentStatusType
+  ApiSuccessResponse: <T>() => ApiSuccessResponse<T>
+  ApiErrorResponse: ApiErrorResponse
+  ApiResponseUnion: <T>() => ApiResponseUnion<T>
+  NextApiHandler: <T>() => NextApiHandler<T>
+  PaginatedApiResponse: <T>() => PaginatedApiResponse<T>
+  PaginatedData: <T>() => PaginatedData<T>
+  PaginationMeta: PaginationMeta
+  CreateOrderRequest: CreateOrderRequest
+  UpdateProductStockRequest: UpdateProductStockRequest
+  CreateProductRequest: CreateProductRequest
+  SearchProductsQuery: SearchProductsQuery
+  AddToWishlistRequest: AddToWishlistRequest
+}
+
+// ============================================================================
+// HELPERS POUR CRÉER DES RÉPONSES API TYPÉES
+// ============================================================================
+
+export function createApiSuccess<T>(data: T, message?: string): ApiSuccessResponse<T> {
+  // ✅ FIX : Éviter le spread sur undefined
+  const response: ApiSuccessResponse<T> = {
+    success: true,
+    data
+  }
+  if (message) {
+    response.message = message
+  }
+  return response
+}
+
+export function createApiError(error: string, message?: string, details?: unknown): ApiErrorResponse {
+  // ✅ FIX : Éviter le spread sur undefined
+  const response: ApiErrorResponse = {
+    success: false,
+    error
+  }
+  if (message) {
+    response.message = message
+  }
+  if (details !== undefined) {
+    response.details = details
+  }
+  return response
+}
+
+export function createPaginatedResponse<T>(
+  items: T[],
+  page: number,
+  limit: number,
+  total: number
+): PaginatedApiResponse<T> {
+  return {
+    success: true,
+    data: {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    }
+  }
 }

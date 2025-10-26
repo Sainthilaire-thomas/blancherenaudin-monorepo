@@ -49,7 +49,7 @@ export default function CollectionsPage() {
     console.warn("[CollectionsPage] rendering error screen:", error);
     return (
       <div className="min-h-screen bg-white">
-        <HeaderMinimal variant="default" showNavigation={true} />
+        <HeaderMinimal />
         <main className="pt-6">
           <div className="container mx-auto px-6 py-20 text-center">
             <h1 className="text-2xl font-medium text-red-600 mb-4">
@@ -74,7 +74,7 @@ export default function CollectionsPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-white">
-        <HeaderMinima variant="default" showNavigation={true} />
+        <HeaderMinimal />
         <main className="pt-6">
           <div className="container mx-auto px-6 py-20 text-center">
             <h1 className="text-2xl font-medium text-red-600 mb-4">
@@ -89,7 +89,7 @@ export default function CollectionsPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <HeaderMinima variant="default" showNavigation={true} />
+      <HeaderMinimal />
 
       <main className="pt-6">
         {/* Hero */}
