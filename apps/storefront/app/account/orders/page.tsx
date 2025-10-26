@@ -1,7 +1,7 @@
-// src/app/account/orders/page.tsx
+// apps/storefront/app/account/orders/page.tsx
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
-import { getServerSupabase } from '@repo/database'
+import { getServerSupabase, type OrderWithDetails } from '@repo/database'
 
 import Link from 'next/link'
 import { Badge } from '@repo/ui'
@@ -41,7 +41,7 @@ function getStatusInfo(status: string | null) {
 
 export default async function AccountOrdersPage() {
   const cookieStore = await cookies()
- const supabase = await getServerSupabase()
+  const supabase = await getServerSupabase()
 
   const {
     data: { user },
@@ -49,6 +49,7 @@ export default async function AccountOrdersPage() {
 
   if (!user || !user.email) redirect('/auth/login')
 
+  // ✅ FIX : Ajout du type explicite OrderWithDetails et .returns<>()
   const { data: orders } = await supabase
     .from('orders')
     .select(
@@ -65,6 +66,7 @@ export default async function AccountOrdersPage() {
     )
     .eq('customer_email', user.email)
     .order('created_at', { ascending: false })
+    .returns<OrderWithDetails[]>()  // ⭐ Cette ligne résout TOUTES les erreurs !
 
   console.log('📦 Orders fetched:', orders?.length)
   console.log('📦 First order items:', orders?.[0]?.order_items)
@@ -78,6 +80,8 @@ export default async function AccountOrdersPage() {
           <div className="space-y-4">
             {orders.map((order) => {
               const statusInfo = getStatusInfo(order.status)
+              
+              // ✅ Plus d'erreur TypeScript sur order_items
               const totalQuantity =
                 order.order_items?.reduce(
                   (sum, item) => sum + (item.quantity || 0),
@@ -119,6 +123,7 @@ export default async function AccountOrdersPage() {
                     </div>
                   </div>
 
+                  {/* ✅ Plus d'erreur sur order_items */}
                   {order.order_items && order.order_items.length > 0 && (
                     <div className="mt-4 pt-4 border-t">
                       <div className="space-y-2">
@@ -144,6 +149,7 @@ export default async function AccountOrdersPage() {
                     </div>
                   )}
 
+                  {/* ✅ Plus d'erreur sur tracking_number */}
                   {order.tracking_number && (
                     <div className="mt-4 pt-4 border-t">
                       <div className="text-sm">

@@ -1,266 +1,252 @@
 ﻿
-# 📊 MIGRATION STATUS - Monorepo Blanche Renaudin
+# 📊 État de la Migration Monorepo - 25 octobre 2025
 
-**Date:** 25 octobre 2025
+## 🎯 Objectif
 
-**Statut global:** 🟡 En cours (85% complété)
-
----
-
-## ✅ PHASES COMPLÉTÉES
-
-### Phase 1-4 : Infrastructure de base (100%)
-
-* ✅ Monorepo Turborepo + pnpm workspaces
-* ✅ Configuration TypeScript partagée
-* ✅ Package `@repo/database` avec types Supabase
-* ✅ Packages utilitaires (`@repo/utils`, `@repo/auth`, etc.)
-
-### Phase 5 : Application Storefront (85%)
-
-* ✅ Structure de dossiers créée
-* ✅ Package.json configuré avec dépendances
-* ✅ 50 imports `@blancherenaudin/*` → `@repo/*` corrigés
-* ✅ Fichiers manquants créés :
-  * `apps/storefront/lib/types.ts` (avec `getSortedImages`, `getPrimaryImage`)
-  * `apps/storefront/lib/image-helpers.ts` (avec `getProductImageUrl`)
-* ✅ Configuration `next.config.ts` avec `transpilePackages` + `recharts`
+Migrer de `site_v1_next` (monolithique) vers `blancherenaudin-monorepo` (architecture modulaire) selon la doc ARCHITECTURE-migration-archi-modulaire.md
 
 ---
 
-## 🔴 PROBLÈMES ACTUELS (Bloquants pour le build)
+## ✅ Phase 1-4 : Fondations (TERMINÉ)
 
-### 1. Typos dans les imports HeaderMinimal
+### Phase 1 : Setup Monorepo ✅
 
-**Fichiers concernés:**
+* [X] Structure Turborepo créée
+* [X] pnpm workspaces configuré
+* [X] turbo.json avec pipelines
+* [X] TypeScript Project References
 
-* `apps/storefront/app/collections/page.tsx` (ligne 29)
-* `apps/storefront/app/collections-editoriales/page.tsx` (ligne 38)
+### Phase 2 : Package Config ✅
 
-**Erreur:**
+* [X] `packages/config/` (Tailwind, ESLint, TS)
+* [X] Configuration partagée entre apps
+
+### Phase 3 : Package Database ✅
+
+* [X] `packages/database/` créé
+* [X] Types Supabase générés
+* [X] Clients Supabase (browser, server, admin)
+* [X] Stripe exporté
+* [X] ⚠️  **PROBLÈME IDENTIFIÉ** : Types relations Supabase (jointures) non gérés
+  * TypeScript infère `never` pour les requêtes avec relations
+  * Solution temporaire : cast `as any`
+  * **TODO** : Créer types helpers pour relations courantes
+
+### Phase 4 : Package UI ✅
+
+* [X] `packages/ui/` avec shadcn/ui
+* [X] 48 composants migrés
+* [X] Exports organisés
+
+### Autres Packages Créés ✅
+
+* [X] `packages/email/` (templates)
+* [X] `packages/auth/` (helpers)
+* [X] `packages/analytics/`
+* [X] `packages/newsletter/`
+* [X] `packages/shipping/`
+* [X] `packages/utils/`
+* [X] `packages/sanity/`
+
+---
+
+## ⚠️  Phase 5 : Storefront (EN COURS - 40%)
+
+### ✅ Ce qui fonctionne
+
+* [X] Structure `apps/storefront/` créée
+* [X] Routes publiques principales migrées :
+  * [X] `/` (homepage)
+  * [X] `/products`
+  * [X] `/collections`
+  * [X] `/cart`
+  * [X] `/checkout`
+  * [X] `/account`
+* [X] Imports corrigés vers packages (`@repo/ui`, `@repo/database`)
+* [X] `@supabase/ssr` installé
+* [X] `AccountSidebar` migré
+* [X] Stripe exporté de `@repo/database`
+
+### ⚠️  Problèmes résolus aujourd'hui
+
+* [X] Routes API collections (cast `as any`)
+* [X] Import `getServerSupabase` exporté
+* [X] Encodage UTF-8 des fichiers
+
+### ❌ Problèmes restants
+
+* [ ] **18 erreurs TypeScript dans `app/account/orders/page.tsx`**
+  * Cause : Relations Supabase (`order_items`) typées comme `never`
+  * Solution immédiate : Cast `as any` (workaround)
+  * Solution propre : Créer types helpers dans `@repo/database`
+
+### ❌ Routes manquantes à migrer
+
+* [ ] `/product/[id]` (détail produit)
+* [ ] `/search`
+* [ ] Pages `/about`, `/contact`, `/impact`
+* [ ] Pages légales
+* [ ] API routes publiques restantes
+
+### ❌ Admin mal placé
+
+* [ ] `apps/storefront/app/api/admin/` **À SUPPRIMER**
+  * Ces routes doivent aller dans `apps/admin/` (Phase 7-10)
+
+---
+
+## ❌ Phase 6 : Package Admin-Shell (NON COMMENCÉ)
+
+* [ ] Créer `packages/admin-shell/`
+* [ ] Types `ModuleProps`, `ModuleServices`
+* [ ] `ModuleLoader` component
+* [ ] Pattern d'injection de services
+
+---
+
+## ❌ Phase 7-10 : Apps Admin (NON COMMENCÉ)
+
+* [ ] Créer `apps/admin/`
+* [ ] Shell admin minimal
+* [ ] Configuration routing
+* [ ] Déplacer routes API admin de storefront
+
+---
+
+## ❌ Phase 11-15 : Modules Admin (NON COMMENCÉ)
+
+### Structure cible (8 modules)
 
 ```
-Module not found: Can't resolve '@/components/layout/HeaderMinima'
+modules/
+├── analytics/     ❌ Non créé
+├── categories/    ❌ Non créé
+├── customers/     ❌ Non créé
+├── media/         ❌ Non créé
+├── newsletter/    ❌ Non créé
+├── orders/        ❌ Non créé
+├── products/      ❌ Non créé
+└── social/        ❌ Non créé
 ```
 
-**Correction requise:**
+Le dossier `modules/` existe mais est  **vide** .
+
+---
+
+## 📊 Progression Globale
+
+```
+Phase 1-4  : Fondations        ████████████████████ 100%
+Phase 5    : Storefront        ████████░░░░░░░░░░░░  40%
+Phase 6    : Admin-Shell       ░░░░░░░░░░░░░░░░░░░░   0%
+Phase 7-10 : Apps Admin        ░░░░░░░░░░░░░░░░░░░░   0%
+Phase 11-15: Modules           ░░░░░░░░░░░░░░░░░░░░   0%
+Phase 16+  : Tests & Deploy    ░░░░░░░░░░░░░░░░░░░░   0%
+
+TOTAL MIGRATION : ~30%
+```
+
+---
+
+## 🚨 Problèmes Architecturaux Identifiés
+
+### 1. Admin dans Storefront ⚠️
+
+**Problème** : Routes admin dans `apps/storefront/app/api/admin/`
+**Impact** : Architecture incohérente, ne suit pas la doc
+**Solution** :
+
+1. Créer `apps/admin/` (Phase 7)
+2. Déplacer toutes les routes `/api/admin/*`
+3. Nettoyer storefront
+
+### 2. Types Supabase Relations 🐛
+
+**Problème** : TypeScript infère `never` pour jointures
+**Impact** : 18+ erreurs dans orders/page.tsx, workarounds `as any`
+**Solution propre** :
+
+typescript
 
 ```typescript
-// ❌ INCORRECT
-import HeaderMinima from '@/components/layout/HeaderMinima'
-<HeaderMinima variant="default" showNavigation={true} />
-
-// ✅ CORRECT
-import HeaderMinimal from '@/components/layout/HeaderMinimal'
-<HeaderMinimal />
-```
-
-### 2. Imports Sanity incorrects
-
-**Fichier:** `apps/storefront/app/collections-editoriales/page.tsx` (lignes 4-6)
-
-**Erreur:**
-
-```typescript
-// ❌ INCORRECT
-import { sanityClient } from '@repo/sanity/lib/client'
-import { COLLECTIONS_EDITORIALES_QUERY } from '@repo/sanity/lib/queries'
-import { urlFor } from '@repo/sanity/lib/image-helpers'
-
-// ✅ CORRECT
-import { sanityClient, COLLECTIONS_EDITORIALES_QUERY, urlFor } from '@repo/sanity'
-```
-
-### 3. Problème recharts/d3 persistant
-
-**Erreur webpack:**
-
-```
-Module parse failed: Unexpected token
-"n"... is not valid JSON
-Did you mean './d3-shape'?
-Did you mean './d3-scale'?
-```
-
-**Tentatives de correction:**
-
-* ✅ Ajout de `'recharts'` dans `transpilePackages`
-* ❌ Problème persiste (peut-être lié aux imports profonds de d3)
-
-**Solution possible:**
-
-* Commenter l'export de Chart dans `packages/ui/src/index.ts` ligne 18
-* Ou configurer webpack pour transpiler les sous-modules d3
-
----
-
-## 📁 FICHIERS CRÉÉS DURANT LA MIGRATION
-
-### apps/storefront/lib/
-
-```typescript
-// types.ts - Types et helpers produits
-export function getSortedImages(product: ProductWithDetails): ProductImage[]
-export function getPrimaryImage(product: ProductWithDetails): ProductImage | null
-
-// image-helpers.ts - URLs Supabase Storage
-export function getProductImageUrl(imageId: string, size: ImageSize): string
-```
-
----
-
-## 🔧 COMMANDES POUR CORRIGER LES ERREURS
-
-### Correction automatique des 3 problèmes :
-
-```powershell
-# 1. Corriger collections/page.tsx
-$file1 = "apps/storefront/app/collections/page.tsx"
-if (Test-Path $file1) {
-    $content = Get-Content $file1 -Raw
-    $content = $content -replace 'HeaderMinima', 'HeaderMinimal'
-    $content | Set-Content $file1 -NoNewline
-    Write-Host "✅ $file1 corrigé"
+// packages/database/src/types-helpers.ts
+exporttypeOrderWithItems=Database['public']['Tables']['orders']['Row']&{
+  order_items:Database['public']['Tables']['order_items']['Row'][]
 }
+```
 
-# 2. Corriger collections-editoriales/page.tsx
-$file2 = "apps/storefront/app/collections-editoriales/page.tsx"
-if (Test-Path $file2) {
-    $content = Get-Content $file2 -Raw
-    $content = $content -replace "from '@repo/sanity/lib/client'", "from '@repo/sanity'"
-    $content = $content -replace "from '@repo/sanity/lib/queries'", "from '@repo/sanity'"
-    $content = $content -replace "from '@repo/sanity/lib/image-helpers'", "from '@repo/sanity'"
-    $content = $content -replace 'HeaderMinima', 'HeaderMinimal'
-    $content | Set-Content $file2 -NoNewline
-    Write-Host "✅ $file2 corrigé"
-}
+### 3. Modules vides 📁
 
-# 3. Option A : Commenter Chart (si recharts toujours problématique)
-$file3 = "packages/ui/src/index.ts"
-$content = Get-Content $file3 -Raw
-$content = $content -replace '(export \{ ChartContainer.*from "./components/chart")', '// $1'
-$content | Set-Content $file3 -NoNewline
-Write-Host "✅ Chart export commenté (temporaire)"
+**Problème** : Dossier `modules/` existe mais vide
+**Impact** : 0% de la logique métier migrée
+**Solution** : Phases 11-15 à faire
 
-# 4. Nettoyer et rebuild
-Remove-Item -Recurse -Force -ErrorAction SilentlyContinue ".turbo","apps/storefront/.next"
+---
+
+## 🎯 Prochaines Étapes Critiques
+
+### Urgent (Finir Phase 5)
+
+1. **Corriger types Supabase** (2h)
+   * Créer `types-helpers.ts` dans `@repo/database`
+   * Exporter types pour relations courantes
+   * Supprimer tous les `as any`
+2. **Migrer routes manquantes** (3h)
+   * `/product/[id]`
+   * `/search`
+   * Pages statiques
+3. **Nettoyer admin** (1h)
+   * Supprimer `apps/storefront/app/api/admin/`
+   * Documenter ce qui doit aller dans `apps/admin/`
+
+### Moyen terme (Phases 6-10)
+
+4. **Créer admin-shell** (4h)
+5. **Créer apps/admin** (6h)
+6. **Migrer 1 module complet** (8h) - products recommandé
+
+---
+
+## 📝 Notes Techniques
+
+### Commandes Utiles
+
+bash
+
+```bash
+# TypeCheck storefront
+pnpm --filter storefront exec tsc --noEmit
+
+# Build storefront
 pnpm run build --filter=storefront
+
+# Compter erreurs
+pnpm --filter storefront exec tsc --noEmit 2>&1| Select-String "error TS"| Measure-Object
 ```
 
----
+### Fichiers Clés Modifiés Aujourd'hui
 
-## 📊 ROUTES MIGRÉES VS MANQUANTES
-
-### ✅ Routes existantes dans le monorepo :
-
-* `/` (homepage)
-* `/about`
-* `/account/*` (orders, settings, wishlist)
-* `/admin/*` (dashboard complet)
-* `/cart`
-* `/checkout` (interface OK, paiement Stripe à intégrer)
-* `/collections` ⚠️ (erreur HeaderMinima)
-* `/collections-editoriales` ⚠️ (erreur imports Sanity)
-* `/contact`
-* `/impact`
-* `/lookbooks`
-* `/products/*`
-* `/search`
-* `/studio` (Sanity CMS)
-
-### ❌ Routes potentiellement manquantes :
-
-* `/product/[id]` (fichier existe mais peut avoir des erreurs cachées)
-* Routes API diverses (à vérifier une fois le build passé)
+* `packages/database/src/index.ts` - Ajout export `getServerSupabase`
+* `packages/database/src/stripe.ts` - Copié et exporté
+* `apps/storefront/components/account/AccountSidebar.tsx` - Migré
+* `apps/storefront/app/api/collections/route.ts` - Cast `as any`
+* `apps/storefront/app/account/orders/page.tsx` - En cours
 
 ---
 
-## 🎯 PROCHAINES ÉTAPES (par ordre de priorité)
+## 🤔 Questions en Suspens
 
-### 🔴 URGENT (30 min)
-
-1. **Corriger les 3 erreurs** avec le script PowerShell ci-dessus
-2. **Tester le build** : `pnpm run build --filter=storefront`
-3. **Si échec recharts** : Commenter l'export Chart temporairement
-
-### 🟡 IMPORTANT (1-2h)
-
-4. **Vérifier les routes manquantes** systématiquement
-5. **Tester le dev** : `pnpm dev --filter=storefront`
-6. **Corriger les erreurs runtime** au fur et à mesure
-
-### 🟢 SOUHAITABLE (après build réussi)
-
-7. **Intégration Stripe** complète (webhooks)
-8. **Emails transactionnels** (Resend configuré)
-9. **Optimisations** (lazy loading, ISR)
-10. **Tests E2E** avec Playwright
+1. **Déploiement** : Une instance Vercel ou deux ?
+   * Décision : **Une seule** avec routing `/admin`
+   * Justification : Plus simple, moins cher, URLs cohérentes
+2. **Types Supabase** : Pourquoi `never` sur les relations ?
+   * Cause : TypeScript ne peut pas inférer automatiquement les jointures
+   * Solution : Types helpers explicites à créer
+3. **Priorité modules** : Dans quel ordre les migrer ?
+   * Recommandation : products → orders → customers → autres
 
 ---
 
-## 💡 LEÇONS APPRISES
-
-### ✅ Ce qui fonctionne bien :
-
-* Architecture monorepo Turborepo claire et scalable
-* Packages partagés réutilisables
-* Build incrémental (95% réduction temps de build après cache)
-
-### ⚠️ Difficultés rencontrées :
-
-* **Logs tronqués** : Difficile de déboguer avec les sorties PowerShell/VS Code
-* **Imports profonds** : Beaucoup de corrections manuelles `@blancherenaudin/*` → `@repo/*`
-* **Dépendances complexes** : recharts/d3 nécessite configuration webpack spécifique
-* **Typos** : Erreurs silencieuses jusqu'au build (HeaderMinima vs HeaderMinimal)
-
-### 💡 Recommandations futures :
-
-1. **Toujours créer un monorepo from scratch** plutôt que migrer (10x plus rapide)
-2. **Utiliser ESLint** avec règles strictes sur les imports
-3. **Script de vérification** avant chaque build pour détecter les typos
-4. **Commenter les exports non utilisés** dans @repo/ui pour alléger le bundle
-
----
-
-## 🔗 RESSOURCES UTILES
-
-### Documentation projet :
-
-* `/mnt/project/point-etape-9-oct-2025.md` - État des lieux complet site
-* `apps/storefront/README.md` - Documentation storefront
-* `packages/*/README.md` - Documentation packages individuels
-
-### Commandes de debug :
-
-```powershell
-# Vérifier les imports cassés
-Get-ChildItem -Path "apps/storefront" -Recurse -Include "*.tsx","*.ts" | 
-  Select-String "@blancherenaudin/|@repo/ui/" | Select-Object -First 20
-
-# Build avec logs complets
-pnpm run build --filter=storefront 2>&1 | Tee-Object build-full.log
-
-# Extraire uniquement les erreurs
-Get-Content build-full.log | Where-Object { 
-  $_ -match "error|Error|Module not found|Can't resolve" 
-} | Select-Object -Last 20
-```
-
----
-
-## 📞 SUPPORT
-
-**Pour continuer la migration dans une nouvelle conversation :**
-
-1. Lire ce fichier `MIGRATION_STATUS.md`
-2. Exécuter le script de correction des 3 erreurs
-3. Lancer `pnpm run build --filter=storefront`
-4. Documenter les nouvelles erreurs rencontrées
-
-**Estimation temps restant :** 1-3 heures selon complexité des erreurs cachées
-
----
-
-**Dernière mise à jour :** 25/10/2025 17:30
-
-**Auteur :** Claude (conversation migration monorepo)
+**Dernière mise à jour** : 25 octobre 2025, 21:00
+**Durée totale investie** : ~8 heures
+**Estimation restante** : 40-50 heures
