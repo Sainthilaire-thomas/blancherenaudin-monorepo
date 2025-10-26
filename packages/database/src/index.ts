@@ -15,7 +15,7 @@ export { supabaseAdmin } from "./client-admin"
 export { supabaseAdmin as createAdminClient } from "./client-admin"
 
 // Export stock management (si activé)
-// export * from './stock/decrement-stock'
+ export * from './stock/decrement-stock'
 
 // Export Stripe
 export * from './stripe'

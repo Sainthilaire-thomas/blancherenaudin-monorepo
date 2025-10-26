@@ -9,3 +9,5 @@ export * from './images'
 export * from './services/customerService'
 
 export * from './validation/adminCustomers'
+
+export { cn } from './cn'

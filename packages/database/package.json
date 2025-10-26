@@ -18,12 +18,13 @@
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.47.10"
+    "@supabase/supabase-js": "^2.47.10",
+    "stripe": "^14.25.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "typescript": "^5.9.3",
-    "next": "^15.0.0"
+    "next": "^15.0.0",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "next": "^15.0.0"
