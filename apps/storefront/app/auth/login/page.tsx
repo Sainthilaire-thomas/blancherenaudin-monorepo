@@ -1,12 +1,12 @@
 // src/app/auth/login/page.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabaseBrowser } from '@repo/database/client-browser'
 import Link from 'next/link'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isLogin, setIsLogin] = useState(true)
@@ -52,7 +52,7 @@ export default function LoginPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,  
           },
         })
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
         }
 
         // Créer le profil après l'inscription
-        await fetch('/api/auth/ensure-profile', { method: 'POST' })
+        await fetch('/api/auth/ensure-profile', { method: 'POST' })      
 
         router.push('/account')
         router.refresh()
@@ -96,7 +96,7 @@ export default function LoginPage() {
             }}
             className={`flex-1 py-3 text-[13px] tracking-[0.05em] lowercase transition-colors ${
               isLogin
-                ? 'border-b-2 border-black text-black font-semibold'
+                ? 'border-b-2 border-black text-black font-semibold'     
                 : 'text-grey-medium hover:text-black'
             }`}
           >
@@ -109,7 +109,7 @@ export default function LoginPage() {
             }}
             className={`flex-1 py-3 text-[13px] tracking-[0.05em] lowercase transition-colors ${
               !isLogin
-                ? 'border-b-2 border-black text-black font-semibold'
+                ? 'border-b-2 border-black text-black font-semibold'     
                 : 'text-grey-medium hover:text-black'
             }`}
           >
@@ -169,7 +169,7 @@ export default function LoginPage() {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => setConfirmPassword(e.target.value)}     
                 disabled={isLoading}
                 className="w-full px-4 py-3 border border-grey-light bg-white text-black text-[15px] focus:border-black focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 required
@@ -190,7 +190,7 @@ export default function LoginPage() {
             className="w-full py-4 bg-violet text-white text-[13px] tracking-[0.05em] font-semibold lowercase hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <span className="flex items-center justify-center gap-2">
+              <span className="flex items-center justify-center gap-2">  
                 <svg
                   className="animate-spin h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -220,10 +220,15 @@ export default function LoginPage() {
             )}
           </button>
         </form>
-
-        {/* ✅ LIEN ADMIN RETIRÉ */}
-        {/* Plus de lien vers /admin/login pour des raisons de sécurité */}
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Chargement...</div>}>
+      <LoginForm />
+    </Suspense>
   )
 }

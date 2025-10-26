@@ -108,7 +108,7 @@ export default function CartPage() {
                           <h3 className="text-product mb-2">{item.name}</h3>
                           <div className="text-[13px] tracking-[0.05em] font-semibold lowercase text-grey-medium">
                             {item.size && <span>size: {item.size}</span>}
-                            {item.size && item.color && <span> • </span>}
+                            {item.size && item.color && <span> ï¿½ </span>}
                             {item.color && <span>color: {item.color}</span>}
                           </div>
                         </div>
@@ -167,7 +167,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Résumé */}
+            {/* Rï¿½sumï¿½ */}
             <div>
               <div className="border border-grey-light p-8 sticky top-32">
                 <h2 className="text-product mb-8">summary</h2>

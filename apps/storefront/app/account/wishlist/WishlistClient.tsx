@@ -43,7 +43,7 @@ export default function WishlistClient({ initialItems }: Props) {
       if (!response.ok) throw new Error('Failed to remove')
 
       setItems((prev) => prev.filter((item) => item.id !== itemId))
-      toast.success('Retiré des favoris')
+      toast.success('Retirï¿½ des favoris')
     } catch (error) {
       console.error('Error removing from wishlist:', error)
       toast.error('Erreur lors de la suppression')
@@ -66,7 +66,7 @@ export default function WishlistClient({ initialItems }: Props) {
       productId: product.id,
       imageId: primaryImage?.id,
     })
-    toast.success('Ajouté au panier')
+    toast.success('Ajoutï¿½ au panier')
   }
 
   if (!items.length) {
@@ -84,7 +84,7 @@ export default function WishlistClient({ initialItems }: Props) {
             href="/products"
             className="text-[13px] tracking-[0.05em] font-semibold lowercase text-black hover:text-grey-medium transition-colors"
           >
-            Découvrir nos produits ?
+            Dï¿½couvrir nos produits ?
           </Link>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function WishlistClient({ initialItems }: Props) {
           if (!item.product) return null
 
           const product = item.product
-          // Comparaison stricte avec true pour gérer le nullable
+          // Comparaison stricte avec true pour gï¿½rer le nullable
           const primaryImage =
             product.images?.find((img) => img.is_primary === true) ??
             product.images?.[0]
@@ -155,15 +155,15 @@ export default function WishlistClient({ initialItems }: Props) {
                     {product.sale_price ? (
                       <>
                         <span className="text-[13px] font-medium text-black">
-                          {product.sale_price}€
+                          {product.sale_price}ï¿½
                         </span>
                         <span className="text-[11px] text-grey-medium line-through">
-                          {product.price}€
+                          {product.price}ï¿½
                         </span>
                       </>
                     ) : (
                       <span className="text-[13px] font-medium text-black">
-                        {product.price}€
+                        {product.price}ï¿½
                       </span>
                     )}
                   </div>

@@ -97,3 +97,4 @@ export * from './stripe'
 // ============================================================================
 // Si le code existant utilise ApiResponse, on peut garder les deux noms
 export type { ApiResponseUnion as ApiResponseHelper } from './types-helpers'
+export { getCategoryWithChildren } from './types-helpers'

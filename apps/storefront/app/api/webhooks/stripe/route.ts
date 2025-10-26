@@ -1,9 +1,8 @@
-﻿// src/app/api/webhooks/stripe/route.ts
+// src/app/api/webhooks/stripe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@repo/database'
+import { stripe, decrementStockForOrder } from '@repo/database'
 import { supabaseAdmin } from '@repo/database/client-admin'
-import { sendOrderConfirmationHook } from '@repo/email/send-order-confirmation-hook'
-import { decrementStockForOrder } from '@repo/database'
+import { sendOrderConfirmationHook } from '@repo/email'
 
 function parseAddress(address: any): any {
   if (!address) return null
@@ -21,12 +20,12 @@ const emailSentForOrders = new Set<string>()
 
 async function sendConfirmationEmailSafe(orderId: string) {
   const uniqueId = `${Date.now()}-${Math.random()}`
-  console.log(`?? EMAIL ATTEMPT ${uniqueId} FOR ORDER ${orderId}`)
+  console.log(`🎯 EMAIL ATTEMPT ${uniqueId} FOR ORDER ${orderId}`)
 
-  // ? V�RIFICATION ANTI-DOUBLON
+  // ✅ VÉRIFICATION ANTI-DOUBLON
   if (emailSentForOrders.has(orderId)) {
     console.log(
-      `?? Email D�J� envoy� pour ${orderId}, SKIP (attempt ${uniqueId})`
+      `⚠️ Email DÉJÀ envoyé pour ${orderId}, SKIP (attempt ${uniqueId})`
     )
     return
   }
@@ -34,24 +33,24 @@ async function sendConfirmationEmailSafe(orderId: string) {
   try {
     const result = await sendOrderConfirmationHook(orderId)
     if (result.success) {
-      console.log(`? Email sent ${uniqueId}`)
+      console.log(`✅ Email sent ${uniqueId}`)
 
-      // ? MARQUER COMME ENVOY�
+      // ✅ MARQUER COMME ENVOYÉ
       emailSentForOrders.add(orderId)
 
-      // ? AUTO-CLEANUP apr�s 5 minutes (�viter memory leak)
+      // ✅ AUTO-CLEANUP après 5 minutes (éviter memory leak)
       setTimeout(
         () => {
           emailSentForOrders.delete(orderId)
-          console.log(`?? Cleaned up ${orderId} from email cache`)
+          console.log(`🧹 Cleaned up ${orderId} from email cache`)
         },
         5 * 60 * 1000
       )
     } else {
-      console.error(`?? Email error ${uniqueId}:`, result.error)
+      console.error(`⚠️ Email error ${uniqueId}:`, result.error)
     }
   } catch (error) {
-    console.error(`?? Email exception ${uniqueId}:`, error)
+    console.error(`❌ Email exception ${uniqueId}:`, error)
   }
 }
 
@@ -73,11 +72,11 @@ export async function POST(req: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET!
     )
   } catch (err: any) {
-    console.error('? Webhook error:', err.message)
+    console.error('❌ Webhook error:', err.message)
     return NextResponse.json({ error: err.message }, { status: 400 })
   }
 
-  console.log(`\n?? Webhook: ${event.type}`)
+  console.log(`\n🔔 Webhook: ${event.type}`)
 
   switch (event.type) {
     case 'checkout.session.completed':
@@ -90,24 +89,20 @@ export async function POST(req: NextRequest) {
       await handlePaymentIntentFailed(event.data.object)
       break
     default:
-      console.log(`?? Unhandled: ${event.type}`)
+      console.log(`ℹ️ Unhandled: ${event.type}`)
   }
 
   return NextResponse.json({ received: true })
 }
 
-// ???????????????????????????????????????????????????????
-// CHECKOUT.SESSION.COMPLETED (APPROCHE HYBRIDE INTELLIGENTE)
-// R�le : Cr�er items + confirmer paiement SI payment_intent existe
-// ???????????????????????????????????????????????????????
 async function handleCheckoutSessionCompleted(session: any) {
   console.log('\n-----------------------------------------------------------')
-  console.log('?? CHECKOUT SESSION COMPLETED')
+  console.log('🎉 CHECKOUT SESSION COMPLETED')
   console.log('-----------------------------------------------------------')
   console.log('Session ID:', session.id)
 
   try {
-    console.log('\n?? Step 1: Fetching full session...')
+    console.log('\n📋 Step 1: Fetching full session...')
     const fullSession = await stripe.checkout.sessions.retrieve(session.id, {
       expand: ['line_items', 'customer_details', 'payment_intent'],
     })
@@ -117,17 +112,16 @@ async function handleCheckoutSessionCompleted(session: any) {
         ? fullSession.payment_intent
         : fullSession.payment_intent?.id || null
 
-    // ? APPROCHE HYBRIDE : V�rifier si payment_intent existe
     if (!paymentIntentId) {
-      console.log('   ? No payment intent yet')
-      console.log('   ??  Will wait for payment_intent.succeeded to process')
+      console.log('   ⏳ No payment intent yet')
+      console.log('   ➡️  Will wait for payment_intent.succeeded to process')
       return
     }
 
-    console.log('   ? Payment Intent found:', paymentIntentId)
-    console.log('   ? This means payment is being processed by Stripe')
+    console.log('   ✅ Payment Intent found:', paymentIntentId)
+    console.log('   ✅ This means payment is being processed by Stripe')
 
-    console.log('\n?? Step 2: Finding order...')
+    console.log('\n📋 Step 2: Finding order...')
     const { data: orderRaw, error: orderError } = await supabaseAdmin
       .from('orders')
       .select(
@@ -137,14 +131,14 @@ async function handleCheckoutSessionCompleted(session: any) {
       .single()
 
     if (orderError || !orderRaw) {
-      console.error('   ? Order not found:', orderError)
+      console.error('   ❌ Order not found:', orderError)
       return
     }
 
-    console.log('   ? Order found:', orderRaw.order_number)
-    console.log('   ??  Current payment status:', orderRaw.payment_status)
+    console.log('   ✅ Order found:', orderRaw.order_number)
+    console.log('   ℹ️  Current payment status:', orderRaw.payment_status)
 
-    console.log('\n?? Step 3: Checking for existing items...')
+    console.log('\n📋 Step 3: Checking for existing items...')
     const { data: existingItems } = await supabaseAdmin
       .from('order_items')
       .select('id')
@@ -152,13 +146,11 @@ async function handleCheckoutSessionCompleted(session: any) {
       .limit(1)
 
     if (existingItems && existingItems.length > 0) {
-      console.log('   ?? Items already exist')
+      console.log('   ✅ Items already exist')
 
-      // ? FIX : Si items existent ET payment_status est 'paid'
-      // Alors on doit envoyer l'email + d�cr�menter stock
       if (orderRaw.payment_status === 'paid') {
         console.log(
-          '   ? Order already paid, sending email + decrementing stock'
+          '   ✅ Order already paid, sending email + decrementing stock'
         )
 
         await decrementStockForOrder(orderRaw.id)
@@ -167,50 +159,45 @@ async function handleCheckoutSessionCompleted(session: any) {
         console.log(
           '-----------------------------------------------------------'
         )
-        console.log('? SESSION COMPLETED (email sent)')
+        console.log('✅ SESSION COMPLETED (email sent)')
         console.log(
           '-----------------------------------------------------------\n'
         )
       } else {
         console.log(
-          '   ??  payment_intent.succeeded will handle final confirmation'
+          '   ➡️  payment_intent.succeeded will handle final confirmation'
         )
       }
       return
     }
 
-    console.log('   ? No items found, creating them now...')
+    console.log('   ⚠️ No items found, creating them now...')
 
-    // ? APPROCHE HYBRIDE : Tout faire ICI si payment_intent existe
     await createOrderItemsAndConfirm(orderRaw.id, fullSession, paymentIntentId)
 
     console.log('-----------------------------------------------------------')
-    console.log('? SESSION COMPLETED (full processing done)')
+    console.log('✅ SESSION COMPLETED (full processing done)')
     console.log('-----------------------------------------------------------\n')
   } catch (error) {
-    console.error('? Error:', error)
+    console.error('❌ Error:', error)
   }
 }
 
-// ???????????????????????????????????????????????????????
-// PAYMENT_INTENT.SUCCEEDED (BACKUP + S�CURIT�)
-// R�le : Confirmer le paiement si checkout.session.completed l'a rat�
-// ???????????????????????????????????????????????????????
 async function handlePaymentIntentSucceeded(paymentIntent: any) {
   console.log('\n-----------------------------------------------------------')
-  console.log('?? PAYMENT INTENT SUCCEEDED')
+  console.log('💳 PAYMENT INTENT SUCCEEDED')
   console.log('-----------------------------------------------------------')
   console.log('Payment Intent ID:', paymentIntent.id)
 
   try {
-    console.log('\n?? Step 1: Finding associated session...')
+    console.log('\n📋 Step 1: Finding associated session...')
     const sessions = await stripe.checkout.sessions.list({
       payment_intent: paymentIntent.id,
       limit: 1,
     })
 
     if (sessions.data.length === 0) {
-      console.log('   ?? No session found, updating directly')
+      console.log('   ⚠️ No session found, updating directly')
       await supabaseAdmin
         .from('orders')
         .update({
@@ -223,9 +210,9 @@ async function handlePaymentIntentSucceeded(paymentIntent: any) {
     }
 
     const sessionId = sessions.data[0].id
-    console.log('   ? Session found:', sessionId)
+    console.log('   ✅ Session found:', sessionId)
 
-    console.log('\n?? Step 2: Finding order...')
+    console.log('\n📋 Step 2: Finding order...')
     const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
       .select('id, order_number, payment_status')
@@ -233,29 +220,27 @@ async function handlePaymentIntentSucceeded(paymentIntent: any) {
       .single()
 
     if (orderError || !order) {
-      console.error('   ? Order not found:', orderError)
+      console.error('   ❌ Order not found:', orderError)
       return
     }
 
-    console.log('   ? Order found:', order.order_number)
-    console.log('   ??  Current payment status:', order.payment_status)
+    console.log('   ✅ Order found:', order.order_number)
+    console.log('   ℹ️  Current payment status:', order.payment_status)
 
-    // ? Si d�j� trait� par checkout.session.completed
     if (order.payment_status === 'paid') {
-      console.log('   ? Order already marked as paid')
-      console.log('   ??  checkout.session.completed handled everything')
+      console.log('   ✅ Order already marked as paid')
+      console.log('   ℹ️  checkout.session.completed handled everything')
       console.log('-----------------------------------------------------------')
-      console.log('? PAYMENT SUCCEEDED (already processed)')
+      console.log('✅ PAYMENT SUCCEEDED (already processed)')
       console.log(
         '-----------------------------------------------------------\n'
       )
       return
     }
 
-    // ?? Sinon, traiter maintenant (backup scenario)
-    console.log('   ??  Order still pending, processing now as backup')
+    console.log('   ➡️  Order still pending, processing now as backup')
 
-    console.log('\n?? Step 3: Checking for existing items...')
+    console.log('\n📋 Step 3: Checking for existing items...')
     const { data: existingItems } = await supabaseAdmin
       .from('order_items')
       .select('id')
@@ -263,7 +248,7 @@ async function handlePaymentIntentSucceeded(paymentIntent: any) {
       .limit(1)
 
     if (existingItems && existingItems.length > 0) {
-      console.log('   ? Items exist, just updating payment status')
+      console.log('   ✅ Items exist, just updating payment status')
 
       await supabaseAdmin
         .from('orders')
@@ -278,7 +263,7 @@ async function handlePaymentIntentSucceeded(paymentIntent: any) {
       await decrementStockForOrder(order.id)
       await sendConfirmationEmailSafe(order.id)
     } else {
-      console.log('   ??  No items exist, creating everything now')
+      console.log('   ➡️  No items exist, creating everything now')
 
       const fullSession = await stripe.checkout.sessions.retrieve(sessionId, {
         expand: ['line_items', 'customer_details'],
@@ -288,16 +273,13 @@ async function handlePaymentIntentSucceeded(paymentIntent: any) {
     }
 
     console.log('-----------------------------------------------------------')
-    console.log('? PAYMENT SUCCEEDED (backup processing done)')
+    console.log('✅ PAYMENT SUCCEEDED (backup processing done)')
     console.log('-----------------------------------------------------------\n')
   } catch (error) {
-    console.error('? Error:', error)
+    console.error('❌ Error:', error)
   }
 }
 
-// ???????????????????????????????????????????????????????
-// HELPER: Cr�er items + confirmer paiement + stock + email
-// ???????????????????????????????????????????????????????
 async function createOrderItemsAndConfirm(
   orderId: string,
   fullSession: any,
@@ -310,14 +292,11 @@ async function createOrderItemsAndConfirm(
         : paymentIntentId?.id || null
 
     if (!paymentIntentIdString) {
-      console.error('? No valid payment intent ID')
+      console.error('❌ No valid payment intent ID')
       return
     }
 
-    // ??????????????????????????????????????????
-    // STEP A: Mettre � jour le statut de paiement
-    // ??????????????????????????????????????????
-    console.log('\n?? Step A: Updating payment status...')
+    console.log('\n📋 Step A: Updating payment status...')
 
     const { error: updateError } = await supabaseAdmin
       .from('orders')
@@ -330,32 +309,29 @@ async function createOrderItemsAndConfirm(
       .eq('id', orderId)
 
     if (updateError) {
-      console.error('   ? Update error:', updateError)
+      console.error('   ❌ Update error:', updateError)
       return
     }
 
-    console.log('   ? Payment status updated to PAID')
+    console.log('   ✅ Payment status updated to PAID')
 
-    // ??????????????????????????????????????????
-    // STEP B: Cr�er les order_items
-    // ??????????????????????????????????????????
-    console.log('\n?? Step B: Creating order items...')
+    console.log('\n📋 Step B: Creating order items...')
 
     const itemsString = fullSession.metadata?.items || '[]'
     let items
     try {
       items = JSON.parse(itemsString)
     } catch (e) {
-      console.error('   ? Error parsing items:', e)
+      console.error('   ❌ Error parsing items:', e)
       return
     }
 
     if (!items || items.length === 0) {
-      console.error('   ? No items in metadata')
+      console.error('   ❌ No items in metadata')
       return
     }
 
-    console.log(`   ? Found ${items.length} items`)
+    console.log(`   ✅ Found ${items.length} items`)
 
     const orderItems = items.map((item: any) => ({
       order_id: orderId,
@@ -379,45 +355,36 @@ async function createOrderItemsAndConfirm(
 
     if (itemsError) {
       if (itemsError.code === '23505') {
-        console.log('   ?? Items already exist (race condition)')
+        console.log('   ⚠️ Items already exist (race condition)')
         return
       }
-      console.error('   ? Insert error:', itemsError)
+      console.error('   ❌ Insert error:', itemsError)
       return
     }
 
-    console.log(`   ? Created ${insertedItems.length} items`)
+    console.log(`   ✅ Created ${insertedItems.length} items`)
 
-    // ??????????????????????????????????????????
-    // STEP C: D�cr�menter le stock
-    // ??????????????????????????????????????????
-    console.log('\n?? Step C: Decrementing stock...')
+    console.log('\n📋 Step C: Decrementing stock...')
 
     const stockResult = await decrementStockForOrder(orderId)
     if (stockResult.success) {
-      console.log(`   ? Stock decremented: ${stockResult.decremented} items`)
+      console.log(`   ✅ Stock decremented: ${stockResult.decremented} items`)
     } else {
-      console.error('   ?? Stock errors:', stockResult.errors)
+      console.error('   ⚠️ Stock errors:', stockResult.errors)
     }
 
-    // ??????????????????????????????????????????
-    // STEP D: Envoyer l'email de confirmation
-    // ??????????????????????????????????????????
-    console.log('\n?? Step D: Sending confirmation email...')
+    console.log('\n📋 Step D: Sending confirmation email...')
 
     await sendConfirmationEmailSafe(orderId)
 
-    console.log('\n? Full order processing completed')
+    console.log('\n✅ Full order processing completed')
   } catch (error) {
-    console.error('? Error in createOrderItemsAndConfirm:', error)
+    console.error('❌ Error in createOrderItemsAndConfirm:', error)
   }
 }
 
-// ???????????????????????????????????????????????????????
-// PAYMENT_INTENT.FAILED
-// ???????????????????????????????????????????????????????
 async function handlePaymentIntentFailed(paymentIntent: any) {
-  console.log('\n? Payment failed:', paymentIntent.id)
+  console.log('\n❌ Payment failed:', paymentIntent.id)
 
   await supabaseAdmin
     .from('orders')
@@ -428,5 +395,5 @@ async function handlePaymentIntentFailed(paymentIntent: any) {
     })
     .eq('payment_intent_id', paymentIntent.id)
 
-  console.log('   ? Order marked as failed/cancelled')
+  console.log('   ✅ Order marked as failed/cancelled')
 }

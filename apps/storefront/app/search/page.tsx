@@ -43,7 +43,7 @@ function SearchContent() {
     { label: '.impact', href: '/impact' },
   ]
 
-  // Charger les catégories
+  // Charger les catï¿½gories
   useEffect(() => {
     async function loadCategories() {
       const { data } = await supabaseBrowser
@@ -86,7 +86,7 @@ function SearchContent() {
         )
       }
 
-      // Filtre catégorie
+      // Filtre catï¿½gorie
       if (selectedCategory) {
         query = query.eq('category_id', selectedCategory)
       }
@@ -130,14 +130,14 @@ function SearchContent() {
     }
   }, [searchQuery, selectedCategory, priceRange, sortBy, inStockOnly])
 
-  // Rechercher au chargement si query présente
+  // Rechercher au chargement si query prï¿½sente
   useEffect(() => {
     if (initialQuery) {
       searchProducts()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Rechercher quand les filtres changent (SEULEMENT si on a déjà fait une recherche)
+  // Rechercher quand les filtres changent (SEULEMENT si on a dï¿½jï¿½ fait une recherche)
   useEffect(() => {
     if (hasSearched && searchQuery.trim()) {
       searchProducts()
@@ -155,7 +155,7 @@ function SearchContent() {
     }
   }
 
-  // Clear search et retour à l'état initial
+  // Clear search et retour ï¿½ l'ï¿½tat initial
   const handleClearSearch = () => {
     setSearchQuery('')
     setProducts([])
@@ -164,7 +164,7 @@ function SearchContent() {
     router.push('/search', { scroll: false })
   }
 
-  // Recherche suggérée
+  // Recherche suggï¿½rï¿½e
   const handleSuggestedSearch = (term: string) => {
     setSearchQuery(term)
     router.push(`/search?q=${encodeURIComponent(term)}`, { scroll: false })
@@ -247,14 +247,14 @@ function SearchContent() {
           {/* Hint */}
           {searchQuery.trim() && !hasSearched && (
             <p className="text-[9px] text-black/25 mt-2 text-center tracking-wide">
-              Appuyez sur Entrée pour rechercher
+              Appuyez sur Entrï¿½e pour rechercher
             </p>
           )}
         </div>
 
-        {/* Contenu : Avant recherche OU Résultats */}
+        {/* Contenu : Avant recherche OU Rï¿½sultats */}
         {!hasSearched || !searchQuery.trim() ? (
-          /* État initial - Quick access (style Jacquemus) */
+          /* ï¿½tat initial - Quick access (style Jacquemus) */
           <div className="max-w-5xl mx-auto">
             <div>
               <h2 className="text-[11px] tracking-[0.1em] text-black/40 mb-6 text-center">
@@ -278,9 +278,9 @@ function SearchContent() {
             </div>
           </div>
         ) : (
-          /* Résultats de recherche */
+          /* Rï¿½sultats de recherche */
           <>
-            {/* En-tête résultats */}
+            {/* En-tï¿½te rï¿½sultats */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
@@ -318,7 +318,7 @@ function SearchContent() {
             {/* Panneau de filtres */}
             {showFilters && (
               <div className="mb-12 border-t border-black/10 pt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-                {/* Catégorie */}
+                {/* Catï¿½gorie */}
                 <div>
                   <h3 className="text-[11px] uppercase tracking-[0.1em] mb-4 text-black/60">
                     category
@@ -366,7 +366,7 @@ function SearchContent() {
                         className="w-full border border-black/10 px-3 py-2 text-[13px] focus:outline-none focus:border-black"
                         placeholder="min"
                       />
-                      <span className="text-black/40">—</span>
+                      <span className="text-black/40">ï¿½</span>
                       <input
                         type="number"
                         value={priceRange[1]}
@@ -397,7 +397,7 @@ function SearchContent() {
                   </select>
                 </div>
 
-                {/* Disponibilité */}
+                {/* Disponibilitï¿½ */}
                 <div>
                   <h3 className="text-[11px] uppercase tracking-[0.1em] mb-4 text-black/60">
                     availability
@@ -415,7 +415,7 @@ function SearchContent() {
               </div>
             )}
 
-            {/* Résultats */}
+            {/* Rï¿½sultats */}
             {isLoading ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                 {Array.from({ length: 8 }).map((_, i) => (

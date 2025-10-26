@@ -115,7 +115,7 @@ export default async function CollectionEditorialeDetailPage({
 
   return (
     <div className="min-h-screen bg-white">
-      <HeaderMinimal variant="default" showNavigation={true} />
+      <HeaderMinimal />
 
       <main className="pt-6">
         {/* Breadcrumb */}

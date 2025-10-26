@@ -3,11 +3,17 @@
 // ============================================
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@repo/database/client-server'
+import type { Database } from '@repo/database'
+
+type WishlistItem = Database['public']['Tables']['wishlist_items']['Row']
+type Product = Database['public']['Tables']['products']['Row']
+type ProductImage = Database['public']['Tables']['product_images']['Row']
 
 // GET: Récupérer la wishlist de l'utilisateur
 export async function GET() {
   try {
     const supabase = await createServerClient()
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -55,6 +61,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const supabase = await createServerClient()
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -87,13 +94,13 @@ export async function POST(req: Request) {
       )
     }
 
-    // Ajouter à la wishlist
-    const { data, error } = await supabase
+    // Ajouter à la wishlist - ✅ FIX: Typage explicite
+     const { data, error } = await supabase
       .from('wishlist_items')
       .insert({
         user_id: user.id,
         product_id: productId,
-      })
+      } as any)
       .select(
         `
         id,

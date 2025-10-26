@@ -2,7 +2,7 @@
 import HeaderMinimal from '@/components/layout/HeaderMinimal'
 import FooterMinimal from '@/components/layout/FooterMinimal'
 import ProductGridJacquemus from '@/components/products/ProductGridJacquemus'
-import { createServerClient } from '@repo/database'
+import { createServerClient, getCategoryWithChildren } from '@repo/database'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { ProductWithRelations } from '@/lib/types'
@@ -72,25 +72,10 @@ async function getProductsForCategory(
 ): Promise<ProductWithRelations[]> {
   const supabase = await createServerClient()
 
-  const { data: parentCategory, error: catErr } = await supabase
-    .from('categories')
-    .select('id, slug, name')
-    .eq('slug', categorySlug)
-    .eq('is_active', true)
-    .single()
+  // ✅ Utiliser le helper du package database
+  const { categoryIds } = await getCategoryWithChildren(supabase, categorySlug)
 
-  if (catErr || !parentCategory) return []
-
-  const { data: childCategories } = await supabase
-    .from('categories')
-    .select('id')
-    .eq('parent_id', parentCategory.id)
-    .eq('is_active', true)
-
-  const categoryIds = [
-    parentCategory.id,
-    ...(childCategories?.map((c) => c.id) || []),
-  ]
+  if (categoryIds.length === 0) return []
 
   const { data } = await supabase
     .from('products')

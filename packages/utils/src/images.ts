@@ -17,7 +17,7 @@ export function getOriginalPath(
 }
 
 /**
- * Chemin de stockage générique (alias de getOriginalPath pour compatibilité)
+ * Chemin de stockage generique (alias de getOriginalPath pour compatibilite)
  */
 export function getStoragePath(
   productId: string,
@@ -28,7 +28,7 @@ export function getStoragePath(
 }
 
 /**
- * Chemin d'une variante (taille + format spécifiques)
+ * Chemin d'une variante (taille + format specifiques)
  */
 export function getVariantPath(
   productId: string,
@@ -40,7 +40,7 @@ export function getVariantPath(
 }
 
 /**
- * Infère l'extension depuis le type MIME
+ * Infere l'extension depuis le type MIME
  */
 export function inferExtFromMime(mimeType: string): string {
   const map: Record<string, string> = {

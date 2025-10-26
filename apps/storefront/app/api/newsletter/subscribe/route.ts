@@ -1,9 +1,8 @@
-﻿// src/app/api/newsletter/subscribe/route.ts
+// src/app/api/newsletter/subscribe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@repo/database/client-admin'
-import { sendEmail } from '@repo/email/send'
+import { sendEmail, NewsletterConfirmation } from '@repo/email'
 import { z } from 'zod'
-import NewsletterConfirmation from '@repo/email/newsletter-confirmation'
 
 const subscribeSchema = z.object({
   email: z.string().email('Email invalide'),
@@ -16,7 +15,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const data = subscribeSchema.parse(body)
 
-    // V�rifier si email existe d�j�
+    // Vérifier si email existe déjà
     const { data: existing } = await supabaseAdmin
       .from('newsletter_subscribers')
       .select('id, status')
@@ -26,12 +25,12 @@ export async function POST(req: NextRequest) {
     if (existing) {
       if (existing.status === 'active') {
         return NextResponse.json(
-          { success: false, error: 'Cet email est d�j� inscrit' },
+          { success: false, error: 'Cet email est déjà inscrit' },
           { status: 409 }
         )
       }
 
-      // R�activer si d�sabonn�
+      // Réactiver si désabonné
       if (existing.status === 'unsubscribed') {
         await supabaseAdmin
           .from('newsletter_subscribers')
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
           .eq('id', existing.id)
       }
     } else {
-      // Cr�er nouvel abonn�
+      // Créer nouvel abonné
       const { error } = await supabaseAdmin
         .from('newsletter_subscribers')
         .insert({
@@ -54,7 +53,7 @@ export async function POST(req: NextRequest) {
       if (error) throw error
     }
 
-    // G�n�rer token de confirmation
+    // Générer token de confirmation
     const confirmToken = Buffer.from(
       JSON.stringify({
         email: data.email,
@@ -62,17 +61,14 @@ export async function POST(req: NextRequest) {
       })
     ).toString('base64')
 
-    // ? CORRECTION : Ajouter /api/ dans l'URL
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL || 'https://www.blancherenaudin.com'
     const confirmUrl = `${baseUrl}/api/newsletter/confirm?token=${confirmToken}`
 
-    console.log('?? Lien de confirmation g�n�r�:', confirmUrl)
-
     // Envoyer email de confirmation
     await sendEmail({
       to: data.email,
-      subject: 'Confirmez votre inscription � la newsletter',
+      subject: 'Confirmez votre inscription à la newsletter',
       from: 'newsletter@blancherenaudin.com',
       react: NewsletterConfirmation({
         firstName: data.first_name,
@@ -82,7 +78,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `Email de confirmation envoy� � ${data.email}`,
+      message: `Email de confirmation envoyé à ${data.email}`,
     })
   } catch (error) {
     if (error instanceof z.ZodError) {

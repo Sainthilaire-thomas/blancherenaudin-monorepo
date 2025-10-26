@@ -1,11 +1,11 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
-import { sendOrderConfirmationEmail } from '@repo/email/send'
+import { NextRequest, NextResponse } from 'next/server'
+import { sendOrderConfirmationEmail } from '@repo/email'
 
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json()
 
-    // Donn�es de test
+    // Données de test
     const testData = {
       orderNumber: 'BR-TEST-001',
       customerName: 'Marie',

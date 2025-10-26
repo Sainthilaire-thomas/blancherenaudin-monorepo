@@ -1,5 +1,5 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
-import { sendOrderShippedEmail } from '@repo/email/send'
+import { NextRequest, NextResponse } from 'next/server'
+import { sendOrderShippedEmail } from '@repo/email'
 
 export async function POST(request: NextRequest) {
   try {

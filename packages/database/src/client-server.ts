@@ -1,35 +1,31 @@
-// src/lib/supabase-server.ts
-import {
-  createServerClient as createSupabaseServerClient,
-  type CookieOptions,
-} from '@supabase/ssr'
+// packages/database/src/client-server.ts
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr'
 import type { Database } from './types'
-import { cookies } from "next/headers";
 
-// ✅ Fonction principale (votre code existant)
-export async function getServerSupabase() {
-  const cookieStore = await cookies();
+// ✅ Import dynamique pour éviter l'erreur dans les Client Components
+async function getCookies() {
+  const { cookies } = await import('next/headers')
+  return cookies()
+}
+
+export async function createServerClient() {
+  const cookieStore = await getCookies()
 
   return createSupabaseServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        // ✅ nouvelle API attendue par @supabase/ssr
         getAll() {
           return cookieStore.getAll()
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set({
-                name,
-                value,
-                ...(options as CookieOptions | undefined),
-              })
-            })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
           } catch {
-            // Appelé depuis un Server Component pur -> on ne peut pas écrire des cookies ici, c'est OK.
+            // Ignore si appelé depuis un Server Component
           }
         },
       },
@@ -37,6 +33,5 @@ export async function getServerSupabase() {
   )
 }
 
-// ✅ Alias pour l'API analytics (même fonction, nom différent)
-export const createServerClient = getServerSupabase;
-
+// Backward compatibility
+export const getServerSupabase = createServerClient

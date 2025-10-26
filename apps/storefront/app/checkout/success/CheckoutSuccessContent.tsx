@@ -95,7 +95,7 @@ export default function CheckoutSuccessContent() {
 
       <main className="pt-32 pb-24 px-8">
         <div className="max-w-3xl mx-auto">
-          {/* En-tête centré */}
+          {/* En-tï¿½te centrï¿½ */}
           <div className="text-center mb-12">
             <div className="mb-8 flex justify-center">
               <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
@@ -116,7 +116,7 @@ export default function CheckoutSuccessContent() {
             </p>
           </div>
 
-          {/* Liste des produits commandés */}
+          {/* Liste des produits commandï¿½s */}
           {items.length > 0 && (
             <div className="mb-12 border-t border-b border-grey-light py-8">
               <h2 className="text-product mb-6">YOUR ORDER</h2>
@@ -138,7 +138,7 @@ export default function CheckoutSuccessContent() {
                       )}
                     </div>
 
-                    {/* Détails produit */}
+                    {/* Dï¿½tails produit */}
                     <div className="flex-1">
                       <h3 className="text-product mb-1">
                         {item.product_name || 'Product'}
@@ -156,7 +156,7 @@ export default function CheckoutSuccessContent() {
                     {/* Prix */}
                     <div className="text-right">
                       <p className="text-[13px] tracking-[0.05em] font-semibold">
-                        €{Number(item.total_price).toFixed(2)}
+                        ï¿½{Number(item.total_price).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -167,7 +167,7 @@ export default function CheckoutSuccessContent() {
               <div className="mt-6 pt-6 border-t border-grey-light flex justify-between items-center">
                 <span className="text-product">TOTAL</span>
                 <span className="text-[15px] tracking-[0.05em] font-bold">
-                  €{Number(order.total_amount).toFixed(2)}
+                  ï¿½{Number(order.total_amount).toFixed(2)}
                 </span>
               </div>
             </div>

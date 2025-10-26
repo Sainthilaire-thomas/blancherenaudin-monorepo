@@ -19,7 +19,7 @@ export function formatDate(date: Date | string, pattern: string = "dd/MM/yyyy"):
 }
 
 /**
- * Formate un numéro de téléphone français
+ * Formate un numero de telephone francais
  */
 export function formatPhone(phone: string): string {
   const cleaned = phone.replace(/\D/g, "")
@@ -39,7 +39,7 @@ export function truncate(text: string, length: number): string {
 }
 
 /**
- * Génère un slug depuis un titre
+ * Genere un slug depuis un titre
  */
 export function slugify(text: string): string {
   return text

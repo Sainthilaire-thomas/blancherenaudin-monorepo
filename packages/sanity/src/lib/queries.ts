@@ -1,8 +1,7 @@
-// src/lib/queries.ts
-import { groq } from 'next-sanity'
+// packages/sanity/src/lib/queries.ts
 
 // === Homepage ===
-export const HOMEPAGE_QUERY = groq`*[_type=="homepage" && _id == "homepage-singleton"][0]{
+export const HOMEPAGE_QUERY = `*[_type=="homepage" && _id == "homepage-singleton"][0]{
   hero {
     title,
     subtitle,
@@ -44,10 +43,8 @@ export const HOMEPAGE_QUERY = groq`*[_type=="homepage" && _id == "homepage-singl
 }`
 
 // === Collections éditoriales ===
-
-// Liste (uniquement publiées)
-export const COLLECTIONS_EDITORIALES_QUERY = groq`*[
-  _type == "collectionEditoriale" && coalesce(published, true) == true
+export const COLLECTIONS_EDITORIALES_QUERY = `*[
+  _type == "collectionEditoriale" && coalesce(published, true) == true   
 ] | order(_createdAt desc) {
   _id,
   name,
@@ -58,8 +55,7 @@ export const COLLECTIONS_EDITORIALES_QUERY = groq`*[
   seo
 }`
 
-// Détail par slug (uniquement publiée)
-export const COLLECTION_EDITORIALE_QUERY = groq`*[
+export const COLLECTION_EDITORIALE_QUERY = `*[
   _type=="collectionEditoriale" &&
   slug.current == $slug &&
   coalesce(published, true) == true
@@ -72,10 +68,8 @@ export const COLLECTION_EDITORIALE_QUERY = groq`*[
   seo
 }`
 
-// === Lookbooks (affichés comme "Silhouettes" sur le site) ===
-
-// Liste (uniquement publiés)
-export const LOOKBOOKS_QUERY = groq`*[
+// === Lookbooks ===
+export const LOOKBOOKS_QUERY = `*[
   _type == "lookbook" && coalesce(published, true) == true
 ] | order(_createdAt desc) {
   _id,
@@ -87,8 +81,7 @@ export const LOOKBOOKS_QUERY = groq`*[
   seo
 }`
 
-// Détail par slug (uniquement publié)
-export const LOOKBOOK_QUERY = groq`*[
+export const LOOKBOOK_QUERY = `*[
   _type=="lookbook" &&
   slug.current == $slug &&
   coalesce(published, true) == true
@@ -103,8 +96,7 @@ export const LOOKBOOK_QUERY = groq`*[
 }`
 
 // === Pages statiques ===
-
-export const PAGE_QUERY = groq`*[_type=="page" && slug.current == $slug][0]{
+export const PAGE_QUERY = `*[_type=="page" && slug.current == $slug][0]{
   _id,
   title,
   slug,
@@ -112,7 +104,7 @@ export const PAGE_QUERY = groq`*[_type=="page" && slug.current == $slug][0]{
   seo
 }`
 
-export const PAGES_QUERY = groq`*[_type=="page"] | order(_createdAt desc) {
+export const PAGES_QUERY = `*[_type=="page"] | order(_createdAt desc) {
   _id,
   title,
   slug,

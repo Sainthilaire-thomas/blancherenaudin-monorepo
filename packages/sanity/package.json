@@ -18,11 +18,8 @@
     "lint": "eslint src/"
   },
   "dependencies": {
-    "@sanity/client": "^7.12.0",
-    "@sanity/image-url": "^1.0.2",
-    "@sanity/vision": "^4.11.0",
-    "next-sanity": "^9.12.3",
-    "sanity": "^3.0.0"
+    "@sanity/client": "^6.22.7",
+    "@sanity/image-url": "^1.0.2"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",

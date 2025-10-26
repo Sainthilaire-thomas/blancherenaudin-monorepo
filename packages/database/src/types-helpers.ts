@@ -376,3 +376,53 @@ export function createPaginatedResponse<T>(
     }
   }
 }
+
+// ==========================================
+// CATEGORY HELPERS
+// ==========================================
+
+/**
+ * Helper pour récupérer une catégorie avec ses enfants
+ * Gère correctement les types Supabase pour éviter les 'never'
+ * 
+ * @example
+ * `	ypescript
+ * const { categoryIds } = await getCategoryWithChildren(supabase, 'hauts')
+ * // categoryIds contient l'ID parent + tous les IDs enfants
+ * `
+ */
+export async function getCategoryWithChildren(
+  supabase: any,
+  categorySlug: string
+): Promise<{
+  parentCategory: Pick<Category, 'id' | 'slug' | 'name'> | null
+  childCategories: Array<Pick<Category, 'id'>> | null
+  categoryIds: string[]
+}> {
+  const { data: parentCategory, error: catErr } = await supabase
+    .from('categories')
+    .select('id, slug, name')
+    .eq('slug', categorySlug)
+    .eq('is_active', true)
+    .single()
+
+  if (catErr || !parentCategory) {
+    return { parentCategory: null, childCategories: null, categoryIds: [] }
+  }
+
+  const { data: childCategoriesRaw } = await supabase
+    .from('categories')
+    .select('id')
+    .eq('parent_id', parentCategory.id)
+    .eq('is_active', true)
+
+  // ✅ Cast explicite pour éviter le type 'never'
+  const childCategories = childCategoriesRaw as Array<Pick<Category, 'id'>> | null
+
+  const categoryIds: string[] = [
+    parentCategory.id,
+    ...(childCategories?.map((c) => c.id) || []),
+  ]
+
+  return { parentCategory, childCategories, categoryIds }
+}
