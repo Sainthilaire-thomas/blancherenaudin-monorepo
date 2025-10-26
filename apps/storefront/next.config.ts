@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     '@repo/analytics',
     '@repo/sanity',
     '@repo/utils',
+    'recharts',
   ],
 
   images: {

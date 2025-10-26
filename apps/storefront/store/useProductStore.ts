@@ -1,6 +1,6 @@
 // src/store/useProductStore.ts
 import { create } from 'zustand'
-import type { ProductWithRelations } from '@/lib/types'
+import type { ProductWithRelations } from '@repo/database'
 
 export interface ProductState {
   products: ProductWithRelations[]
@@ -50,7 +50,7 @@ export const useProductStore = create<ProductState>((set) => ({
     } catch (error) {
       console.error('Error fetching featured products:', error)
       set({
-        error: 'Erreur lors du chargement des produits Ã  la une',
+        error: 'Erreur lors du chargement des produits à la une',
         isLoading: false,
       })
     }

@@ -1,16 +1,16 @@
 ﻿import type { Database } from '@repo/database'
 
-// ✅ Tables principales
+// ? Tables principales
 export type Product = Database['public']['Tables']['products']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Collection = Database['public']['Tables']['collections']['Row']
-export type WishlistItem = Database['public']['Tables']['wishlist_items']['Row'] // ✅ CORRIGÉ
+export type WishlistItem = Database['public']['Tables']['wishlist_items']['Row'] // ? CORRIG�
 export type Order = Database['public']['Tables']['orders']['Row']
 export type OrderItem = Database['public']['Tables']['order_items']['Row']
 export type ProductVariant = Database['public']['Tables']['product_variants']['Row']
 export type ProductImage = Database['public']['Tables']['product_images']['Row']
 
-// Types métier dérivés
+// Types m�tier d�riv�s
 export interface ProductWithImages extends Product {
   images: ProductImage[]
 }
@@ -71,26 +71,37 @@ export interface CheckoutFormData {
   shipping_method: string
 }
 
-// 🔧 Helper : Récupérer l'image principale d'un produit
-// 🔧 Helper : Récupérer l'image principale d'un produit
-// 🔧 Helper : Récupérer l'image principale d'un produit
+// ?? Helper : R�cup�rer l'image principale d'un produit
+// ?? Helper : R�cup�rer l'image principale d'un produit
+// ?? Helper : R�cup�rer l'image principale d'un produit
 export function getPrimaryImage(product: ProductWithDetails): ProductImage | null {
   if (!product.images || product.images.length === 0) {
     return null
   }
   
-  // Chercher l'image marquée comme primaire
+  // Chercher l'image marqu�e comme primaire
   const primaryImage = product.images.find((img: ProductImage) => img.is_primary)
   if (primaryImage) {
     return primaryImage
   }
   
-  // Sinon, prendre la première par ordre de sort_order
+  // Sinon, prendre la premi�re par ordre de sort_order
   const sortedImages = [...product.images].sort(
     (a: ProductImage, b: ProductImage) => (a.sort_order ?? 999) - (b.sort_order ?? 999)
   )
   return sortedImages[0] || null
 }
 
-// Type alias pour compatibilité
+// Récupérer les images triées par sort_order
+export function getSortedImages(product: ProductWithDetails): ProductImage[] {
+  if (!product.images || product.images.length === 0) {
+    return []
+  }
+  
+  return [...product.images].sort(
+    (a: ProductImage, b: ProductImage) => (a.sort_order ?? 999) - (b.sort_order ?? 999)
+  )
+}
+
+// Type alias pour compatibilit�
 export type ProductWithDetails = ProductWithImagesAndVariants

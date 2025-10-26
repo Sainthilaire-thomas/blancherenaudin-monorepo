@@ -1,34 +1,34 @@
-ï»¿import { z } from "zod"
+import { z } from "zod"
 
 /**
- * SchÃ©ma email
+ * Schéma email
  */
 export const emailSchema = z.string().email("Email invalide")
 
 /**
- * SchÃ©ma tÃ©lÃ©phone franÃ§ais
+ * Schéma téléphone français
  */
 export const phoneSchema = z
   .string()
-  .regex(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/, "NumÃ©ro de tÃ©lÃ©phone invalide")
+  .regex(/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/, "Numéro de téléphone invalide")
 
 /**
- * SchÃ©ma code postal franÃ§ais
+ * Schéma code postal français
  */
 export const postalCodeSchema = z
   .string()
   .regex(/^[0-9]{5}$/, "Code postal invalide")
 
 /**
- * SchÃ©ma prix
+ * Schéma prix
  */
 export const priceSchema = z
   .number()
-  .positive("Le prix doit Ãªtre positif")
-  .multipleOf(0.01, "Le prix doit avoir au maximum 2 dÃ©cimales")
+  .positive("Le prix doit être positif")
+  .multipleOf(0.01, "Le prix doit avoir au maximum 2 décimales")
 
 /**
- * Helper pour valider une donnÃ©e
+ * Helper pour valider une donnée
  */
 export function validate<T>(schema: z.ZodSchema<T>, data: unknown): { success: true; data: T } | { success: false; errors: string[] } {
   const result = schema.safeParse(data)

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { cn } from "@/lib/utils"; // ← Reste local, c'est correct
+import { cn } from '@repo/utils'; // ? Reste local, c'est correct
 
 interface LazyImageProps {
   src: string;

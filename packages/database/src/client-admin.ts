@@ -1,8 +1,8 @@
-﻿import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 import type { Database } from './types'
 
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-// âœ… accepte SERVICE_ROLE_KEY ou SERVICE_KEY
+// ✅ accepte SERVICE_ROLE_KEY ou SERVICE_KEY
 const SERVICE_KEY =
   process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SERVICE_KEY
 

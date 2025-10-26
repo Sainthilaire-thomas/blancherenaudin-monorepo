@@ -2,10 +2,10 @@
 import { track } from '@vercel/analytics'
 
 /**
- * Helper pour tracker les Ã©vÃ©nements e-commerce avec Vercel Analytics
+ * Helper pour tracker les événements e-commerce avec Vercel Analytics
  *
  * Usage:
- * import { trackEvent } from '@/lib/analytics/track'
+ * import { trackEvent } from '@repo/analytics''
  *
  * trackEvent.viewProduct(product.id, product.name, product.price)
  */
@@ -61,8 +61,8 @@ export const trackEvent = {
   },
 
   /**
-   * Track quand un achat est complÃ©tÃ©
-   * Note: Les dÃ©tails des produits sont sÃ©rialisÃ©s en JSON string pour compatibilitÃ© Vercel Analytics
+   * Track quand un achat est complété
+   * Note: Les détails des produits sont sérialisés en JSON string pour compatibilité Vercel Analytics
    */
   purchase: (
     orderId: string,
@@ -79,16 +79,16 @@ export const trackEvent = {
       order_id: orderId,
       value: totalAmount,
       items: itemCount,
-      // SÃ©rialiser le tableau en JSON string pour Ã©viter les erreurs de type
+      // Sérialiser le tableau en JSON string pour éviter les erreurs de type
       products_json: JSON.stringify(products),
-      // Ajouter aussi des infos agrÃ©gÃ©es directement accessibles
+      // Ajouter aussi des infos agrégées directement accessibles
       product_ids: products.map((p) => p.id).join(','),
       product_names: products.map((p) => p.name).join(','),
     })
   },
 
   /**
-   * Track quand un utilisateur ajoute un produit Ã  sa wishlist
+   * Track quand un utilisateur ajoute un produit à sa wishlist
    */
   addToWishlist: (productId: string, productName: string) => {
     track('add_to_wishlist', {
@@ -122,7 +122,7 @@ export const trackEvent = {
    */
   subscribeNewsletter: (email: string) => {
     track('subscribe_newsletter', {
-      // Hash l'email pour la confidentialitÃ© si nÃ©cessaire
+      // Hash l'email pour la confidentialité si nécessaire
       email_domain: email.split('@')[1] || 'unknown',
     })
   },

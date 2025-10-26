@@ -1,1 +1,1 @@
-﻿export { requireAdmin } from './requireAdmin'
+export { requireAdmin } from './requireAdmin'

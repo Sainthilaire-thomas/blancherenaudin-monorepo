@@ -3,8 +3,8 @@
 
 import Link from 'next/link'
 import { ProductImage } from '@/components/products/ProductImage'
-import type { ProductWithRelations } from '@/lib/types'
-import { getPrimaryImage } from '@/lib/types'
+import type { ProductWithRelations } from '@repo/database'
+import { getPrimaryImage } from '@repo/database'
 
 export default function ProductGridJacquemus({
   products,
@@ -46,12 +46,12 @@ export default function ProductGridJacquemus({
               {(product.stock_quantity ?? 0) <= 0 && (
                 <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
                   <span className="text-[10px] tracking-[0.15em] uppercase text-black/40">
-                    Ã‰puisÃ©
+                    Épuisé
                   </span>
                 </div>
               )}
 
-              {/* Overlay avec infos au hover - affichÃ© par-dessus l'image */}
+              {/* Overlay avec infos au hover - affiché par-dessus l'image */}
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4">
                 <h3 className="text-[13px] font-light tracking-[0.05em] text-white mb-2 text-center">
                   {product.name}
@@ -59,7 +59,7 @@ export default function ProductGridJacquemus({
 
                 <div className="flex items-center gap-2">
                   <span className="text-[13px] font-normal text-white">
-                    {price}â‚¬
+                    {price}€
                   </span>
                 </div>
               </div>

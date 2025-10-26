@@ -1,5 +1,5 @@
-ï»¿/**
- * Configuration et constantes partagÃ©es
+/**
+ * Configuration et constantes partagées
  */
 
 // URLs
@@ -20,8 +20,8 @@ export const RESEND_API_KEY = process.env.RESEND_API_KEY
 export const EMAIL_FROM = process.env.EMAIL_FROM || "noreply@blancherenaudin.com"
 
 // Business rules
-export const FREE_SHIPPING_THRESHOLD = 100 // â‚¬
-export const DEFAULT_SHIPPING_COST = 8.5 // â‚¬
+export const FREE_SHIPPING_THRESHOLD = 100 // €
+export const DEFAULT_SHIPPING_COST = 8.5 // €
 export const MAX_CART_QUANTITY = 99
 export const SESSION_COOKIE_NAME = "sb-session"
 

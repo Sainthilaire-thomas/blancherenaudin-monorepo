@@ -1,6 +1,6 @@
 // src/store/useWishListStore.ts
 import { create } from 'zustand'
-import type { WishlistItem } from '@/lib/types'
+import type { WishlistItem } from '@repo/database'
 
 interface WishlistState {
   items: WishlistItem[]
@@ -27,7 +27,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
       const response = await fetch(`/api/wishlist?userId=${userId}`)
       const { data } = await response.json()
 
-      // âœ… Filtrer les items oÃ¹ product n'est pas null
+      // ? Filtrer les items où product n'est pas null
       const validItems = (data || []).filter(
         (item: any) => item.product !== null
       )
@@ -56,7 +56,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
 
       const { data } = await response.json()
 
-      // âœ… VÃ©rifier que product n'est pas null avant d'ajouter
+      // ? Vérifier que product n'est pas null avant d'ajouter
       if (data?.product) {
         set((state) => ({
           items: [...state.items, data],
@@ -68,7 +68,7 @@ export const useWishlistStore = create<WishlistState>((set, get) => ({
     } catch (error) {
       console.error('Error adding to wishlist:', error)
       set({
-        error: "Erreur lors de l'ajout Ã  la wishlist",
+        error: "Erreur lors de l'ajout à la wishlist",
         isLoading: false,
       })
     }

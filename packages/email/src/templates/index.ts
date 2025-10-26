@@ -1,4 +1,4 @@
-﻿// Templates avec exports nommés
+// Templates avec exports nomm�s
 export { NewsletterCampaignEmail } from './newsletter-campaign'
 export { OrderConfirmationEmail } from './order-confirmation'
 export { OrderDeliveredEmail } from './order-delivered'

@@ -1,4 +1,4 @@
-# 📘 Guide de Migration : Architecture Modulaire (Version complète)
+# n📘 Guide de Migration : Architecture Modulaire (Version complète)
 
 ## Projet site_v1_next → blancherenaudin-monorepo
 

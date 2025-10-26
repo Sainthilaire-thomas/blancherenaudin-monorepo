@@ -1,4 +1,4 @@
-ï»¿import { format } from "date-fns"
+import { format } from "date-fns"
 
 /**
  * Formate un prix en euros
@@ -19,7 +19,7 @@ export function formatDate(date: Date | string, pattern: string = "dd/MM/yyyy"):
 }
 
 /**
- * Formate un numÃ©ro de tÃ©lÃ©phone franÃ§ais
+ * Formate un numéro de téléphone français
  */
 export function formatPhone(phone: string): string {
   const cleaned = phone.replace(/\D/g, "")
@@ -39,7 +39,7 @@ export function truncate(text: string, length: number): string {
 }
 
 /**
- * GÃ©nÃ¨re un slug depuis un titre
+ * Génère un slug depuis un titre
  */
 export function slugify(text: string): string {
   return text
