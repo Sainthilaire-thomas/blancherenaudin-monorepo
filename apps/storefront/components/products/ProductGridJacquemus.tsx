@@ -4,7 +4,7 @@
 import Link from 'next/link'
 import { ProductImage } from '@/components/products/ProductImage'
 import type { ProductWithRelations } from '@repo/database'
-import { getPrimaryImage } from '@repo/database'
+import { getPrimaryImage } from '@/lib/product-helpers'
 
 export default function ProductGridJacquemus({
   products,

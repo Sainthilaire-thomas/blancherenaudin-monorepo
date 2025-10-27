@@ -16,7 +16,7 @@
     --violet-soft: hsl(271 74% 45%);
     --violet-subtle: hsl(271 30% 92%);
 
-    /* Variables systeme */
+    /* Variables système */
     --background: hsl(0 0% 100%);
     --foreground: hsl(0 0% 0%);
     --border: hsl(0 0% 95%);
@@ -50,7 +50,7 @@
   }
 
   body {
-    font-family: var(--font-archivo-narrow), sans-serif;
+    font-family: var(--font-archivo-narrow);
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -66,7 +66,7 @@
 
 /* === TYPOGRAPHIE JACQUEMUS === */
 .text-hero {
-  font-family: var(--font-archivo-black), sans-serif;
+  font-family: var(--font-archivo-black);
   font-size: clamp(4rem, 10vw, 7.5rem);
   line-height: 0.9;
   letter-spacing: -0.03em;
@@ -74,7 +74,7 @@
 }
 
 .text-section {
-  font-family: var(--font-archivo-black), sans-serif;
+  font-family: var(--font-archivo-black);
   font-size: clamp(2.5rem, 5vw, 3.75rem);
   line-height: 1;
   letter-spacing: -0.02em;
@@ -82,7 +82,7 @@
 }
 
 .text-product {
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
   font-size: clamp(0.875rem, 1.5vw, 1rem);
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -90,7 +90,7 @@
 }
 
 .text-body {
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
   font-size: clamp(0.875rem, 1.5vw, 1rem);
   line-height: 1.6;
   font-weight: 400;
@@ -100,7 +100,7 @@
 .btn-primary {
   @apply inline-flex items-center justify-center px-10 py-4;
   @apply bg-black text-white;
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -117,7 +117,7 @@
 .btn-primary-inverse {
   @apply inline-flex items-center justify-center px-10 py-4;
   @apply bg-white text-black;
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -129,7 +129,7 @@
 .btn-secondary {
   @apply inline-flex items-center justify-center px-10 py-4;
   @apply bg-transparent text-black border border-black;
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -144,7 +144,7 @@
 .btn-text {
   @apply inline-flex items-center gap-2 p-0;
   @apply bg-transparent text-black border-b border-black;
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -215,11 +215,11 @@ select:focus-visible {
 }
 
 .font-title {
-  font-family: var(--font-archivo-black), sans-serif;
+  font-family: var(--font-archivo-black);
 }
 
 .font-text {
-  font-family: var(--font-archivo-narrow), sans-serif;
+  font-family: var(--font-archivo-narrow);
 }
 
 .section-spacing {

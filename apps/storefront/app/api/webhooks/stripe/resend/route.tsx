@@ -1,6 +1,6 @@
 // src/app/api/webhooks/resend/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@repo/database/client-admin'
+import { supabaseAdmin } from '@repo/database/server'
 import { Webhook } from 'svix'
 
 export const runtime = 'nodejs'

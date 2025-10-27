@@ -2,7 +2,7 @@
 import HeaderMinimal from '@/components/layout/HeaderMinimal'
 import FooterMinimal from '@/components/layout/FooterMinimal'
 import ProductGridJacquemus from '@/components/products/ProductGridJacquemus'
-import { createServerClient, getCategoryWithChildren } from '@repo/database'
+import { createServerClient, getCategoryWithChildren } from '@repo/database/server'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { ProductWithRelations } from '@/lib/types'

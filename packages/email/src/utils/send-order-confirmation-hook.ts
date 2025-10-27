@@ -1,5 +1,5 @@
 // packages/email/src/utils/send-order-confirmation-hook.ts
-import { supabaseAdmin } from '@repo/database'
+import { supabaseAdmin } from '@repo/database/server'
 import { sendOrderConfirmationEmail } from './send'
 
 // Type partiel pour les images

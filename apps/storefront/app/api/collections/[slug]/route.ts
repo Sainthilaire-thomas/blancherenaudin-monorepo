@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from "@repo/database"; // ⬅️ remplace l'import
+import { createServerClient } from '@repo/database/server'; // ⬅️ remplace l'import
 
 export async function GET(
   _req: Request,

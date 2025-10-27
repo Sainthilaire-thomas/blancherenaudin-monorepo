@@ -1,7 +1,7 @@
 // src/app/api/webhooks/stripe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, decrementStockForOrder } from '@repo/database'
-import { supabaseAdmin } from '@repo/database/client-admin'
+import { stripe, decrementStockForOrder } from '@repo/database/server'
+import { supabaseAdmin } from '@repo/database/server'
 import { sendOrderConfirmationHook } from '@repo/email'
 
 function parseAddress(address: any): any {

@@ -5,7 +5,7 @@ import { Button } from '@repo/ui';
 import { ArrowLeft } from "lucide-react";
 import ProductGridClient from "./product-grid-client";
 import { notFound } from "next/navigation";
-import { createServerClient } from "@repo/database";
+import { createServerClient } from '@repo/database/server';
 
 export const revalidate = 0;
 

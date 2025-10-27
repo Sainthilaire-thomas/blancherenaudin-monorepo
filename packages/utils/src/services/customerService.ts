@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@repo/database'
+import { supabaseAdmin } from '@repo/database/server'
 
 export async function getCustomers(params: {
   q?: string

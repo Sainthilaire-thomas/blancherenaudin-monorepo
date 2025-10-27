@@ -1,6 +1,6 @@
 // src/app/api/newsletter/confirm/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@repo/database/client-admin'
+import { supabaseAdmin } from '@repo/database/server'
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token')

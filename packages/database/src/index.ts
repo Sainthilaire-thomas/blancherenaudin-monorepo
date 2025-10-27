@@ -1,5 +1,4 @@
 // packages/database/src/index.ts
-
 // ============================================================================
 // EXPORTS DE BASE (depuis types.ts)
 // ============================================================================
@@ -20,37 +19,31 @@ export type {
   CustomerWithOrders,
   CollectionWithProducts,
   WishlistItemWithProduct,
-  
   // Inserts avec relations
   OrderWithItemsInsert,
   ProductWithRelationsInsert,
-  
   // Utilities
   AddressJson,
   OrderWithTypedAddresses,
   SupabaseQuery,
-  
   // Enums types
   OrderStatusType,
   PaymentStatusType,
   FulfillmentStatusType,
-  
   // ✅ Types API (avec des noms différents pour éviter les conflits)
   ApiSuccessResponse,
   ApiErrorResponse,
-  ApiResponseUnion,  // Au lieu de ApiResponse qui existe déjà dans types.ts
+  ApiResponseUnion,  // Au lieu de ApiResponse qui existe déjà dans types.ts    
   NextApiHandler,
   PaginatedApiResponse,
   PaginatedData,
   PaginationMeta,
-  
   // Request types
   CreateOrderRequest,
   UpdateProductStockRequest,
   CreateProductRequest,
   SearchProductsQuery,
   AddToWishlistRequest,
-  
   // Type export
   DatabaseHelperTypes
 } from "./types-helpers"
@@ -61,40 +54,38 @@ export {
   OrderStatusEnum,
   PaymentStatusEnum,
   FulfillmentStatusEnum,
-  
   // Type guards (ce sont des fonctions)
   isOrderWithItems,
   isProductWithImages,
   isApiSuccess,
   isApiError,
-  
   // Helpers (ce sont des fonctions)
   createApiSuccess,
   createApiError,
   createPaginatedResponse,
 } from "./types-helpers"
 
-// ============================================================================
-// EXPORTS CLIENTS SUPABASE
-// ============================================================================
+// ============================================================================ 
+// EXPORTS CLIENTS SUPABASE (SAFE - Sans Admin)
+// ============================================================================ 
 export { createBrowserClient } from "./client-browser"
 export { getServerSupabase, createServerClient } from "./client-server"
-export { supabaseAdmin } from "./client-admin"
-export { supabaseAdmin as createAdminClient } from "./client-admin"
 
-// ============================================================================
+// ❌ RETIRÉ : supabaseAdmin est maintenant dans /server uniquement
+// export { supabaseAdmin } from "./client-admin"
+// export { supabaseAdmin as createAdminClient } from "./client-admin"
+
+// ============================================================================ 
 // EXPORTS STOCK MANAGEMENT
-// ============================================================================
-export * from './stock/decrement-stock'
+// ============================================================================ 
+// ❌ MOVED TO /server - export * from './stock/decrement-stock'
 
-// ============================================================================
+// ============================================================================ 
 // EXPORTS STRIPE
-// ============================================================================
-export * from './stripe'
-
-// ============================================================================
+// ============================================================================ 
+// // ============================================================================ 
 // RE-EXPORT EXPLICITE POUR COMPATIBILITÉ
-// ============================================================================
-// Si le code existant utilise ApiResponse, on peut garder les deux noms
+// ============================================================================ 
+// Si le code existant utilise ApiResponse, on peut garder les deux noms        
 export type { ApiResponseUnion as ApiResponseHelper } from './types-helpers'
 export { getCategoryWithChildren } from './types-helpers'

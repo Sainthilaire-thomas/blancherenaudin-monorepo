@@ -1,7 +1,7 @@
 // src/app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@repo/database'
-import { supabaseAdmin } from '@repo/database/client-admin'
+import { stripe } from '@repo/database/server'
+import { supabaseAdmin } from '@repo/database/server'
 
 interface CheckoutItem {
   product_id: string

@@ -1,8 +1,8 @@
 // src/app/api/checkout/create-session/route.tsx
 
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@repo/database'
-import { supabaseAdmin } from '@repo/database/client-admin'
+import { stripe } from '@repo/database/server'
+import { supabaseAdmin } from '@repo/database/server'
 
 interface CartItem {
   productId: string

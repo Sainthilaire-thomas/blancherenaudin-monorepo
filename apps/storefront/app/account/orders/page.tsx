@@ -1,7 +1,7 @@
 // apps/storefront/app/account/orders/page.tsx
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
-import { getServerSupabase, type OrderWithDetails } from '@repo/database'
+import { getServerSupabase, type OrderWithDetails } from '@repo/database/server'
 
 import Link from 'next/link'
 import { Badge } from '@repo/ui'
