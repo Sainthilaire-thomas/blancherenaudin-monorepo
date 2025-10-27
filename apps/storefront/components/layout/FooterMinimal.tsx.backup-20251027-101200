@@ -1,22 +1,25 @@
-// apps/storefront/components/layout/FooterMinimal.tsx
+// src/components/layout/FooterMinimal.tsx
 import Link from 'next/link'
-import { NewsletterSubscribe } from '@/components/newsletter/NewsletterSubscribe'
+// import { NewsletterSubscribe } from '@/components/newsletter/NewsletterSubscribe'
 
 export default function FooterMinimal() {
   return (
     <footer className="border-t border-grey-light py-16 px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
           {/* Column 1: Newsletter */}
           <div>
-            <NewsletterSubscribe />
-          </div>
+  {/* DÉSACTIVÉ TEMPORAIREMENT - À migrer plus tard */}
+  {/* <NewsletterSubscribe /> */}
+  
+  {/* Placeholder temporaire */}
+  <h3 className="text-product mb-3">NEWSLETTER</h3>
+  <p className="text-xs text-grey-medium">Coming soon</p>
+</div>
 
           {/* Column 2: Shop */}
           <div>
-            <h3 className="text-[13px] tracking-[0.15em] font-semibold uppercase mb-3">
-              SHOP
-            </h3>
+            <h3 className="text-product mb-3">SHOP</h3>
             <ul className="space-y-3">
               <li>
                 <Link
@@ -55,9 +58,7 @@ export default function FooterMinimal() {
 
           {/* Column 3: House */}
           <div>
-            <h3 className="text-[13px] tracking-[0.15em] font-semibold uppercase mb-3">
-              MAISON
-            </h3>
+            <h3 className="text-product mb-3">MAISON</h3>
             <ul className="space-y-3">
               <li>
                 <Link
@@ -88,9 +89,7 @@ export default function FooterMinimal() {
 
           {/* Column 4: Help */}
           <div>
-            <h3 className="text-[13px] tracking-[0.15em] font-semibold uppercase mb-3">
-              HELP
-            </h3>
+            <h3 className="text-product mb-3">HELP</h3>
             <ul className="space-y-3">
               <li>
                 <Link
