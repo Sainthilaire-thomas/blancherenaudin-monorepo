@@ -1,4 +1,4 @@
-import { defineConfig } from 'sanity'
+import { defineConfig, type Config } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './schemas'
@@ -15,4 +15,4 @@ export default defineConfig({
     visionTool(),
   ],
   schema: { types: schemaTypes },
-})
+}) satisfies Config

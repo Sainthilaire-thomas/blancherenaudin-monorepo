@@ -4,12 +4,18 @@ import { supabaseAdmin } from '@repo/database/server'
 
 export const runtime = 'nodejs'
 
+interface RouteContext {
+  params: Promise<{
+    imageId: string
+  }>
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { imageId: string } }
+  context: RouteContext
 ) {
   try {
-    const { imageId } = params
+    const { imageId } = await context.params
     const { searchParams } = new URL(request.url)
     
     const variant = searchParams.get('variant') || 'md'

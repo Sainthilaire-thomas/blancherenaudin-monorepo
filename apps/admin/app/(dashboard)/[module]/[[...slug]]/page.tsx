@@ -3,14 +3,14 @@ import { notFound } from 'next/navigation'
 import { adminModules } from '@/admin.config'
 
 interface ModulePageProps {
-  params: {
+  params: Promise<{
     module: string
     slug?: string[]
-  }
+  }>
 }
 
-export default function ModulePage({ params }: ModulePageProps) {
-  const { module: moduleId, slug = [] } = params
+export default async function ModulePage({ params }: ModulePageProps) {
+  const { module: moduleId, slug = [] } = await params
 
   // Trouver le module dans l'array
   const moduleDefinition = adminModules.find((m) => m.id === moduleId)

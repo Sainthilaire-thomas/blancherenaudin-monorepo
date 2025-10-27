@@ -30,7 +30,7 @@ export default function LoginPage() {
       } else {
         toast.error('Email ou mot de passe incorrect')
       }
-    } catch (error) {
+    } catch {
       toast.error('Erreur de connexion')
     } finally {
       setLoading(false)

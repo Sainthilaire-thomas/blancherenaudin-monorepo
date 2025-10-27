@@ -15,7 +15,7 @@ export default function DashboardPage() {
       name: 'Commandes',
       value: '12',
       icon: ShoppingCart,
-      change: '+2 aujourd\'hui',
+      change: "+2 aujourd'hui",
       color: 'text-green-600',
     },
     {
@@ -40,7 +40,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="mt-1 text-sm text-gray-600">
-          Vue d'ensemble de votre boutique
+          Vue d&apos;ensemble de votre boutique
         </p>
       </div>
 
@@ -74,7 +74,7 @@ export default function DashboardPage() {
           Bienvenue sur votre admin modulaire 🎉
         </h2>
         <p className="mt-2 text-sm text-gray-700">
-          L'infrastructure admin est prête. Les modules seront ajoutés progressivement :
+          L&apos;infrastructure admin est prête. Les modules seront ajoutés progressivement :
         </p>
         <ul className="mt-4 space-y-2 text-sm text-gray-600">
           <li>⏳ Module Products - À venir</li>
