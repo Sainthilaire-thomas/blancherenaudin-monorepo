@@ -1,7 +1,7 @@
 // src/app/product/[id]/page.tsx
 import HeaderMinimal from '@/components/layout/HeaderMinimal'
 import { notFound } from 'next/navigation'
-import { createServerClient } from '@repo/database/server'
+import { createServerClient } from '@repo/database'
 import ProductDetailClient from './ProductDetailClient' // ✅ chemin corrigé
 
 export const revalidate = 0
@@ -47,3 +47,4 @@ export default async function ProductDetailPage({
     </div>
   )
 }
+

@@ -3,7 +3,7 @@
 
 import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { supabaseBrowser } from '@repo/database/client-browser'
+import { supabaseBrowser } from '@repo/database'
 import Link from 'next/link'
 
 function LoginForm() {

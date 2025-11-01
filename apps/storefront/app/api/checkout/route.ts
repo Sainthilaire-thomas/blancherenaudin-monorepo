@@ -1,7 +1,7 @@
 // src/app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@repo/database/server'
-import { supabaseAdmin } from '@repo/database/server'
+import { stripe } from '@/lib/stripe'
+import { supabaseAdmin } from '@repo/database'
 
 interface CheckoutItem {
   product_id: string
@@ -193,3 +193,4 @@ export async function POST(req: NextRequest) {
     )
   }
 }
+

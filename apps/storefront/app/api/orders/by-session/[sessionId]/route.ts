@@ -1,6 +1,6 @@
 // apps/storefront/app/api/orders/by-session/[sessionId]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient, OrderWithItems } from '@repo/database/server'
+import { createServerClient, OrderWithItems } from '@repo/database'
 
 // ✅ SOLUTION OPTIMALE : Utiliser les types helpers existants
 export async function GET(
@@ -54,3 +54,4 @@ export async function GET(
     )
   }
 }
+

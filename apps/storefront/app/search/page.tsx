@@ -6,7 +6,7 @@ import HeaderMinimal from '@/components/layout/HeaderMinimal'
 import FooterMinimal from '@/components/layout/FooterMinimal'
 import ProductGridJacquemus from '@/components/products/ProductGridJacquemus'
 import { SlidersHorizontal, Search, X } from 'lucide-react'
-import { supabaseBrowser } from '@repo/database/client-browser'
+import { supabaseBrowser } from '@repo/database'
 import type { ProductWithRelations } from '@repo/database'
 import Link from 'next/link'
 

@@ -1,5 +1,5 @@
 // src/app/account/page.tsx
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 import { Package, Heart, User } from 'lucide-react'
 
 export default async function AccountDashboard() {

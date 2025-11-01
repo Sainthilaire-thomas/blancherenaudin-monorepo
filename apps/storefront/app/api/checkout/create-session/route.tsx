@@ -1,8 +1,8 @@
 // src/app/api/checkout/create-session/route.tsx
 
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@repo/database/server'
-import { supabaseAdmin } from '@repo/database/server'
+import { stripe } from '@/lib/stripe'
+import { supabaseAdmin } from '@repo/database'
 
 interface CartItem {
   productId: string
@@ -308,3 +308,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
+

@@ -5,7 +5,7 @@ import { Button } from '@repo/ui';
 import { ArrowLeft } from "lucide-react";
 import ProductGridClient from "./product-grid-client";
 import { notFound } from "next/navigation";
-import { createServerClient } from '@repo/database/server';
+import { createServerClient } from '@repo/database';
 
 export const revalidate = 0;
 
@@ -139,3 +139,4 @@ export default async function CollectionDetailPage({
     </div>
   );
 }
+

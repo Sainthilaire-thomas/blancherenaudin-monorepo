@@ -1,6 +1,6 @@
 // src/app/account/layout.tsx
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 import AccountSidebar from '@/components/account/AccountSidebar'
 import HeaderMinimal from '@/components/layout/HeaderMinimal'
 

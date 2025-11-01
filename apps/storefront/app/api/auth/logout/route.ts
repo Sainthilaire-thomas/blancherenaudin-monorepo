@@ -2,7 +2,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import type { Database } from '@repo/database/types'
+import type { Database } from '@repo/database'
 
 export async function POST() {
   const cookieStore = await cookies()

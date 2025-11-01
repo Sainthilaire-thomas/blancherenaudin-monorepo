@@ -1,6 +1,6 @@
 // src/app/api/products/by-ids/route.ts
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 
 export async function GET(req: Request) {
   const supabase = await createServerClient()

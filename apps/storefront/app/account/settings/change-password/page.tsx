@@ -1,6 +1,6 @@
 // src/app/account/settings/change-password/page.tsx
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 import ChangePasswordForm from './ChangePasswordForm'
 
 export default async function ChangePasswordPage() {

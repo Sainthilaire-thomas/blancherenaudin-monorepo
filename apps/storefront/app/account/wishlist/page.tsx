@@ -1,6 +1,6 @@
 // src/app/account/wishlist/page.tsx
 import WishlistClient from './WishlistClient'
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 
 export default async function WishlistPage() {
   const supabase = await createServerClient()

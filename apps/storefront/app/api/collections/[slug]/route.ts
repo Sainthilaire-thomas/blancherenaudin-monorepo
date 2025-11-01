@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from '@repo/database/server'; // ⬅️ remplace l'import
+import { createServerClient } from '@repo/database'; // ⬅️ remplace l'import
 
 export async function GET(
   _req: Request,
@@ -40,3 +40,4 @@ export async function GET(
   const products = (cps ?? []).map((cp: any) => cp.product).filter(Boolean)
   return NextResponse.json({ collection: coll, products })
 }
+

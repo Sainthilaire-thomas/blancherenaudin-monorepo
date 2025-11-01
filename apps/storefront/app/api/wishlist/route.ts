@@ -2,8 +2,8 @@
 // src/app/api/wishlist/route.ts
 // ============================================
 import { NextResponse } from 'next/server'
-import { createServerClient } from '@repo/database/client-server'
-import type { Database } from '@repo/database/server'
+import { createServerClient } from '@repo/database'
+import type { Database } from '@repo/database'
 
 type WishlistItem = Database['public']['Tables']['wishlist_items']['Row']
 type Product = Database['public']['Tables']['products']['Row']

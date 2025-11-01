@@ -1,6 +1,6 @@
 // src/app/account/settings/page.tsx
 import { redirect } from 'next/navigation'
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 import Link from 'next/link'
 
 export default async function SettingsPage() {

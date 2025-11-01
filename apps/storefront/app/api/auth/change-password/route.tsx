@@ -1,6 +1,6 @@
 // src/app/api/auth/change-password/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@repo/database/client-server'
+import { createServerClient } from '@repo/database'
 
 export async function POST(req: NextRequest) {
   try {

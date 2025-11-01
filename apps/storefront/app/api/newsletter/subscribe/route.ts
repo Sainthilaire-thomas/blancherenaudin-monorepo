@@ -1,6 +1,6 @@
 // src/app/api/newsletter/subscribe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@repo/database/server'
+import { supabaseAdmin } from '@repo/database'
 import { sendEmail, NewsletterConfirmation } from '@repo/email'
 import { z } from 'zod'
 

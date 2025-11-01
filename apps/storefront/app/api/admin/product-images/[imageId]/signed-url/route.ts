@@ -1,6 +1,6 @@
 // apps/storefront/app/api/admin/product-images/[imageId]/signed-url/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@repo/database/server'
+import { supabaseAdmin } from '@repo/database'
 
 export const runtime = 'nodejs'
 
@@ -109,3 +109,4 @@ export async function GET(
     )
   }
 }
+

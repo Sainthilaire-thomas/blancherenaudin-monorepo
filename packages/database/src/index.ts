@@ -3,7 +3,7 @@
 // === CLIENT EXPORTS ===
 export { createBrowserClient, supabaseBrowser } from './clients/client-browser'
 export { createServerClient, getServerSupabase } from './clients/client-server'
-export { createAdminClient } from './clients/client-admin'
+export { createAdminClient, supabaseAdmin } from './clients/client-admin'
 
 // === TYPES ===
 export * from './types'

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database } from '@repo/database/types'
-import { supabaseAdmin } from '@repo/database/server'
+import type { Database } from '@repo/database'
+import { supabaseAdmin } from '@repo/database'
 
 export async function POST() {
   const cookieStore = await cookies()

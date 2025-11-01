@@ -7,7 +7,7 @@ import { X } from 'lucide-react'
 import { ProductImage } from '@/components/products/ProductImage'
 import { useCartStore } from '@/store/useCartStore'
 import { toast } from 'sonner'
-import type { Database } from '@repo/database/types'
+import type { Database } from '@repo/database'
 
 // Type complet depuis la DB
 type ProductImageRow = Database['public']['Tables']['product_images']['Row']

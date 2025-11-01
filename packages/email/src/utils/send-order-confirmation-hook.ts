@@ -1,5 +1,5 @@
 // packages/email/src/utils/send-order-confirmation-hook.ts
-import { supabaseAdmin } from '@repo/database/server'
+import { supabaseAdmin } from '@repo/database'
 import { sendOrderConfirmationEmail } from './send'
 
 // Type partiel pour les images
@@ -252,3 +252,4 @@ export async function sendOrderConfirmationHook(orderId: string) {
     }
   }
 }
+
