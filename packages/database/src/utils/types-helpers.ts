@@ -1,5 +1,5 @@
-// packages/database/src/types-helpers.ts
-import { Database } from './database.types'
+﻿// packages/database/src/types-helpers.ts
+import { Database } from '../types/database.types'
 
 // ============================================================================
 // TYPES DE BASE DEPUIS SUPABASE (pour usage interne uniquement)
@@ -29,7 +29,7 @@ type Collection = Tables['collections']['Row']
 type WishlistItem = Tables['wishlist_items']['Row']
 
 // ============================================================================
-// TYPES AVEC RELATIONS (résout les erreurs "never" de TypeScript)
+// TYPES AVEC RELATIONS (rÃ©sout les erreurs "never" de TypeScript)
 // ============================================================================
 
 export type OrderWithItems = Order & {
@@ -162,7 +162,7 @@ export type FulfillmentStatusType = typeof FulfillmentStatusEnum[keyof typeof Fu
 // ============================================================================
 // TYPES POUR LES API RESPONSES
 // ============================================================================
-// ⚠️ On utilise des noms différents pour éviter le conflit avec types.ts
+// âš ï¸ On utilise des noms diffÃ©rents pour Ã©viter le conflit avec types.ts
 
 export type ApiSuccessResponse<T = unknown> = {
   success: true
@@ -184,7 +184,7 @@ export type NextApiHandler<T = unknown> = (
 ) => Promise<Response> | Response
 
 // ============================================================================
-// TYPES POUR LES RÉPONSES PAGINÉES
+// TYPES POUR LES RÃ‰PONSES PAGINÃ‰ES
 // ============================================================================
 
 export interface PaginationMeta {
@@ -271,7 +271,7 @@ export function isOrderWithItems(order: any): order is OrderWithItems {
   )
 }
 
-// ✅ FIX : Corrigé 'order' → 'product'
+// âœ… FIX : CorrigÃ© 'order' â†’ 'product'
 export function isProductWithImages(product: any): product is ProductWithImages {
   return (
     product &&
@@ -294,7 +294,7 @@ export function isApiError<T>(response: ApiResponseUnion<T>): response is ApiErr
 // EXPORTS POUR FACILITER L'UTILISATION
 // ============================================================================
 
-// ✅ FIX : Types génériques correctement définis
+// âœ… FIX : Types gÃ©nÃ©riques correctement dÃ©finis
 export type DatabaseHelperTypes = {
   OrderWithItems: OrderWithItems
   OrderWithDetails: OrderWithDetails
@@ -327,11 +327,11 @@ export type DatabaseHelperTypes = {
 }
 
 // ============================================================================
-// HELPERS POUR CRÉER DES RÉPONSES API TYPÉES
+// HELPERS POUR CRÃ‰ER DES RÃ‰PONSES API TYPÃ‰ES
 // ============================================================================
 
 export function createApiSuccess<T>(data: T, message?: string): ApiSuccessResponse<T> {
-  // ✅ FIX : Éviter le spread sur undefined
+  // âœ… FIX : Ã‰viter le spread sur undefined
   const response: ApiSuccessResponse<T> = {
     success: true,
     data
@@ -343,7 +343,7 @@ export function createApiSuccess<T>(data: T, message?: string): ApiSuccessRespon
 }
 
 export function createApiError(error: string, message?: string, details?: unknown): ApiErrorResponse {
-  // ✅ FIX : Éviter le spread sur undefined
+  // âœ… FIX : Ã‰viter le spread sur undefined
   const response: ApiErrorResponse = {
     success: false,
     error
@@ -382,8 +382,8 @@ export function createPaginatedResponse<T>(
 // ==========================================
 
 /**
- * Helper pour récupérer une catégorie avec ses enfants
- * Gère correctement les types Supabase pour éviter les 'never'
+ * Helper pour rÃ©cupÃ©rer une catÃ©gorie avec ses enfants
+ * GÃ¨re correctement les types Supabase pour Ã©viter les 'never'
  * 
  * @example
  * `	ypescript
@@ -416,7 +416,7 @@ export async function getCategoryWithChildren(
     .eq('parent_id', parentCategory.id)
     .eq('is_active', true)
 
-  // ✅ Cast explicite pour éviter le type 'never'
+  // âœ… Cast explicite pour Ã©viter le type 'never'
   const childCategories = childCategoriesRaw as Array<Pick<Category, 'id'>> | null
 
   const categoryIds: string[] = [
@@ -426,3 +426,4 @@ export async function getCategoryWithChildren(
 
   return { parentCategory, childCategories, categoryIds }
 }
+

@@ -2422,3 +2422,72 @@ pnpmadd -D eslint-config-turbo
 2. ✅ Storefront (site public critique)
 3. ✅ Admin shell + 2-3 modules essentiels (products, orders)
 4. ⏸️ Reporter les autres modules
+
+
+Annexe 
+
+
+## 🗂️ Architecture Détaillée : Exemple avec Products
+
+### 📁 Structure Complète
+
+```
+blancherenaudin-monorepo/
+│
+├── apps/
+│   └── admin/                           # App Next.js admin
+│       └── app/
+│           ├── api/                     # ⭐ ROUTES API
+│           │   └── products/
+│           │       ├── route.ts         # GET/POST /api/products
+│           │       └── [id]/
+│           │           └── route.ts     # GET/PUT/DELETE /api/products/:id
+│           │
+│           └── (dashboard)/
+│               └── [module]/
+│                   └── [[...slug]]/
+│                       └── page.tsx     # Charge dynamiquement le module
+│
+├── modules/
+│   └── products/                        # ⭐ MODULE PRODUCTS (UI)
+│       └── src/
+│           ├── components/              # Composants React
+│           │   ├── forms/
+│           │   │   └── ProductForm.tsx  # Formulaire produit
+│           │   └── lists/
+│           │       ├── ProductsList.tsx # Liste produits
+│           │       └── ProductsFilter.tsx
+│           │
+│           ├── lib/                     # Utils UI (pas de DB)
+│           │   ├── formatters.ts        # Formater prix, dates
+│           │   └── validators.ts        # Validation formulaire
+│           │
+│           └── index.tsx                # Point d'entrée module
+│
+└── packages/
+    ├── database/                        # ⭐ LOGIQUE MÉTIER + DB
+    │   └── src/
+    │       ├── api/
+    │       │   └── admin/
+    │       │       └── products/        # Fonctions PURES products
+    │       │           ├── list.ts      # Lister produits
+    │       │           ├── detail.ts    # Détail produit
+    │       │           ├── create.ts    # Créer produit
+    │       │           ├── update.ts    # Mettre à jour
+    │       │           └── delete.ts    # Supprimer
+    │       │
+    │       ├── client/                  # Clients Supabase
+    │       │   ├── admin.ts
+    │       │   └── browser.ts
+    │       │
+    │       └── types/                   # Types DB
+    │           └── database.types.ts
+    │
+    └── admin-shell/                     # Infrastructure admin
+        └── src/
+            ├── components/
+            │   ├── ModuleLoader.tsx     # Charge les modules
+            │   └── AdminLayout.tsx
+            └── types/
+                └── module.ts            # Type ModuleProps
+```

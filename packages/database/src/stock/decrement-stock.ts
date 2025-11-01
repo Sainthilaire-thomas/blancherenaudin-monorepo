@@ -1,5 +1,11 @@
-// src/lib/stock/decrement-stock.ts
-import { supabaseAdmin } from '../client-admin'
+﻿// src/lib/stock/decrement-stock.ts
+import { supabaseAdmin } from '../clients/client-admin'
+
+export interface StockDecrementResult {
+  success: boolean
+  decremented: number
+  errors?: string[]
+}
 
 interface OrderItemStock {
   product_id: string | null
@@ -10,42 +16,42 @@ interface OrderItemStock {
 }
 
 /**
- * Décrémenter le stock après un paiement validé
- * Appelé depuis le webhook Stripe après checkout.session.completed
+ * DÃ©crÃ©menter le stock aprÃ¨s un paiement validÃ©
+ * AppelÃ© depuis le webhook Stripe aprÃ¨s checkout.session.completed
  */
 export async function decrementStockForOrder(orderId: string) {
   try {
-    console.log('📦 Starting stock decrement for order:', orderId)
+    console.log('ðŸ“¦ Starting stock decrement for order:', orderId)
 
-    // ✅ Récupérer les items de la commande
+    // âœ… RÃ©cupÃ©rer les items de la commande
     const { data: orderItems, error: itemsError } = await supabaseAdmin
       .from('order_items')
       .select('product_id, variant_id, quantity, product_name, variant_name')
       .eq('order_id', orderId)
 
     if (itemsError) {
-      console.error('❌ Error fetching order items:', itemsError)
+      console.error('âŒ Error fetching order items:', itemsError)
       throw new Error(`Failed to fetch order items: ${itemsError.message}`)
     }
 
     if (!orderItems || orderItems.length === 0) {
-      console.log('⚠️ No items found for order:', orderId)
+      console.log('âš ï¸ No items found for order:', orderId)
       return { success: true, decremented: 0 }
     }
 
-    console.log(`📋 Found ${orderItems.length} items to process`)
+    console.log(`ðŸ“‹ Found ${orderItems.length} items to process`)
 
     let decrementedCount = 0
     const errors: string[] = []
 
-    // ✅ Traiter chaque item
+    // âœ… Traiter chaque item
     for (const item of orderItems) {
       try {
         const result = await decrementStockForItem(item as OrderItemStock)
         if (result.success) {
           decrementedCount++
           console.log(
-            `✅ Stock decremented for: ${item.product_name} (qty: ${item.quantity})`
+            `âœ… Stock decremented for: ${item.product_name} (qty: ${item.quantity})`
           )
         } else {
           errors.push(
@@ -56,17 +62,17 @@ export async function decrementStockForOrder(orderId: string) {
         const errorMsg =
           error instanceof Error ? error.message : 'Unknown error'
         errors.push(`${item.product_name}: ${errorMsg}`)
-        console.error(`❌ Error processing item:`, error)
+        console.error(`âŒ Error processing item:`, error)
       }
     }
 
-    // ✅ Résumé
+    // âœ… RÃ©sumÃ©
     console.log(
-      `📊 Stock decrement summary: ${decrementedCount}/${orderItems.length} items processed`
+      `ðŸ“Š Stock decrement summary: ${decrementedCount}/${orderItems.length} items processed`
     )
 
     if (errors.length > 0) {
-      console.error('⚠️ Errors during stock decrement:', errors)
+      console.error('âš ï¸ Errors during stock decrement:', errors)
       return {
         success: false,
         decremented: decrementedCount,
@@ -79,7 +85,7 @@ export async function decrementStockForOrder(orderId: string) {
       decremented: decrementedCount,
     }
   } catch (error) {
-    console.error('❌ Critical error in decrementStockForOrder:', error)
+    console.error('âŒ Critical error in decrementStockForOrder:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -88,11 +94,11 @@ export async function decrementStockForOrder(orderId: string) {
 }
 
 /**
- * Décrémenter le stock pour un item spécifique
+ * DÃ©crÃ©menter le stock pour un item spÃ©cifique
  */
 async function decrementStockForItem(item: OrderItemStock) {
   try {
-    // ✅ CAS 1 : Produit avec variante
+    // âœ… CAS 1 : Produit avec variante
     if (item.variant_id) {
       return await decrementVariantStock(
         item.variant_id,
@@ -101,7 +107,7 @@ async function decrementStockForItem(item: OrderItemStock) {
       )
     }
 
-    // ✅ CAS 2 : Produit sans variante
+    // âœ… CAS 2 : Produit sans variante
     if (item.product_id) {
       return await decrementProductStock(
         item.product_id,
@@ -110,13 +116,13 @@ async function decrementStockForItem(item: OrderItemStock) {
       )
     }
 
-    console.error('⚠️ Item has no product_id or variant_id:', item)
+    console.error('âš ï¸ Item has no product_id or variant_id:', item)
     return {
       success: false,
       error: 'No product_id or variant_id',
     }
   } catch (error) {
-    console.error('❌ Error in decrementStockForItem:', error)
+    console.error('âŒ Error in decrementStockForItem:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -125,7 +131,7 @@ async function decrementStockForItem(item: OrderItemStock) {
 }
 
 /**
- * Décrémenter le stock d'une variante
+ * DÃ©crÃ©menter le stock d'une variante
  */
 async function decrementVariantStock(
   variantId: string,
@@ -133,7 +139,7 @@ async function decrementVariantStock(
   reason: string
 ) {
   try {
-    // ✅ Récupérer le stock actuel
+    // âœ… RÃ©cupÃ©rer le stock actuel
     const { data: variant, error: variantError } = await supabaseAdmin
       .from('product_variants')
       .select('stock_quantity')
@@ -141,7 +147,7 @@ async function decrementVariantStock(
       .single()
 
     if (variantError || !variant) {
-      console.error('❌ Variant not found:', variantId)
+      console.error('âŒ Variant not found:', variantId)
       return { success: false, error: 'Variant not found' }
     }
 
@@ -149,26 +155,26 @@ async function decrementVariantStock(
     const newStock = Math.max(0, currentStock - quantity)
 
     console.log(
-      `📦 Variant ${variantId}: ${currentStock} → ${newStock} (Δ -${quantity})`
+      `ðŸ“¦ Variant ${variantId}: ${currentStock} â†’ ${newStock} (Î” -${quantity})`
     )
 
-    // ✅ Mettre à jour le stock
+    // âœ… Mettre Ã  jour le stock
     const { error: updateError } = await supabaseAdmin
       .from('product_variants')
       .update({ stock_quantity: newStock })
       .eq('id', variantId)
 
     if (updateError) {
-      console.error('❌ Error updating variant stock:', updateError)
+      console.error('âŒ Error updating variant stock:', updateError)
       return { success: false, error: updateError.message }
     }
 
-    // ✅ Créer un mouvement de stock (historique)
+    // âœ… CrÃ©er un mouvement de stock (historique)
     await createStockMovement(variantId, -quantity, reason)
 
     return { success: true, newStock }
   } catch (error) {
-    console.error('❌ Error in decrementVariantStock:', error)
+    console.error('âŒ Error in decrementVariantStock:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -177,7 +183,7 @@ async function decrementVariantStock(
 }
 
 /**
- * Décrémenter le stock d'un produit (sans variante)
+ * DÃ©crÃ©menter le stock d'un produit (sans variante)
  */
 async function decrementProductStock(
   productId: string,
@@ -185,7 +191,7 @@ async function decrementProductStock(
   reason: string
 ) {
   try {
-    // ✅ Récupérer le stock actuel
+    // âœ… RÃ©cupÃ©rer le stock actuel
     const { data: product, error: productError } = await supabaseAdmin
       .from('products')
       .select('stock_quantity')
@@ -193,7 +199,7 @@ async function decrementProductStock(
       .single()
 
     if (productError || !product) {
-      console.error('❌ Product not found:', productId)
+      console.error('âŒ Product not found:', productId)
       return { success: false, error: 'Product not found' }
     }
 
@@ -201,26 +207,26 @@ async function decrementProductStock(
     const newStock = Math.max(0, currentStock - quantity)
 
     console.log(
-      `📦 Product ${productId}: ${currentStock} → ${newStock} (Δ -${quantity})`
+      `ðŸ“¦ Product ${productId}: ${currentStock} â†’ ${newStock} (Î” -${quantity})`
     )
 
-    // ✅ Mettre à jour le stock
+    // âœ… Mettre Ã  jour le stock
     const { error: updateError } = await supabaseAdmin
       .from('products')
       .update({ stock_quantity: newStock })
       .eq('id', productId)
 
     if (updateError) {
-      console.error('❌ Error updating product stock:', updateError)
+      console.error('âŒ Error updating product stock:', updateError)
       return { success: false, error: updateError.message }
     }
 
-    // Note : Les stock_movements sont liés aux variantes uniquement
-    // Pour les produits sans variantes, pas de mouvement créé
+    // Note : Les stock_movements sont liÃ©s aux variantes uniquement
+    // Pour les produits sans variantes, pas de mouvement crÃ©Ã©
 
     return { success: true, newStock }
   } catch (error) {
-    console.error('❌ Error in decrementProductStock:', error)
+    console.error('âŒ Error in decrementProductStock:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
@@ -229,7 +235,7 @@ async function decrementProductStock(
 }
 
 /**
- * Créer un mouvement de stock dans l'historique
+ * CrÃ©er un mouvement de stock dans l'historique
  */
 async function createStockMovement(
   variantId: string,
@@ -241,15 +247,17 @@ async function createStockMovement(
       variant_id: variantId,
       delta: delta,
       reason: reason,
-      created_by: null, // Système automatique
+      created_by: null, // SystÃ¨me automatique
     })
 
     if (error) {
-      console.error('⚠️ Error creating stock movement:', error)
+      console.error('âš ï¸ Error creating stock movement:', error)
       // Non-bloquant
     }
   } catch (error) {
-    console.error('⚠️ Error creating stock movement:', error)
+    console.error('âš ï¸ Error creating stock movement:', error)
     // Non-bloquant
   }
 }
+
+

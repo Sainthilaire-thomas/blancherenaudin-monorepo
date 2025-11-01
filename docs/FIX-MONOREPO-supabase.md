@@ -302,7 +302,8 @@ Tous ces fichiers importent maintenant depuis `@repo/database/server` :
 import { supabaseAdmin } from '@repo/database'
 
 // ✅ APRÈS
-import { supabaseAdmin } from '@repo/database/server'
+import { createAdminClient } from '@repo/database'
+const supabaseAdmin = createAdminClient
 ```
 
 **Liste des fichiers corrigés** :
@@ -400,7 +401,8 @@ export function MyComponent() {
 'use client'
 
 // ❌ JAMAIS importer supabaseAdmin dans un Client Component
-import { supabaseAdmin } from '@repo/database/server'
+import { createAdminClient } from '@repo/database'
+const supabaseAdmin = createAdminClient
 // → Erreur : "SECURITY ERROR: supabaseAdmin cannot be used in Client Components!"
 ```
 
@@ -525,7 +527,8 @@ function Write-FileNoBOM {
 import { supabaseAdmin } from '@repo/database'
 
 // ✅ APRÈS
-import { supabaseAdmin } from '@repo/database/server'
+import { createAdminClient } from '@repo/database'
+const supabaseAdmin = createAdminClient
 ```
 
 ---

@@ -1,8 +1,8 @@
-// packages/database/src/client-server.ts
+﻿// packages/database/src/client-server.ts
 import { createServerClient as createSupabaseServerClient } from '@supabase/ssr'
-import type { Database } from './types'
+import type { Database } from '../types'
 
-// ✅ Import dynamique pour éviter l'erreur dans les Client Components
+// âœ… Import dynamique pour Ã©viter l'erreur dans les Client Components
 async function getCookies() {
   const { cookies } = await import('next/headers')
   return cookies()
@@ -25,7 +25,7 @@ export async function createServerClient() {
               cookieStore.set(name, value, options)
             )
           } catch {
-            // Ignore si appelé depuis un Server Component
+            // Ignore si appelÃ© depuis un Server Component
           }
         },
       },
@@ -35,3 +35,4 @@ export async function createServerClient() {
 
 // Backward compatibility
 export const getServerSupabase = createServerClient
+

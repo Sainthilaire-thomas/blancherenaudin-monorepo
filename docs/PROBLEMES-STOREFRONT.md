@@ -346,7 +346,8 @@ import { supabaseAdmin, stripe, decrementStockForOrder } from '@repo/database/se
 import { createBrowserClient, ProductWithRelations } from '@repo/database'
 
 // ❌ JAMAIS dans Client Components
-import { supabaseAdmin } from '@repo/database/server' // ERROR!
+import { createAdminClient } from '@repo/database'
+const supabaseAdmin = createAdminClient // ERROR!
 ```
 
 ---
