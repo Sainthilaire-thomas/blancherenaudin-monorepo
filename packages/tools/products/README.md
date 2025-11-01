@@ -1,17 +1,26 @@
 ﻿# @repo/tools-products
 
-Tool de gestion des produits pour l'admin Blanche Renaudin.
+Package de gestion des produits pour l'admin Blanche Renaudin.
 
-## Structure
+## Installation
+```bash
+pnpm add @repo/tools-products
+```
 
-- src/api/ - Logique métier pure (testable)
-- src/routes/ - Composants Server/Client pour les pages
-- src/components/ - Composants UI réutilisables
-- src/hooks/ - Hooks personnalisés
-- __tests__/ - Tests unitaires
+## API
 
-## Usage
+- listProducts(filters?) - Liste les produits
+- getProduct(id) - Récupère un produit
+- createProduct(data) - Crée un produit
+- updateProduct(id, data) - Met à jour
+- deleteProduct(id) - Supprime (soft)
 
-Dans apps/admin:
-import { ProductsList, ProductDetail } from '@repo/tools-products/routes'
-import { listProducts } from '@repo/tools-products/api'
+## Tests
+```bash
+pnpm test
+```
+
+## Build
+```bash
+pnpm build
+```
