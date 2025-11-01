@@ -1,0 +1,23 @@
+﻿{
+    "compilerOptions":  {
+                            "lib":  [
+                                        "ES2022",
+                                        "DOM"
+                                    ],
+                            "types":  [
+
+                                      ],
+                            "outDir":  "./dist",
+                            "jsx":  "react-jsx"
+                        },
+    "include":  [
+                    "src/**/*",
+                    "__tests__/**/*"
+                ],
+    "exclude":  [
+                    "node_modules",
+                    "dist",
+                    "__tests__"
+                ],
+    "extends":  "../../../tsconfig.base.json"
+}
