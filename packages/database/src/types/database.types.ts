@@ -1490,10 +1490,7 @@ export type Database = {
       }
     }
     Functions: {
-      generate_order_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_order_number: { Args: never; Returns: string }
       get_daily_stats: {
         Args: { since_date: string }
         Returns: {
@@ -1535,10 +1532,7 @@ export type Database = {
         }
         Returns: Json
       }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_admin: { Args: never; Returns: boolean }
       recompute_product_stock: {
         Args: { p_product_id: string }
         Returns: number
