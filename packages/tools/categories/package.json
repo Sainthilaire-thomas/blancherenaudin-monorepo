@@ -1,7 +1,11 @@
 ﻿{
     "version":  "0.0.0",
     "dependencies":  {
-                         "@repo/database":  "workspace:*"
+                         "@repo/database":  "workspace:*",
+                         "next":  "^15.0.0",
+                         "react":  "^19.0.0",
+                         "lucide-react":  "^0.263.1",
+                         "@repo/ui":  "workspace:*"
                      },
     "name":  "@repo/tools-categories",
     "type":  "module",

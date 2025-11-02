@@ -8,3 +8,6 @@ export * from './constants'
 
 // API
 export * from './api'
+
+// Routes (composants UI)
+export * from './routes'

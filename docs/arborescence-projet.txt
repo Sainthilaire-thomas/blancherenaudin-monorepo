@@ -1,7 +1,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                    ARBORESCENCE DU PROJET - MONOREPO                        ║
 ║                                                                              ║
-║  Généré le: 31/10/2025 17:48:06                                       ║
+║  Généré le: 02/11/2025 10:25:52                                       ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -12,41 +12,25 @@
     ├── 📁 apps/
     │   ├── 📁 admin/
     │   │   ├── 📁 app/
-    │   │   │   ├── 📁 (admin)/
-    │   │   │   │   ├── ⚛️ layout.tsx
-    │   │   │   │   └── ⚛️ page.tsx
     │   │   │   ├── 📁 (auth)/
     │   │   │   │   └── 📁 login/
     │   │   │   │       └── ⚛️ page.tsx
+    │   │   │   ├── 📁 (dashboard)/
+    │   │   │   │   ├── 📁 [module]/
+    │   │   │   │   │   └── 📁 [[...slug]]/
+    │   │   │   │   │       └── ⚛️ page.tsx
+    │   │   │   │   ├── ⚛️ layout.tsx
+    │   │   │   │   └── ⚛️ page.tsx
     │   │   │   ├── 📁 (tools)/
     │   │   │   │   └── 📁 newsletter/
     │   │   │   │       ├── 📁 analytics/
-    │   │   │   │       ├── 📁 campaigns/
-    │   │   │   │       │   ├── 📁 [id]/
-    │   │   │   │       │   └── 📁 new/
-    │   │   │   │       ├── ⚛️ layout.tsx
-    │   │   │   │       ├── ⚛️ loading.tsx
-    │   │   │   │       ├── ⚛️ page.tsx
-    │   │   │   │       └── 📄 page.tsx.backup-20251031-135635
-    │   │   │   ├── 📁 api/
-    │   │   │   │   └── 📁 newsletter/
-    │   │   │   │       └── 📁 subscribers/
-    │   │   │   │           └── 🔷 route.ts
+    │   │   │   │       └── 📁 campaigns/
+    │   │   │   │           ├── 📁 [id]/
+    │   │   │   │           └── 📁 new/
     │   │   │   ├── 🖼️ favicon.ico
     │   │   │   ├── 🎨 globals.css
-    │   │   │   └── ⚛️ layout.tsx
-    │   │   ├── 📁 components/
-    │   │   │   ├── 📁 admin/
-    │   │   │   │   └── ⚛️ AdminNav.tsx
-    │   │   │   └── 📁 analytics/
-    │   │   │       └── ⚛️ AnalyticsTracker.tsx
-    │   │   ├── 📁 lib/
-    │   │   │   └── 📁 registry/
-    │   │   │       ├── 🔷 index.ts
-    │   │   │       ├── 🔷 registry.ts
-    │   │   │       ├── ⚛️ ToolErrorBoundary.tsx
-    │   │   │       ├── ⚛️ ToolLoader.tsx
-    │   │   │       └── 🔷 types.ts
+    │   │   │   ├── ⚛️ layout.tsx
+    │   │   │   └── ⚛️ page.tsx
     │   │   ├── 📁 public/
     │   │   │   ├── 🖼️ file.svg
     │   │   │   ├── 🖼️ globe.svg
@@ -54,6 +38,7 @@
     │   │   │   ├── 🖼️ vercel.svg
     │   │   │   └── 🖼️ window.svg
     │   │   ├── 📄 .gitignore
+    │   │   ├── 🔷 admin.config.ts
     │   │   ├── 📄 eslint.config.mjs
     │   │   ├── 🔷 middleware.ts
     │   │   ├── 🔷 next-env.d.ts
@@ -197,6 +182,7 @@
     │       │   │   └── ⚛️ RichTextRenderer.tsx
     │       │   ├── 📁 layout/
     │       │   │   ├── ⚛️ FooterMinimal.tsx
+    │       │   │   ├── 📄 FooterMinimal.tsx.backup-20251027-101200
     │       │   │   ├── ⚛️ HeaderMinimal.tsx
     │       │   │   └── ⚛️ Homepage.tsx
     │       │   ├── 📁 newsletter/
@@ -216,6 +202,7 @@
     │       │   ├── 🔷 image-helpers.ts
     │       │   ├── 🔷 product-helpers.ts
     │       │   ├── 🔷 products.ts
+    │       │   ├── 🔷 stripe.ts
     │       │   ├── 🔷 types.ts
     │       │   └── 🔷 utils.ts
     │       ├── 📁 public/
@@ -246,31 +233,12 @@
     │       └── 📄 tsconfig.tsbuildinfo
     ├── 📁 backups/
     │   ├── 📁 analytics.backup-20251030-081152/
-    │   │   ├── 📁 src/
-    │   │   │   ├── 🔷 analytics.ts
-    │   │   │   ├── ⚛️ AnalyticsTracker.tsx
-    │   │   │   ├── 🔷 index.ts
-    │   │   │   └── 🔷 track.ts
-    │   │   ├── 📋 package.json
-    │   │   ├── 📋 tsconfig.json
     │   │   └── 📄 tsconfig.tsbuildinfo
-    │   ├── 📁 cleanup-phase2-20251029-091525/
-    │   │   └── 📁 apps/
-    │   │       └── 📁 admin/
-    │   │           ├── 📁 app/
-    │   │           │   ├── 📁 (dashboard)/
-    │   │           │   │   ├── ⚛️ layout.tsx
-    │   │           │   │   └── ⚛️ page.tsx
-    │   │           │   └── ⚛️ page.tsx
-    │   │           ├── 🔷 admin.config.ts
-    │   │           └── 📜 test-import.js
-    │   ├── 📁 dashboard-final-20251029-092032/
-    │   │   └── 📁 (dashboard)/
-    │   │       └── 📁 [module]/
-    │   │           └── 📁 [[...slug]]/
-    │   │               └── ⚛️ page.tsx
-    │   └── 📁 pre-restore-20251028-175242/
-    │       └── 📁 products/
+    │   ├── 📁 pre-restore-20251028-175242/
+    │   │   └── 📁 products/
+    │   │       └── 📄 tsconfig.tsbuildinfo
+    │   └── 📁 storefront-20251031-184142/
+    │       └── 📁 storefront/
     │           └── 📄 tsconfig.tsbuildinfo
     ├── 📁 docs/
     │   ├── 📁 analytics/
@@ -279,6 +247,7 @@
     │   │   ├── 📝 ALIGNEMENT-ARCHITECTURE.md
     │   │   ├── 📝 ARCHITECTURE-CIBLE.md
     │   │   ├── 📝 CIBLE-EVOLUTIONS-11.md
+    │   │   ├── 📝 MIGRATION-DATABASE.md
     │   │   ├── 📝 PLAN-NETTOYAGE-MONOREPO.md
     │   │   └── 📝 ROADMAP-MIGRATION-POST-NETTOYAGE.md
     │   ├── 📄 arborescence-projet.txt
@@ -291,15 +260,48 @@
     │   ├── 📝 ARCHITECTURE-PLAN-EVOL-MONOREPO.md
     │   ├── 📝 ETAT-LIEUX-26oct.md
     │   ├── 📝 FIX-MONOREPO-supabase.md
+    │   ├── 📝 MIGRATION-DATABASE-COMPLETE.md
     │   ├── 📝 MIGRATION-NEWSLETTER.md
+    │   ├── 📝 MIGRATION-REPORT-2025-10-27.md
+    │   ├── 📝 MIGRATION-STATUS copy.md
+    │   ├── 📝 MIGRATION-STATUS-products.md
     │   ├── 📝 MIGRATION-STATUS.md
     │   ├── 📝 NETTOYAGE-PRODUCTS.md
+    │   ├── 📝 PACKAGE-EMAIL.md
+    │   ├── 📝 PACKAGE-UI.md
+    │   ├── 📝 PACKAGE-UTILS.md
     │   ├── 📝 PACKAGES.md
     │   ├── 📝 PHASE9.md
     │   ├── 📝 PROBLEMES-STOREFRONT.md
+    │   ├── 📝 ROADMAP-MIGRATION.md
+    │   ├── 📝 SESSION-TOOLS-2025-11-01.md
     │   ├── 📝 STANDARD-CREATION-TOOL.md
     │   └── 📝 Verif-migration.md
     ├── 📁 packages/
+    │   ├── 📁 admin-shell/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 📁 components/
+    │   │   │   │   ├── ⚛️ AdminLayout.tsx
+    │   │   │   │   ├── ⚛️ AdminNav.tsx
+    │   │   │   │   ├── 🔷 index.ts
+    │   │   │   │   └── ⚛️ ModuleLoader.tsx
+    │   │   │   ├── 📁 types/
+    │   │   │   │   ├── 🔷 index.ts
+    │   │   │   │   ├── 🔷 module.ts
+    │   │   │   │   └── 🔷 services.ts
+    │   │   │   └── 🔷 index.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📝 README.md
+    │   │   └── 📋 tsconfig.json
+    │   ├── 📁 analytics/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 analytics.ts
+    │   │   │   ├── ⚛️ AnalyticsTracker.tsx
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 track.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 auth/
     │   │   ├── 📁 src/
     │   │   │   ├── 🔷 index.ts
@@ -315,21 +317,8 @@
     │   │   ├── 📋 tsconfig.json
     │   │   └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 database/
-    │   │   ├── 📁 backup-20251031-155657/
-    │   │   │   ├── 📁 stock/
-    │   │   │   │   └── 🔷 decrement-stock.ts
-    │   │   │   ├── 🔷 client-admin.ts
-    │   │   │   ├── 🔷 client-browser.ts
-    │   │   │   ├── 🔷 client-server.ts
-    │   │   │   ├── 🔷 database.types.ts
-    │   │   │   ├── 🔷 index.ts
-    │   │   │   ├── 🔷 server.ts
-    │   │   │   ├── 🔷 stripe.ts
-    │   │   │   ├── 🔷 types-helpers.ts
-    │   │   │   └── 🔷 types.ts
     │   │   ├── 📁 scripts/
-    │   │   │   ├── 📜 generate-types-cli.js
-    │   │   │   └── 📜 generate-types.js
+    │   │   │   └── 📄 db-types.mjs
     │   │   ├── 📁 src/
     │   │   │   ├── 📁 clients/
     │   │   │   │   ├── 🔷 client-admin.ts
@@ -343,14 +332,13 @@
     │   │   │   │   └── 🔷 index.ts
     │   │   │   ├── 📁 utils/
     │   │   │   │   └── 🔷 types-helpers.ts
-    │   │   │   └── 🔷 index.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 types.ts
     │   │   ├── 📋 package.json
     │   │   ├── 📋 tsconfig.json
     │   │   └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 email/
     │   │   ├── 📁 src/
-    │   │   │   ├── 📁 services/
-    │   │   │   │   └── 🔷 send.ts
     │   │   │   ├── 📁 templates/
     │   │   │   │   ├── 🔷 index.ts
     │   │   │   │   ├── ⚛️ newsletter-campaign.tsx
@@ -369,8 +357,17 @@
     │   │   ├── 📋 tsconfig.json
     │   │   └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 eslint-config/
-    │   │   ├── 📜 index.js
-    │   │   └── 📋 package.json
+    │   ├── 📁 newsletter/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 images.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   ├── 🔷 render.ts
+    │   │   │   ├── 🔷 types.ts
+    │   │   │   ├── 🔷 utils.ts
+    │   │   │   └── 🔷 validation.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 sanity/
     │   │   ├── 📁 src/
     │   │   │   ├── 📁 lib/
@@ -394,131 +391,90 @@
     │   │   ├── 📝 README.md
     │   │   ├── 📋 tsconfig.json
     │   │   └── 📄 tsconfig.tsbuildinfo
+    │   ├── 📁 shipping/
+    │   │   ├── 📁 src/
+    │   │   │   ├── 🔷 calculator.ts
+    │   │   │   ├── 🔷 config.ts
+    │   │   │   ├── 🔷 index.ts
+    │   │   │   └── 🔷 types.ts
+    │   │   ├── 📋 package.json
+    │   │   ├── 📋 tsconfig.json
+    │   │   └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 tools/
     │   │   ├── 📁 analytics/
     │   │   │   ├── 📁 __tests__/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   │   └── 🔷 example.test.ts
     │   │   │   │   └── 📁 components/
+    │   │   │   └── 📁 src/
+    │   │   │       ├── 📁 api/
+    │   │   │       ├── 📁 components/
+    │   │   │       ├── 📁 hooks/
+    │   │   │       └── 📁 routes/
+    │   │   ├── 📁 categories/
+    │   │   │   ├── 📁 __tests__/
+    │   │   │   │   └── 🔷 categories.test.ts
     │   │   │   ├── 📁 src/
     │   │   │   │   ├── 📁 api/
-    │   │   │   │   ├── 📁 components/
-    │   │   │   │   ├── 📁 hooks/
-    │   │   │   │   ├── 📁 routes/
+    │   │   │   │   │   ├── 🔷 categories.ts
+    │   │   │   │   │   └── 🔷 index.ts
     │   │   │   │   ├── 🔷 constants.ts
     │   │   │   │   ├── 🔷 index.ts
-    │   │   │   │   ├── 🔷 manifest.ts
     │   │   │   │   └── 🔷 types.ts
     │   │   │   ├── 📋 package.json
     │   │   │   ├── 📝 README.md
-    │   │   │   ├── 📋 tsconfig.json
-    │   │   │   └── 🔷 vitest.config.ts
+    │   │   │   └── 📋 tsconfig.json
     │   │   ├── 📁 customers/
     │   │   │   ├── 📁 __tests__/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   │   └── 🔷 example.test.ts
     │   │   │   │   └── 📁 components/
-    │   │   │   ├── 📁 src/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   ├── 📁 components/
-    │   │   │   │   ├── 📁 hooks/
-    │   │   │   │   ├── 📁 routes/
-    │   │   │   │   ├── 🔷 constants.ts
-    │   │   │   │   ├── 🔷 index.ts
-    │   │   │   │   ├── 🔷 manifest.ts
-    │   │   │   │   └── 🔷 types.ts
-    │   │   │   ├── 📋 package.json
-    │   │   │   ├── 📝 README.md
-    │   │   │   ├── 📋 tsconfig.json
-    │   │   │   └── 🔷 vitest.config.ts
+    │   │   │   └── 📁 src/
+    │   │   │       ├── 📁 api/
+    │   │   │       ├── 📁 components/
+    │   │   │       ├── 📁 hooks/
+    │   │   │       └── 📁 routes/
     │   │   ├── 📁 media/
     │   │   │   ├── 📁 __tests__/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   │   └── 🔷 example.test.ts
     │   │   │   │   └── 📁 components/
-    │   │   │   ├── 📁 src/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   ├── 📁 components/
-    │   │   │   │   ├── 📁 hooks/
-    │   │   │   │   ├── 📁 routes/
-    │   │   │   │   ├── 🔷 constants.ts
-    │   │   │   │   ├── 🔷 index.ts
-    │   │   │   │   ├── 🔷 manifest.ts
-    │   │   │   │   └── 🔷 types.ts
-    │   │   │   ├── 📋 package.json
-    │   │   │   ├── 📝 README.md
-    │   │   │   ├── 📋 tsconfig.json
-    │   │   │   └── 🔷 vitest.config.ts
+    │   │   │   └── 📁 src/
+    │   │   │       ├── 📁 api/
+    │   │   │       ├── 📁 components/
+    │   │   │       ├── 📁 hooks/
+    │   │   │       └── 📁 routes/
     │   │   ├── 📁 newsletter/
     │   │   │   ├── 📁 __tests__/
     │   │   │   │   ├── 📁 api/
     │   │   │   │   └── 📁 components/
     │   │   │   ├── 📁 src/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   │   ├── 🔷 analytics.ts
-    │   │   │   │   │   ├── 🔷 subscribers.ts
-    │   │   │   │   │   ├── 📄 subscribers.ts.backup-20251031-135635
-    │   │   │   │   │   └── 📄 subscribers.ts.backup-20251031-141117
     │   │   │   │   ├── 📁 components/
     │   │   │   │   ├── 📁 hooks/
     │   │   │   │   ├── 📁 routes/
-    │   │   │   │   ├── 📁 types/
-    │   │   │   │   ├── 🔷 constants.ts
-    │   │   │   │   ├── 🔷 images.ts
-    │   │   │   │   ├── 🔷 index.ts
-    │   │   │   │   ├── 📄 index.ts.backup-20251031-135635
-    │   │   │   │   ├── 🔷 manifest.ts
-    │   │   │   │   ├── 🔷 render.ts
-    │   │   │   │   ├── 🔷 types.ts
-    │   │   │   │   ├── 📄 types.ts.backup-20251031-135635
-    │   │   │   │   ├── 🔷 utils.ts
-    │   │   │   │   └── 🔷 validation.ts
-    │   │   │   ├── 📋 package.json
-    │   │   │   ├── 📝 README.md
-    │   │   │   ├── 📋 tsconfig.json
-    │   │   │   ├── 📄 tsconfig.tsbuildinfo
-    │   │   │   └── 🔷 vitest.config.ts
+    │   │   │   │   └── 📁 types/
+    │   │   │   └── 📄 tsconfig.tsbuildinfo
     │   │   ├── 📁 orders/
     │   │   │   ├── 📁 __tests__/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   │   └── 🔷 example.test.ts
     │   │   │   │   └── 📁 components/
-    │   │   │   ├── 📁 src/
-    │   │   │   │   ├── 📁 api/
-    │   │   │   │   ├── 📁 components/
-    │   │   │   │   ├── 📁 hooks/
-    │   │   │   │   ├── 📁 routes/
-    │   │   │   │   ├── 🔷 constants.ts
-    │   │   │   │   ├── 🔷 index.ts
-    │   │   │   │   ├── 🔷 manifest.ts
-    │   │   │   │   └── 🔷 types.ts
-    │   │   │   ├── 📋 package.json
-    │   │   │   ├── 📝 README.md
-    │   │   │   ├── 📋 tsconfig.json
-    │   │   │   └── 🔷 vitest.config.ts
+    │   │   │   └── 📁 src/
+    │   │   │       ├── 📁 api/
+    │   │   │       ├── 📁 components/
+    │   │   │       ├── 📁 hooks/
+    │   │   │       └── 📁 routes/
     │   │   └── 📁 products/
     │   │       ├── 📁 __tests__/
     │   │       │   ├── 📁 api/
-    │   │       │   │   └── 🔷 example.test.ts
-    │   │       │   └── 📁 components/
+    │   │       │   ├── 📁 components/
+    │   │       │   └── 🔷 products.test.ts
     │   │       ├── 📁 src/
     │   │       │   ├── 📁 api/
+    │   │       │   │   ├── 🔷 index.ts
+    │   │       │   │   └── 🔷 products.ts
     │   │       │   ├── 📁 components/
     │   │       │   ├── 📁 hooks/
     │   │       │   ├── 📁 routes/
     │   │       │   ├── 🔷 constants.ts
     │   │       │   ├── 🔷 index.ts
-    │   │       │   ├── 🔷 manifest.ts
     │   │       │   └── 🔷 types.ts
     │   │       ├── 📋 package.json
     │   │       ├── 📝 README.md
     │   │       ├── 📋 tsconfig.json
-    │   │       └── 🔷 vitest.config.ts
-    │   ├── 📁 typescript-config/
-    │   │   ├── 📋 base.json
-    │   │   ├── 📋 nextjs.json
-    │   │   ├── 📋 package.json
-    │   │   └── 📋 react-library.json
+    │   │       └── 📄 tsconfig.tsbuildinfo
     │   ├── 📁 ui/
     │   │   ├── 📁 src/
     │   │   │   ├── 📁 components/
@@ -575,6 +531,7 @@
     │   │   │   │   └── 🔷 utils.ts
     │   │   │   └── 🔷 index.ts
     │   │   ├── 📋 package.json
+    │   │   ├── 📄 package.json.backup-20251027-174944
     │   │   ├── 📜 tailwind.preset.js
     │   │   ├── 📋 tsconfig.json
     │   │   └── 📄 tsconfig.tsbuildinfo
@@ -594,61 +551,64 @@
     │       └── 📄 tsconfig.tsbuildinfo
     ├── 📁 scripts/
     │   ├── 📁 logs/
-    │   ├── 📄 analyze-analytics-dependencies.ps1
-    │   ├── 📄 analyze-analytics.ps1
-    │   ├── 📄 analyze-architecture-gaps.ps1
-    │   ├── 📄 analyze-root-packages.ps1
-    │   ├── 📄 audit-analytics-module.ps1
-    │   ├── 📄 check-database-exports.ps1
-    │   ├── 📄 check-monorepo-compatibility.ps1
-    │   ├── 📄 cleanup-backups.ps1
-    │   ├── 📄 complete-tools-structure.ps1
-    │   ├── 📄 diagnose-database.ps1
-    │   ├── 📄 diagnose-monorepo-state.ps1
-    │   ├── 📄 diagnose-newsletter-complete.ps1
-    │   ├── 📄 diagnose-newsletter-deps.ps1
-    │   ├── 📄 diagnose-typescript-config.ps1
-    │   ├── 📄 diagnostic.ps1
+    │   ├── 📄 audit-cross-project.ps1
+    │   ├── 📄 audit-imports.ps1
+    │   ├── 📄 audit-migration.ps1
+    │   ├── 📄 audit-react-complete.ps1
+    │   ├── 📄 check-admin-shell-app.ps1
+    │   ├── 📄 check-admin-shell.ps1
+    │   ├── 📄 check-imports.ps1
+    │   ├── 📄 check-packages.ps1
+    │   ├── 📄 check-react-versions.ps1
+    │   ├── 📄 check-real-structure.ps1
+    │   ├── 📄 check-stripe-routes.ps1
+    │   ├── 📄 complete-admin-shell.ps1
+    │   ├── 📄 create-signed-url-route.ps1
+    │   ├── 📄 deep-check.ps1
+    │   ├── 📄 deploy-stripe-webhook.ps1
+    │   ├── 📄 diagnose-product-images.ps1
     │   ├── 📄 doc-packages.ps1
-    │   ├── 📄 find-old-imports.ps1
+    │   ├── 📄 explore-migration-status.ps1
     │   ├── 📄 fix-all-imports.ps1
-    │   ├── 📄 fix-database-imports.ps1
+    │   ├── 📄 fix-database-complete.ps1
+    │   ├── 📄 fix-image-imports.ps1
+    │   ├── 📄 fix-imports.ps1
+    │   ├── 📄 fix-stripe-export.ps1
+    │   ├── 📄 full-audit.ps1
     │   ├── 📄 generate-doc.ps1
+    │   ├── 📄 generate-migration-report.ps1
+    │   ├── 📄 generate-packages-doc.ps1
     │   ├── 📜 generate-tree.js
-    │   ├── 📄 generate-types.ps1
-    │   ├── 📄 install-subscribers-fix.ps1
-    │   ├── 📄 migrate-analytics-to-tools.ps1
-    │   ├── 📄 migrate-database-package.ps1
-    │   ├── 📄 migrate-email-package.ps1
+    │   ├── 📄 install-admin-shell-app.ps1
+    │   ├── 📄 install-admin-shell.ps1
+    │   ├── 📄 install-newsletter.ps1
+    │   ├── 📄 master-migration.ps1
+    │   ├── 📄 migrate-api-route.ps1
+    │   ├── 📄 migrate-missing-files.ps1
+    │   ├── 📄 migrate-react19.ps1
     │   ├── 📄 migration-scripts-blanche-renaudin.tar.gz
-    │   ├── 📄 monorepo-cleanup.ps1
     │   ├── 📝 README-SCRIPTS-MIGRATION.md
-    │   ├── 📄 test-newsletter-build.ps1
-    │   ├── 📄 test-supabase-types.ps1
-    │   └── 📄 verify-architecture.ps1
+    │   ├── 📄 setup-monorepo.ps1
+    │   ├── 📄 verif-imports.ps1
+    │   ├── 📄 verify-monorepo-health.ps1
+    │   └── 📄 verify-project-complete.ps1
     ├── 📁 tests/
     │   └── 📁 e2e/
     ├── 📄 .env.example
     ├── 📄 .gitignore
-    ├── 📋 architecture-gaps-report.json
-    ├── 📝 ARCHITECTURE-GAPS-REPORT.md
-    ├── 📋 architecture-verification-report.json
     ├── 📄 build-errors.txt
-    ├── 📋 diagnostic-report.json
-    ├── 📝 MIGRATION-REPORT-2025-10-27.md
-    ├── 📝 MIGRATION-STATUS.md
     ├── 📋 package.json
     ├── 📄 package.json.bak
     ├── ⚙️ pnpm-workspace.yaml
     ├── 📝 README.md
     ├── 📋 tsconfig.base.json
-    ├── 📋 tsconfig.json
+    ├── 📄 tsconfig.base.json.backup
     └── 📋 turbo.json
 
 
 📈 Statistiques :
-   • Dossiers : 209
-   • Fichiers : 426
-   • Total : 635 éléments
+   • Dossiers : 200
+   • Fichiers : 395
+   • Total : 595 éléments
 
 💡 Fichiers ignorés : node_modules, .next, .turbo, dist, build, .git, etc.
