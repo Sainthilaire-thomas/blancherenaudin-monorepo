@@ -1,4 +1,185 @@
-# **Document 2 — Création d’un nouveau Tool compatible avec le Shell**
+
+# **Document 2 — Création d'un nouveau Tool compatible avec le Shell**
+
+> **📅 Dernière mise à jour** : 2 novembre 2025
+>
+> **✅ Statut** : Recette validée avec POC `test-tool`
+
+---
+
+## 🎉 Recette validée - POC test-tool
+
+**IMPORTANT** : Cette recette a été validée et fonctionne à 100% avec Next.js 15.0.3 + pnpm workspace.
+
+### ✅ Configuration qui fonctionne
+
+#### 1. Structure du package
+
+```
+packages/tools/test-tool/
+├── src/
+│   └── index.tsx          ← .tsx PAS .ts !
+├── package.json
+└── node_modules/
+```
+
+#### 2. Package.json minimal
+
+```json
+{
+  "name": "@repo/tools-test",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.tsx"   // ✅ Pointer vers .tsx
+  },
+  "dependencies": {
+    "react": "^19.0.0"
+  }
+}
+```
+
+#### 3. Composant simple
+
+```tsx
+// packages/tools/test-tool/src/index.tsx
+export function TestComponent() {
+  return <div>Test component works!</div>
+}
+```
+
+#### 4. Page Next.js
+
+```tsx
+// apps/admin/app/test-tool/page.tsx
+import { TestComponent } from '@repo/tools-test'
+
+export default function TestToolPage() {
+  return (
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Test Tool Page</h1>
+      <TestComponent />
+    </div>
+  )
+}
+```
+
+#### 5. Installation du package
+
+```bash
+# Dans apps/admin
+pnpm add @repo/tools-test@workspace:*
+```
+
+#### 6. Configuration Next.js
+
+```typescript
+// apps/admin/next.config.ts
+const nextConfig: NextConfig = {
+  transpilePackages: [
+    '@repo/tools-test',  // ✅ CRITIQUE
+  ],
+}
+```
+
+### 🎯 Points critiques à respecter
+
+| Point                               | Importance   | Détail                                                  |
+| ----------------------------------- | ------------ | -------------------------------------------------------- |
+| **Extension .tsx**            | 🔴 CRITIQUE  | Utiliser `.tsx`pour les fichiers avec JSX, pas `.ts` |
+| **Ajouter comme dépendance** | 🔴 CRITIQUE  | `pnpm add @repo/xxx@workspace:*`dans apps/admin        |
+| **transpilePackages**         | 🔴 CRITIQUE  | Ajouter le package dans next.config.ts                   |
+| **Export simple**             | 🟡 Important | `"exports": { ".": "./src/index.tsx" }`                |
+| **Symlink pnpm**              | 🟡 Important | Vérifier que `node_modules/@repo/xxx`existe           |
+
+### ⚠️ Erreurs courantes
+
+#### Erreur 0 : "The default export is not a React Component" (LAYOUTS VIDES)
+
+```
+Error: The default export is not a React Component in "/page"
+```
+
+**Cause** : Un layout parent (groupe de routes) est vide ou corrompu
+
+**Symptôme** : Le composant fonctionne hors du groupe mais pas dedans
+
+**Solution** : Vérifier que TOUS les layouts retournent `{children}` :
+
+```tsx
+// ❌ LAYOUT VIDE - CASSE TOUT
+export default function Layout() {
+  // rien ici
+}
+
+// ✅ MINIMUM REQUIS
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
+}
+```
+
+**Comment vérifier** :
+
+```powershell
+# Afficher le contenu du layout
+Get-Content "apps/admin/app/(tools)/layout.tsx"
+
+# S'il est vide ou ne retourne rien → LE REMPLACER
+```
+
+**Note** : Cette erreur est insidieuse car le message ne mentionne PAS le layout !
+
+#### Erreur 1 : "Expected ';', got 'component'"
+
+```
+Error: × Expected ';', got 'component'
+```
+
+**Cause** : Le fichier est `.ts` au lieu de `.tsx`
+
+**Solution** : Renommer en `.tsx` et mettre à jour l'export dans package.json
+
+#### Erreur 2 : "Module not found: Can't resolve '@repo/xxx'"
+
+```
+Module not found: Can't resolve '@repo/tools-test'
+```
+
+**Cause** : Le package n'est pas ajouté comme dépendance
+
+**Solution** :
+
+```bash
+cd apps/admin
+pnpm add @repo/tools-test@workspace:*
+```
+
+#### Erreur 3 : "The default export is not a React Component"
+
+```
+Error: The default export is not a React Component in "/page"
+```
+
+**Cause multiple possible** :
+
+1. Le composant n'est pas exporté correctement
+2. Le package n'est pas dans `transpilePackages`
+3. Problème de cache Next.js
+
+**Solutions** :
+
+```bash
+# 1. Vérifier l'export
+Get-Content packages/tools/xxx/src/index.tsx
+
+# 2. Ajouter dans transpilePackages
+# Voir next.config.ts
+
+# 3. Nettoyer le cache
+Remove-Item -Recurse -Force apps/admin/.next
+pnpm dev
+```
 
 ---
 
@@ -7,10 +188,10 @@
 Ce guide explique comment :
 
 * Créer un **nouveau tool** modulaire dans `packages/tools/`
-* L’intégrer dans le **shell Next.js** (`apps/web`)
+* L'intégrer dans le **shell Next.js** (`apps/admin`)
 * Le rendre compatible avec :
-  * Le **Design System partagé** (`@acme/ui`)
-  * Le **client Supabase partagé** (`@acme/supabase`)
+  * Le **Design System partagé** (`@repo/ui`)
+  * Le **client Supabase partagé** (`@repo/database`)
   * Le **système de routage App Router**
   * Le **registre des tools** (manifest & permissions)
   * Le **middleware RBAC**
@@ -21,351 +202,564 @@ Ce guide explique comment :
 
 Chaque tool est un **package indépendant** dans le dossier `packages/tools/`.
 
-Exemple :
+Exemple : Création du tool `categories`
 
-➡️ Création du tool `tool-c`
-
-<pre class="overflow-visible!" data-start="835" data-end="906"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>mkdir</span><span> -p packages/tools/tool-c/src/{routes,components,data}
-</span></span></code></div></div></pre>
+```bash
+mkdir -p packages/tools/categories/src/{routes,api,components,hooks}
+```
 
 **Fichier `package.json` :**
 
-<pre class="overflow-visible!" data-start="938" data-end="1185"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span><span>{</span><span>
-  </span><span>"name"</span><span>:</span><span></span><span>"@acme/tool-c"</span><span>,</span><span>
-  </span><span>"version"</span><span>:</span><span></span><span>"0.1.0"</span><span>,</span><span>
-  </span><span>"private"</span><span>:</span><span></span><span>true</span><span></span><span>,</span><span>
-  </span><span>"type"</span><span>:</span><span></span><span>"module"</span><span>,</span><span>
-  </span><span>"main"</span><span>:</span><span></span><span>"src/index.ts"</span><span>,</span><span>
-  </span><span>"dependencies"</span><span>:</span><span></span><span>{</span><span>
-    </span><span>"@acme/ui"</span><span>:</span><span></span><span>"*"</span><span>,</span><span>
-    </span><span>"@acme/supabase"</span><span>:</span><span></span><span>"*"</span><span>,</span><span>
-    </span><span>"@acme/types"</span><span>:</span><span></span><span>"*"</span><span>,</span><span>
-    </span><span>"react"</span><span>:</span><span></span><span>"^18.3.0"</span><span>
-  </span><span>}</span><span>
-</span><span>}</span><span>
-</span></span></code></div></div></pre>
-
----
-
-## 🪪 Étape 2 — Créer le manifest du tool
-
-Le manifest sert à enregistrer le tool dans le  **registre global du shell** .
-
-<pre class="overflow-visible!" data-start="1313" data-end="1529"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-ts"><span><span>// packages/tools/tool-c/src/manifest.ts</span><span>
-</span><span>export</span><span></span><span>default</span><span> {
-  </span><span>id</span><span>: </span><span>'tool-c'</span><span>,
-  </span><span>name</span><span>: </span><span>'Tool C'</span><span>,
-  </span><span>icon</span><span>: </span><span>'Puzzle'</span><span>,
-  </span><span>route</span><span>: </span><span>'/tool-c'</span><span>,
-  </span><span>permissions</span><span>: [</span><span>'tool_c:read'</span><span>, </span><span>'tool_c:write'</span><span>],
-  </span><span>enabled</span><span>: </span><span>true</span><span>,
-} </span><span>as</span><span></span><span>const</span><span>;
-</span></span></code></div></div></pre>
-
-### Champs du manifest :
-
-| Champ           | Description                                 |
-| --------------- | ------------------------------------------- |
-| `id`          | Identifiant unique du tool                  |
-| `name`        | Nom affiché dans la navigation             |
-| `icon`        | Icône MUI/Lucide affichée dans la sidebar |
-| `route`       | Route d’entrée du tool                    |
-| `permissions` | Rôles ou scopes autorisés                 |
-| `enabled`     | Activation via feature flag                 |
-
----
-
-## 🧩 Étape 3 — Créer les composants principaux du tool
-
-Chaque tool expose ses routes sous `src/routes/`.
-
-### Exemple minimal
-
-<pre class="overflow-visible!" data-start="2004" data-end="2264"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-tsx"><span><span>// packages/tools/tool-c/src/routes/home.tsx</span><span>
-</span><span>'use client'</span><span>;
-</span><span>import</span><span> { </span><span>Typography</span><span>, </span><span>Box</span><span> } </span><span>from</span><span></span><span>'@mui/material'</span><span>;
-
-</span><span>export</span><span></span><span>function</span><span></span><span>ToolCHome</span><span>(</span><span></span><span>) {
-  </span><span>return</span><span> (
-    </span><span><span class="language-xml"><Box</span></span><span></span><span>p</span><span>=</span><span>{2}</span><span>>
-      </span><span><Typography</span><span></span><span>variant</span><span>=</span><span>"h5"</span><span>>Bienvenue dans Tool C</span><span></Typography</span><span>>
-    </span><span></Box</span><span>>
-  );
+```json
+{
+  "name": "@repo/tools-categories",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@repo/ui": "workspace:*",
+    "@repo/database": "workspace:*",
+    "react": "^19.0.0",
+    "next": "^15.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vitest": "^2.0.0"
+  }
 }
-</span></span></code></div></div></pre>
+```
 
-<pre class="overflow-visible!" data-start="2266" data-end="2567"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-tsx"><span><span>// packages/tools/tool-c/src/routes/list.tsx</span><span>
-</span><span>'use client'</span><span>;
-</span><span>import</span><span></span><span>Link</span><span></span><span>from</span><span></span><span>'next/link'</span><span>;
-</span><span>import</span><span> { </span><span>Box</span><span>, </span><span>Button</span><span> } </span><span>from</span><span></span><span>'@mui/material'</span><span>;
+---
 
-</span><span>export</span><span></span><span>function</span><span></span><span>ToolCList</span><span>(</span><span></span><span>) {
-  </span><span>return</span><span> (
-    </span><span><span class="language-xml"><Box</span></span><span></span><span>p</span><span>=</span><span>{2}</span><span>>
-      </span><span><Button</span><span></span><span>component</span><span>=</span><span>{Link}</span><span></span><span>href</span><span>=</span><span>"/tool-c/items/abc"</span><span>>Voir l’item ABC</span><span></Button</span><span>>
-    </span><span></Box</span><span>>
-  );
+## 🧩 Étape 2 — Créer les composants du tool
+
+### Structure recommandée
+
+```
+packages/tools/categories/
+├── src/
+│   ├── api/              # Logique métier pure
+│   │   └── categories.ts
+│   ├── routes/           # Composants de pages (RSC + Client)
+│   │   ├── CategoriesList.tsx
+│   │   └── CategoryDetail.tsx
+│   ├── components/       # Composants UI spécifiques
+│   │   └── CategoryForm.tsx
+│   ├── hooks/           # Hooks métier
+│   ├── types.ts         # Types
+│   └── index.ts         # Exports publics
+```
+
+### ⚠️ Structure Next.js avec layouts
+
+```
+apps/admin/app/
+├── (tools)/                    # Groupe de routes
+│   ├── layout.tsx              ⚠️ DOIT RETOURNER {children}
+│   ├── categories/
+│   │   ├── layout.tsx          ✅ Optionnel (navigation locale)
+│   │   └── page.tsx            ✅ Import depuis @repo/tools-categories
+│   └── newsletter/
+└── other-routes/
+```
+
+**RÈGLE D'OR** : Tout layout DOIT retourner `{children}`, même minimal :
+
+```tsx
+// ✅ Minimum requis pour un layout
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
 }
-</span></span></code></div></div></pre>
+```
 
-<pre class="overflow-visible!" data-start="2569" data-end="2917"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-tsx"><span><span>// packages/tools/tool-c/src/routes/detail.tsx</span><span>
-</span><span>'use client'</span><span>;
-</span><span>import</span><span> { useParams } </span><span>from</span><span></span><span>'next/navigation'</span><span>;
-</span><span>import</span><span> { </span><span>Box</span><span>, </span><span>Typography</span><span> } </span><span>from</span><span></span><span>'@mui/material'</span><span>;
+### Exemple : API pure (testable)
 
-</span><span>export</span><span></span><span>function</span><span></span><span>ToolCDetail</span><span>(</span><span></span><span>) {
-  </span><span>const</span><span> { id } = useParams<{ </span><span>id</span><span>: </span><span>string</span><span> }>();
-  </span><span>return</span><span> (
-    </span><span><span class="language-xml"><Box</span></span><span></span><span>p</span><span>=</span><span>{2}</span><span>>
-      </span><span><Typography</span><span></span><span>variant</span><span>=</span><span>"h6"</span><span>>Détail de {id}</span><span></Typography</span><span>>
-    </span><span></Box</span><span>>
-  );
+```typescript
+// packages/tools/categories/src/api/categories.ts
+import { createServerClient } from '@repo/database'
+
+export interface Category {
+  id: string
+  name: string
+  slug: string
+  parent_id: string | null
+  order_index: number
+  is_active: boolean
 }
-</span></span></code></div></div></pre>
 
-> Ces composants contiennent la logique du tool (UI, data, interactions).
->
-> Ils seront **montés dans l’app shell** via des pages minces.
-
----
-
-## 🧭 Étape 4 — Monter le tool dans le Shell Next.js
-
-Le shell (dans `apps/web/app/(tools)/`) héberge les routes du tool.
-
-<pre class="overflow-visible!" data-start="3187" data-end="3362"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>apps/web/app/(tools)/tool-c/
-├─ layout.tsx
-├─ page.tsx
-├─ items/
-│  ├─ page.tsx
-│  └─ [</span><span>id</span><span>]/page.tsx
-├─ @modal/
-│  └─ (.)items/[</span><span>id</span><span>]/page.tsx
-├─ loading.tsx
-└─ error.tsx
-</span></span></code></div></div></pre>
-
-### Pages minces (réexport des routes)
-
-<pre class="overflow-visible!" data-start="3403" data-end="3798"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-tsx"><span><span>// apps/web/app/(tools)/tool-c/page.tsx</span><span>
-</span><span>import</span><span> { </span><span>ToolCHome</span><span> } </span><span>from</span><span></span><span>'@acme/tool-c/routes/home'</span><span>;
-</span><span>export</span><span></span><span>default</span><span></span><span>ToolCHome</span><span>;
-
-</span><span>// apps/web/app/(tools)/tool-c/items/page.tsx</span><span>
-</span><span>import</span><span> { </span><span>ToolCList</span><span> } </span><span>from</span><span></span><span>'@acme/tool-c/routes/list'</span><span>;
-</span><span>export</span><span></span><span>default</span><span></span><span>ToolCList</span><span>;
-
-</span><span>// apps/web/app/(tools)/tool-c/items/[id]/page.tsx</span><span>
-</span><span>import</span><span> { </span><span>ToolCDetail</span><span> } </span><span>from</span><span></span><span>'@acme/tool-c/routes/detail'</span><span>;
-</span><span>export</span><span></span><span>default</span><span></span><span>ToolCDetail</span><span>;
-</span></span></code></div></div></pre>
-
----
-
-## 🧭 Étape 5 — Créer le layout local du tool
-
-Chaque tool a son propre  **layout interne** , pour la navigation locale.
-
-<pre class="overflow-visible!" data-start="3925" data-end="4539"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-tsx"><span><span>// apps/web/app/(tools)/tool-c/layout.tsx</span><span>
-</span><span>import</span><span></span><span>Link</span><span></span><span>from</span><span></span><span>'next/link'</span><span>;
-</span><span>import</span><span> { </span><span>Tabs</span><span>, </span><span>Tab</span><span> } </span><span>from</span><span></span><span>'@mui/material'</span><span>;
-</span><span>import</span><span> { useSelectedLayoutSegment } </span><span>from</span><span></span><span>'next/navigation'</span><span>;
-
-</span><span>export</span><span></span><span>default</span><span></span><span>function</span><span></span><span>ToolCLayout</span><span>(</span><span>{ children }: { children: React.ReactNode }</span><span>) {
-  </span><span>const</span><span> segment = </span><span>useSelectedLayoutSegment</span><span>();
-
-  </span><span>return</span><span> (
-    </span><span><span class="language-xml"><></span></span><span>
-      </span><span><Tabs</span><span></span><span>value</span><span>=</span><span>{segment</span><span> ?? '</span><span>home</span><span>'}>
-        </span><span><Tab</span><span></span><span>value</span><span>=</span><span>"home"</span><span></span><span>label</span><span>=</span><span>"Accueil"</span><span></span><span>component</span><span>=</span><span>{Link}</span><span></span><span>href</span><span>=</span><span>"/tool-c"</span><span> />
-        </span><span><Tab</span><span></span><span>value</span><span>=</span><span>"items"</span><span></span><span>label</span><span>=</span><span>"Items"</span><span></span><span>component</span><span>=</span><span>{Link}</span><span></span><span>href</span><span>=</span><span>"/tool-c/items"</span><span> />
-      </span><span></Tabs</span><span>>
-
-      </span><span><div</span><span></span><span>style</span><span>=</span><span>{{</span><span></span><span>padding:</span><span></span><span>16</span><span> }}>{children}</span><span></div</span><span>>
-    </span><span></></span><span>
-  );
+export async function listCategories() {
+  const supabase = createServerClient()
+  
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .order('order_index')
+  
+  return { data, error }
 }
-</span></span></code></div></div></pre>
 
-### Bonus : parallel routes pour modales
+export async function getCategory(id: string) {
+  const supabase = createServerClient()
+  
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('id', id)
+    .single()
+  
+  return { data, error }
+}
 
-Exemple : vue rapide d’un item sans quitter la liste
+export async function createCategory(input: Omit<Category, 'id'>) {
+  const supabase = createServerClient()
+  
+  const { data, error } = await supabase
+    .from('categories')
+    .insert(input)
+    .select()
+    .single()
+  
+  return { data, error }
+}
+```
 
-<pre class="overflow-visible!" data-start="4636" data-end="4701"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>apps/web/app/(tools)/tool-c/@modal/(.)items/[</span><span>id</span><span>]/page.tsx
-</span></span></code></div></div></pre>
+### Exemple : Route (Server Component)
+
+```tsx
+// packages/tools/categories/src/routes/CategoriesList.tsx
+import { listCategories } from '../api/categories'
+import { CategoriesClient } from './CategoriesClient'
+
+export async function CategoriesList() {
+  const { data: categories, error } = await listCategories()
+  
+  if (error) {
+    return <div>Erreur: {error.message}</div>
+  }
+  
+  return <CategoriesClient initialCategories={categories || []} />
+}
+```
+
+### Exemple : Client Component
+
+```tsx
+// packages/tools/categories/src/routes/CategoriesClient.tsx
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@repo/ui'
+import type { Category } from '../types'
+
+interface Props {
+  initialCategories: Category[]
+}
+
+export function CategoriesClient({ initialCategories }: Props) {
+  const [categories, setCategories] = useState(initialCategories)
+  
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Catégories</h1>
+        <Button>Nouvelle catégorie</Button>
+      </div>
+    
+      <div className="grid gap-4">
+        {categories.map(cat => (
+          <div key={cat.id} className="border p-4 rounded">
+            {cat.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### Exports publics
+
+```typescript
+// packages/tools/categories/src/index.ts
+export * from './types'
+export * from './api'
+export * from './routes'
+```
 
 ---
 
-## ⚙️ Étape 6 — Ajouter au registre global des tools
+## 🧭 Étape 3 — Monter le tool dans le Shell Next.js
 
-Le shell centralise tous les tools dans un fichier commun :
+Le shell (dans `apps/admin/app/(tools)/`) héberge les routes du tool.
 
-<pre class="overflow-visible!" data-start="4823" data-end="5047"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-ts"><span><span>// apps/web/app/(shell)/tool-registry.ts</span><span>
-</span><span>import</span><span> toolA </span><span>from</span><span></span><span>'@acme/tool-a/manifest'</span><span>;
-</span><span>import</span><span> toolB </span><span>from</span><span></span><span>'@acme/tool-b/manifest'</span><span>;
-</span><span>import</span><span> toolC </span><span>from</span><span></span><span>'@acme/tool-c/manifest'</span><span>;
+### Structure
 
-</span><span>export</span><span></span><span>const</span><span></span><span>TOOLS</span><span> = [toolA, toolB, toolC];
-</span></span></code></div></div></pre>
+```
+apps/admin/app/(tools)/categories/
+├── page.tsx              # Liste des catégories
+├── [id]/
+│   └── page.tsx          # Détail d'une catégorie
+├── new/
+│   └── page.tsx          # Nouvelle catégorie
+├── layout.tsx            # Layout local (navigation)
+└── error.tsx             # Error boundary
+```
 
-Ce registre alimente :
+### Pages minces (wrapper de composants)
 
-* La **navigation globale** (sidebar, AppBar…)
-* Les **autorisations** (permissions par role)
-* L’**affichage conditionnel** (feature flags)
+```tsx
+// apps/admin/app/(tools)/categories/page.tsx
+import { CategoriesList } from '@repo/tools-categories'
+
+export default async function CategoriesPage() {
+  return <CategoriesList />
+}
+```
+
+```tsx
+// apps/admin/app/(tools)/categories/[id]/page.tsx
+import { CategoryDetail } from '@repo/tools-categories'
+
+interface Props {
+  params: { id: string }
+}
+
+export default async function CategoryDetailPage({ params }: Props) {
+  return <CategoryDetail categoryId={params.id} />
+}
+```
+
+### Layout local (navigation du tool)
+
+```tsx
+// apps/admin/app/(tools)/categories/layout.tsx
+'use client'
+
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+export default function CategoriesLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const pathname = usePathname()
+  
+  return (
+    <div>
+      <nav className="border-b mb-4">
+        <div className="flex gap-4 p-4">
+          <Link 
+            href="/categories"
+            className={pathname === '/categories' ? 'font-bold' : ''}
+          >
+            Liste
+          </Link>
+          <Link 
+            href="/categories/new"
+            className={pathname === '/categories/new' ? 'font-bold' : ''}
+          >
+            Nouveau
+          </Link>
+        </div>
+      </nav>
+    
+      {children}
+    </div>
+  )
+}
+```
 
 ---
 
-## 🔒 Étape 7 — Gérer la sécurité & RBAC
+## ⚙️ Étape 4 — Configuration Next.js
 
-Le shell utilise un middleware pour filtrer l’accès aux routes du tool :
+### Ajouter le package comme dépendance
 
-<pre class="overflow-visible!" data-start="5335" data-end="5825"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-ts"><span><span>// apps/web/middleware.ts</span><span>
-</span><span>import</span><span> { </span><span>NextResponse</span><span> } </span><span>from</span><span></span><span>'next/server'</span><span>;
-</span><span>import</span><span> { getSessionFromCookies } </span><span>from</span><span></span><span>'@acme/supabase/auth'</span><span>;
+```bash
+cd apps/admin
+pnpm add @repo/tools-categories@workspace:*
+```
 
-</span><span>export</span><span></span><span>async</span><span></span><span>function</span><span></span><span>middleware</span><span>(</span><span>req: Request</span><span>) {
-  </span><span>const</span><span> { user, roles } = </span><span>await</span><span></span><span>getSessionFromCookies</span><span>(req);
-  </span><span>const</span><span> url = </span><span>new</span><span></span><span>URL</span><span>(req.</span><span>url</span><span>);
+### Configurer transpilePackages
 
-  </span><span>// Protection du tool C</span><span>
-  </span><span>if</span><span> (url.</span><span>pathname</span><span>.</span><span>startsWith</span><span>(</span><span>'/tool-c'</span><span>) && !roles.</span><span>includes</span><span>(</span><span>'tool_c:read'</span><span>)) {
-    </span><span>return</span><span></span><span>NextResponse</span><span>.</span><span>redirect</span><span>(</span><span>new</span><span></span><span>URL</span><span>(</span><span>'/forbidden'</span><span>, req.</span><span>url</span><span>));
+```typescript
+// apps/admin/next.config.ts
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  
+  // ✅ CRITIQUE : Transpiler tous les packages tools
+  transpilePackages: [
+    '@repo/ui',
+    '@repo/database',
+    '@repo/tools-categories',  // ✅ Ajouter le nouveau tool
+  ],
+  
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+    ],
+  },
+}
+
+export default nextConfig
+```
+
+---
+
+## 🔒 Étape 5 — Sécurité & RBAC (optionnel)
+
+### Ajouter au registre des tools
+
+```typescript
+// apps/admin/lib/registry.ts
+import { TagIcon } from 'lucide-react'
+
+export const toolsRegistry = {
+  categories: {
+    id: 'categories',
+    name: 'Catégories',
+    icon: TagIcon,
+    route: '/categories',
+    permissions: ['categories:read'],
+    loader: () => import('@repo/tools-categories'),
+  },
+  // ... autres tools
+}
+```
+
+### Middleware de sécurité
+
+```typescript
+// apps/admin/middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { createServerClient } from '@repo/database'
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Protection des routes tools
+  if (pathname.startsWith('/categories')) {
+    const supabase = createServerClient()
+    const { data: { session } } = await supabase.auth.getSession()
+  
+    if (!session) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  
+    // Vérifier permissions (TODO: implémenter)
   }
 
-  </span><span>return</span><span></span><span>NextResponse</span><span>.</span><span>next</span><span>();
+  return NextResponse.next()
 }
-</span></span></code></div></div></pre>
+```
 
 ---
 
-## 🧮 Étape 8 — Créer le schéma Supabase du tool
+## 🧮 Étape 6 — Schéma Supabase (optionnel)
 
-Chaque tool peut avoir ses propres tables dans un **schéma dédié** (`tool_c`).
-
-Exemple SQL :
-
-<pre class="overflow-visible!" data-start="5977" data-end="6445"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-sql"><span><span>create</span><span> schema if </span><span>not</span><span></span><span>exists</span><span> tool_c;
-
-</span><span>create</span><span></span><span>table</span><span> tool_c.items (
-  id uuid </span><span>primary</span><span> key </span><span>default</span><span> gen_random_uuid(),
-  org_id uuid </span><span>references</span><span> public.organizations(id),
-  name text,
-  created_by uuid </span><span>references</span><span> auth.users(id),
-  inserted_at timestamptz </span><span>default</span><span> now()
+```sql
+-- Créer la table categories
+CREATE TABLE categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  parent_id UUID REFERENCES categories(id),
+  order_index INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
 );
 
-</span><span>alter</span><span></span><span>table</span><span> tool_c.items enable </span><span>row</span><span> level security;
+-- RLS
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 
-</span><span>create</span><span> policy "Org members can read tool_c.items"
-</span><span>on</span><span> tool_c.items
-</span><span>for</span><span></span><span>select</span><span>
-</span><span>to</span><span> authenticated
-</span><span>using</span><span> ( org_id </span><span>=</span><span> auth.jwt() </span><span>-</span><span>>></span><span></span><span>'org_id'</span><span> );
-</span></span></code></div></div></pre>
+CREATE POLICY "Public can view active categories"
+ON categories FOR SELECT
+USING (is_active = true);
 
-> Chaque requête Supabase utilisera le `client` mutualisé (`@acme/supabase`).
+CREATE POLICY "Admins can manage categories"
+ON categories FOR ALL
+USING (
+  EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid()
+    AND role IN ('admin', 'owner')
+  )
+);
+```
 
 ---
 
-## 📡 Étape 9 — Ajouter les hooks de données (optionnel)
+## 🧪 Étape 7 — Tests
 
-Dans `packages/tools/tool-c/src/data/`, tu peux créer des hooks dédiés :
+### Tests unitaires (API)
 
-<pre class="overflow-visible!" data-start="6663" data-end="7102"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-ts"><span><span>// packages/tools/tool-c/src/data/useItems.ts</span><span>
-</span><span>'use client'</span><span>;
-</span><span>import</span><span> { createBrowserSupabase } </span><span>from</span><span></span><span>'@acme/supabase'</span><span>;
-</span><span>import</span><span> { useEffect, useState } </span><span>from</span><span></span><span>'react'</span><span>;
+```typescript
+// packages/tools/categories/src/api/__tests__/categories.test.ts
+import { describe, it, expect, vi } from 'vitest'
+import { listCategories, createCategory } from '../categories'
 
-</span><span>export</span><span></span><span>function</span><span></span><span>useItems</span><span>(</span><span></span><span>) {
-  </span><span>const</span><span> [items, setItems] = useState<</span><span>any</span><span>[]>([]);
-  </span><span>const</span><span> supabase = </span><span>createBrowserSupabase</span><span>();
+vi.mock('@repo/database', () => ({
+  createServerClient: () => ({
+    from: vi.fn(() => ({
+      select: vi.fn().mockReturnThis(),
+      order: vi.fn().mockResolvedValue({
+        data: [
+          { id: '1', name: 'Hauts' },
+          { id: '2', name: 'Bas' }
+        ],
+        error: null
+      })
+    }))
+  })
+}))
 
-  </span><span>useEffect</span><span>(</span><span>() =></span><span> {
-    supabase.</span><span>from</span><span>(</span><span>'tool_c.items'</span><span>).</span><span>select</span><span>(</span><span>'*'</span><span>).</span><span>then</span><span>(</span><span>({ data }</span><span>) => </span><span>setItems</span><span>(data ?? []));
-  }, [supabase]);
+describe('categories API', () => {
+  it('should list categories', async () => {
+    const { data, error } = await listCategories()
+  
+    expect(error).toBeNull()
+    expect(data).toHaveLength(2)
+    expect(data[0].name).toBe('Hauts')
+  })
+})
+```
 
-  </span><span>return</span><span> items;
+---
+
+## ✅ Checklist finale
+
+Avant de considérer le tool terminé :
+
+### Configuration
+
+* [ ] Package créé dans `packages/tools/`
+* [ ] `package.json` avec exports corrects
+* [ ] Extensions `.tsx` pour fichiers JSX
+* [ ] Package ajouté comme dépendance dans `apps/admin`
+* [ ] Package dans `transpilePackages` de next.config.ts
+
+### Code
+
+* [ ] API pure dans `src/api/`
+* [ ] Routes dans `src/routes/`
+* [ ] Types définis dans `src/types.ts`
+* [ ] Exports publics dans `src/index.ts`
+
+### Integration
+
+* [ ] Pages Next.js créées dans `apps/admin/app/(tools)/`
+* [ ] Layout local avec navigation
+* [ ] Symlink pnpm créé (`node_modules/@repo/xxx`)
+
+### Tests & Qualité
+
+* [ ] Type-check OK (`pnpm type-check`)
+* [ ] Lint OK (`pnpm lint`)
+* [ ] Tests unitaires écrits
+* [ ] Build réussi (`pnpm build`)
+* [ ] Test manuel dans le navigateur
+
+### Sécurité (optionnel)
+
+* [ ] Ajouté au registre des tools
+* [ ] Permissions définies
+* [ ] Middleware configuré
+* [ ] RLS Supabase configuré
+
+---
+
+## 🐛 Troubleshooting
+
+### Le composant ne s'affiche pas
+
+1. **Vérifier le symlink** :
+
+```powershell
+Get-Item "apps/admin/node_modules/@repo/tools-xxx"
+```
+
+2. **Vérifier l'import** :
+
+```tsx
+// ✅ Correct
+import { Component } from '@repo/tools-xxx'
+
+// ❌ Incorrect
+import { Component } from '@repo/tools-xxx/routes/Component'
+```
+
+3. **Nettoyer le cache** :
+
+```bash
+rm -rf apps/admin/.next
+pnpm dev
+```
+
+### Erreur de compilation TypeScript
+
+1. **Vérifier les types** :
+
+```bash
+cd packages/tools/xxx
+pnpm type-check
+```
+
+2. **Vérifier les dépendances** :
+
+```json
+{
+  "dependencies": {
+    "@repo/ui": "workspace:*",
+    "@repo/database": "workspace:*",
+    "react": "^19.0.0"
+  }
 }
-</span></span></code></div></div></pre>
+```
 
-> Ces hooks peuvent être réutilisés dans les composants de routes.
+### Performance lente
 
----
+1. **Vérifier transpilePackages** : Tous les `@repo/*` doivent être listés
+2. **Activer le cache Turbo** :
 
-## 🧪 Étape 10 — Vérifications
-
-Avant de commit :
-
-<pre class="overflow-visible!" data-start="7228" data-end="7284"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>pnpm -r lint
-pnpm -r typecheck
-pnpm -r build
-</span></span></code></div></div></pre>
-
-Checklist :
-
-* [X] Le tool apparaît dans la navigation du shell
-* [X] Les pages fonctionnent (`/tool-c`, `/tool-c/items`)
-* [X] La sécurité RBAC redirige les utilisateurs non autorisés
-* [X] Les hooks Supabase fonctionnent avec la base partagée
-* [X] Le thème MUI du shell est appliqué
+```json
+// turbo.json
+{
+  "pipeline": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
+```
 
 ---
 
-## ⚙️ Étape 11 — Tests et CI
+## 🎓 Ressources
 
-* Tests unitaires : `vitest` ou `jest` dans le package
-* Tests e2e : `playwright` dans `apps/web`
-* Pipeline Turborepo :
-
-<pre class="overflow-visible!" data-start="7737" data-end="7974"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span><span>// turbo.json</span><span>
-</span><span>{</span><span>
-  </span><span>"pipeline"</span><span>:</span><span></span><span>{</span><span>
-    </span><span>"build"</span><span>:</span><span></span><span>{</span><span></span><span>"dependsOn"</span><span>:</span><span></span><span>[</span><span>"^build"</span><span>]</span><span>,</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>".next/**"</span><span>,</span><span></span><span>"dist/**"</span><span>]</span><span></span><span>}</span><span>,</span><span>
-    </span><span>"lint"</span><span>:</span><span></span><span>{</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>]</span><span></span><span>}</span><span>,</span><span>
-    </span><span>"typecheck"</span><span>:</span><span></span><span>{</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>]</span><span></span><span>}</span><span>,</span><span>
-    </span><span>"test"</span><span>:</span><span></span><span>{</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>"coverage/**"</span><span>]</span><span></span><span>}</span><span>
-  </span><span>}</span><span>
-</span><span>}</span><span>
-</span></span></code></div></div></pre>
+* [Next.js 15 Documentation](https://nextjs.org/docs)
+* [pnpm Workspace](https://pnpm.io/workspaces)
+* [TypeScript Project References](https://www.typescriptlang.org/docs/handbook/project-references.html)
+* [Vitest](https://vitest.dev/)
 
 ---
 
-## 🧠 En résumé
+## 📝 Changelog
 
-| Étape | Action                                | Fichier clé                     |
-| ------ | ------------------------------------- | -------------------------------- |
-| 1️⃣  | Créer le package du tool             | `packages/tools/tool-c/`       |
-| 2️⃣  | Définir le manifest                  | `src/manifest.ts`              |
-| 3️⃣  | Créer les routes et composants       | `src/routes/`                  |
-| 4️⃣  | Monter les pages minces dans le shell | `apps/web/app/(tools)/tool-c/` |
-| 5️⃣  | Ajouter un layout local               | `layout.tsx`                   |
-| 6️⃣  | Enregistrer dans le registre global   | `tool-registry.ts`             |
-| 7️⃣  | Gérer le RBAC via middleware         | `middleware.ts`                |
-| 8️⃣  | Créer le schéma Supabase (RLS)      | SQL                              |
-| 9️⃣  | Ajouter des hooks de data (optionnel) | `src/data/`                    |
-| 🔟     | Tester et valider                     | `pnpm -r build`                |
+* **2025-11-02** : Ajout de la section "Recette validée" avec POC test-tool
+* **2025-10-29** : Version initiale du document
 
 ---
 
-## 🧰 Bonus — Outils utiles
-
-| Besoin                                    | Outil recommandé                        |
-| ----------------------------------------- | ---------------------------------------- |
-| **Scaffold automatique d’un tool** | Script Turborepo custom                  |
-| **Validation des envs**             | `zod`+`env.mjs`                      |
-| **Typage Supabase**                 | `supabase gen types typescript`        |
-| **CI/CD Vercel**                    | Monorepo auto-build apps                 |
-| **Tests e2e**                       | Playwright                               |
-| **Feature Flags**                   | Table `features`+`@acme/utils/flags` |
-
----
-
-## 🚀 Résultat attendu
-
-Une fois le tool intégré :
-
-* Il **apparaît automatiquement** dans la navigation globale
-* Il **bénéficie du thème, de l’auth et du client Supabase**
-* Il **dispose de son propre mini-router interne**
-* Il est **isolé et versionné indépendamment**
+**Document validé et testé** ✅

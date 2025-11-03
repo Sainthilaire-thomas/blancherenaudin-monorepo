@@ -1,26 +1,28 @@
 'use client'
-
 import React from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@repo/ui'
-import type { ModuleDefinition } from '../types'
+import * as Icons from 'lucide-react'
+import type { ToolDefinition } from '../../lib/types/tool'
 
 interface AdminLayoutProps {
   children: React.ReactNode
-  modules: ModuleDefinition[]
+  modules: ToolDefinition[]
 }
 
 export function AdminLayout({ children, modules }: AdminLayoutProps) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = React.useState(true)
-
-  const enabledModules = modules.filter(m => m.enabled).sort((a, b) => (a.order || 0) - (b.order || 0))
+  
+  const enabledTools = modules
+    .filter(m => m.enabled)
+    .sort((a, b) => (a.order || 0) - (b.order || 0))
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside 
+      <aside
         className={cn(
           "bg-white border-r border-gray-200 transition-all duration-300",
           sidebarOpen ? "w-64" : "w-20"
@@ -43,29 +45,24 @@ export function AdminLayout({ children, modules }: AdminLayoutProps) {
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1 px-2">
-              {enabledModules.map((module) => {
-                const Icon = module.icon
-                const isActive = pathname.startsWith(module.basePath)
-
+              {enabledTools.map((tool) => {
+                const Icon = Icons[tool.icon as keyof typeof Icons] as any
+                const isActive = pathname.startsWith(tool.path)
+                
                 return (
-                  <li key={module.id}>
+                  <li key={tool.id}>
                     <Link
-                      href={module.basePath}
+                      href={tool.path}
                       className={cn(
                         "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
-                        isActive 
-                          ? "bg-violet-50 text-violet-600" 
+                        isActive
+                          ? "bg-violet-50 text-violet-600"
                           : "text-gray-700 hover:bg-gray-100"
                       )}
                     >
-                      <Icon className="w-5 h-5" />
+                      {Icon && <Icon className="w-5 h-5 flex-shrink-0" />}
                       {sidebarOpen && (
-                        <span className="font-medium">{module.name}</span>
-                      )}
-                      {sidebarOpen && module.badge && (
-                        <span className="ml-auto text-xs bg-gray-200 px-2 py-0.5 rounded-full">
-                          {module.badge}
-                        </span>
+                        <span className="text-sm font-medium">{tool.name}</span>
                       )}
                     </Link>
                   </li>
@@ -76,9 +73,11 @@ export function AdminLayout({ children, modules }: AdminLayoutProps) {
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        {children}
+      {/* Main content */}
+      <main className="flex-1 overflow-auto">
+        <div className="container mx-auto p-8">
+          {children}
+        </div>
       </main>
     </div>
   )

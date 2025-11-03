@@ -1,4 +1,71 @@
+
 # **Document 3 — Guide de contribution (Monorepo Next.js + Supabase + Tools)**
+
+> **📅 Dernière mise à jour** : 2 novembre 2025
+>
+> **✅ Statut** : Validé avec POC test-tool
+
+---
+
+## 🎉 Points critiques validés
+
+Suite aux tests approfondis du 2 novembre 2025, voici les **règles absolues** pour créer un tool qui fonctionne :
+
+### 🔴 CRITIQUES (ne JAMAIS ignorer)
+
+1. **Extension `.tsx` pour JSX**
+
+   * ✅ `index.tsx` → Fonctionne
+   * ❌ `index.ts` → Erreur de compilation JSX
+2. **Layouts DOIVENT retourner children**
+
+   * ✅ `return <>{children}</>` → Minimum requis
+   * ❌ Layout vide ou sans return → Casse TOUS les exports du groupe
+   * 🔍 **Bug silencieux** : L'erreur ne mentionne PAS le layout !
+3. **Ajouter comme dépendance workspace**
+
+   ```bash
+   cd apps/admin
+   pnpm add @repo/tools-xxx@workspace:*
+   ```
+
+   * Sans cette étape, Next.js ne trouve pas le package
+4. **Déclarer dans `transpilePackages`**
+
+   ```typescript
+   // apps/admin/next.config.ts
+   transpilePackages: [
+     '@repo/tools-xxx',  // ✅ OBLIGATOIRE
+   ]
+   ```
+5. **Export simple dans package.json**
+
+   ```json
+   {
+     "exports": {
+       ".": "./src/index.tsx"  // ✅ Chemin direct
+     }
+   }
+   ```
+
+### 🟡 IMPORTANTES (recommandations fortes)
+
+1. **Workspace pnpm configuré**
+   ```yaml
+   # pnpm-workspace.yaml
+   packages:
+     - 'apps/*'
+     - 'packages/*'
+     - 'packages/tools/*'  # ✅ Inclure tools
+   ```
+2. **Pas de dépendances inutiles**
+   * Commencer minimal (juste React)
+   * Ajouter `@repo/ui`, `@repo/database` seulement si nécessaire
+3. **Nettoyer le cache si problème**
+   ```bash
+   rm -rf apps/admin/.next
+   pnpm dev
+   ```
 
 ---
 
@@ -17,46 +84,45 @@ Il vise à :
 
 ## 🧩 1. Structure du monorepo
 
-<pre class="overflow-visible!" data-start="733" data-end="1584"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>.
+```
+.
 ├─ apps/
-│  └─ web/                      </span><span># App shell (Next.js App Router)</span><span>
+│  └─ admin/                      # App shell (Next.js App Router)
 │     ├─ app/
-│     │  ├─ (shell)/            </span><span># Layout global, navigation, auth</span><span>
-│     │  ├─ (tools)/            </span><span># Montage des tools (wrappers)</span><span>
-│     │  └─ api/                </span><span># Routes API locales</span><span>
+│     │  ├─ (shell)/              # Layout global, navigation, auth
+│     │  ├─ (tools)/              # Montage des tools (wrappers)
+│     │  └─ api/                  # Routes API locales
 │     ├─ middleware.ts
-│     └─ env.mjs
+│     └─ next.config.ts
 │
 ├─ packages/
-│  ├─ ui/                       </span><span># @acme</span><span>/ui - Design System MUI
-│  ├─ supabase/                 </span><span># @acme</span><span>/supabase - Client + helpers
-│  ├─ types/                    </span><span># @acme</span><span>/types - Interfaces, Zod
-│  ├─ utils/                    </span><span># @acme</span><span>/utils - Helpers, flags, formatters
-│  ├─ config/                   </span><span># @acme</span><span>/config - ESLint, TS, Prettier configs
-│  └─ tools/                    </span><span># Tools métiers (indépendants)</span><span>
-│     ├─ tool-a/
-│     ├─ tool-b/
-│     └─ tool-c/
+│  ├─ ui/                         # @repo/ui - Design System
+│  ├─ database/                   # @repo/database - Client + helpers
+│  ├─ auth/                       # @repo/auth - Authentication
+│  └─ tools/                      # Tools métiers (indépendants)
+│     ├─ products/
+│     ├─ categories/
+│     ├─ newsletter/
+│     └─ [autres]/
 │
 ├─ turbo.json
 ├─ pnpm-workspace.yaml
 └─ package.json
-</span></span></code></div></div></pre>
+```
 
 ---
 
 ## 🧱 2. Rôles et responsabilités
 
-| Élément                               | Rôle                                                                                |
-| --------------------------------------- | ------------------------------------------------------------------------------------ |
-| **Shell (`apps/web`)**          | Gère la navigation, l’authentification, le layout global et le registre des tools. |
-| **Tool (`packages/tools/...`)** | Contient la logique métier, ses routes, hooks et composants.                        |
-| **UI (`@acme/ui`)**             | Fournit le Design System partagé (MUI, thèmes, composants).                        |
-| **Supabase (`@acme/supabase`)** | Fournit le client, les hooks et les helpers RLS.                                     |
-| **Types (`@acme/types`)**       | Centralise les interfaces et schémas partagés.                                     |
-| **Config (`@acme/config`)**     | Définit les règles de lint, TS et formatage.                                       |
+| Élément                               | Rôle                                                                               |
+| --------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Shell (`apps/admin`)**        | Gère la navigation, l'authentification, le layout global et le registre des tools. |
+| **Tool (`packages/tools/...`)** | Contient la logique métier, ses routes, hooks et composants.                       |
+| **UI (`@repo/ui`)**             | Fournit le Design System partagé (shadcn/ui + customs).                            |
+| **Database (`@repo/database`)** | Fournit les clients Supabase (browser, server, admin).                              |
+| **Auth (`@repo/auth`)**         | Centralise la logique d'authentification.                                           |
 
-> 🔑 **Principe clé :** chaque tool est  **autonome** , mais **ne doit jamais dupliquer** de logique présente dans un package partagé.
+> 🔑 **Principe clé** : chaque tool est  **autonome** , mais **ne doit jamais dupliquer** de logique présente dans un package partagé.
 
 ---
 
@@ -72,10 +138,12 @@ Il vise à :
 
 Exemples :
 
-<pre class="overflow-visible!" data-start="2640" data-end="2716"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>feature/tool-d-import
-fix/supabase-realtime-desync
-refactor/ui-theme
-</span></span></code></div></div></pre>
+```
+feature/tool-analytics
+fix/categories-delete-bug
+refactor/database-types
+docs/update-architecture
+```
 
 ---
 
@@ -83,8 +151,9 @@ refactor/ui-theme
 
 Les commits suivent la norme **Conventional Commits** :
 
-<pre class="overflow-visible!" data-start="2825" data-end="2861"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span><span class="language-xml"><type</span></span><span>>(scope): </span><span><description</span><span>>
-</span></span></code></div></div></pre>
+```
+<type>(scope): <description>
+```
 
 ### Types autorisés :
 
@@ -101,10 +170,12 @@ Les commits suivent la norme **Conventional Commits** :
 
 ### Exemples :
 
-<pre class="overflow-visible!" data-start="3262" data-end="3411"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre!"><span><span>feat</span><span>(tool-c): ajout de la vue liste avec filtres
-</span><span>fix</span><span>(ui): corrige le padding des boutons MUI
-</span><span>refactor</span><span>(supabase): extraction du client serveur
-</span></span></code></div></div></pre>
+```
+feat(tools-categories): ajout formulaire création
+fix(ui): corrige padding des boutons
+refactor(database): extraction client serveur
+docs(architecture): mise à jour recette validée
+```
 
 > ✅ Les commits sont validés automatiquement via  **husky + commitlint** .
 
@@ -112,116 +183,122 @@ Les commits suivent la norme **Conventional Commits** :
 
 ## 🧰 5. Commandes utiles
 
-| Commande                                     | Description                                |
-| -------------------------------------------- | ------------------------------------------ |
-| `pnpm dev`                                 | Lance le shell et les tools en mode dev    |
-| `pnpm -r build`                            | Build tous les packages                    |
-| `pnpm -r lint`                             | Vérifie les règles ESLint                |
-| `pnpm -r typecheck`                        | Vérifie les types TypeScript              |
-| `pnpm -r test`                             | Exécute les tests Vitest/Jest             |
-| `pnpm changeset`                           | Crée une version pour un package modifié |
-| `pnpm turbo run dev --filter=@acme/tool-c` | Dev uniquement sur un tool donné          |
+| Commande            | Description                             |
+| ------------------- | --------------------------------------- |
+| `pnpm dev`        | Lance le shell et les tools en mode dev |
+| `pnpm build`      | Build tous les packages                 |
+| `pnpm lint`       | Vérifie les règles ESLint             |
+| `pnpm type-check` | Vérifie les types TypeScript           |
+| `pnpm test`       | Exécute les tests Vitest               |
+| `pnpm clean`      | Nettoie node_modules et .next           |
 
 ---
 
-## 🎨 6. Bonnes pratiques UI & MUI
+## 🎨 6. Bonnes pratiques UI
 
-1. **Toujours utiliser le thème global**
-   * Importer depuis `@acme/ui`
-   * Pas de `createTheme()` local
-   * Typo : `Typography variant="h6"` → cohérence garantie
-2. **Favoriser les composants réutilisables**
-   * Si un composant devient générique, le déplacer vers `@acme/ui`
-3. **Respecter la structure visuelle**
-   * Pas de `margin`/`padding` en dur → utiliser `sx` et tokens (`theme.spacing()`)
-   * Privilégier `Grid`, `Stack`, `Box`
+1. **Toujours utiliser le Design System**
+   * Importer depuis `@repo/ui`
+   * Pas de composants UI custom sans raison
+2. **Composants réutilisables**
+   * Si un composant devient générique, le déplacer vers `@repo/ui`
+3. **Tailwind best practices**
+   * Utiliser les classes utilitaires
+   * Pas de styles inline complexes
+   * Privilégier `cn()` pour combiner les classes
 4. **Accessibilité (a11y)**
-   * Boutons = `Button`
-   * Liens = `Link`
+   * Boutons = `<Button>`
+   * Liens = `<Link>`
    * Labels explicites pour les inputs
-   * Couleurs testées avec contraste AA minimum
+   * Contraste AA minimum
 
 ---
 
 ## ⚙️ 7. Règles de code et typage
 
 1. **Types centralisés**
-   * Tous les modèles viennent de `@acme/types`
-   * Pas de duplication de type dans un tool
+   * Types métier dans le package tool
+   * Types partagés dans `@repo/database/types`
 2. **Imports**
-   * `@acme/ui`, `@acme/supabase`, `@acme/types`, `@acme/utils`
-   * Jamais d’import direct entre deux tools (`tool-a` → `tool-b` ❌)
+   * Toujours depuis `@repo/ui`, `@repo/database`, etc.
+   * Jamais d'import direct entre deux tools
 3. **Lint et formatage**
-   * ESLint + Prettier configurés via `@acme/config`
-   * Interdiction des `any` non justifiés
-   * Interdiction des console.log en prod
-4. **Server components**
-   * Préférer `Server Component` pour la data initiale (via `createServerSupabase`)
-   * `use client` uniquement quand nécessaire (interaction, hooks React)
+   * ESLint configuré
+   * Prettier configuré
+   * Pas de `any` sans justification
+   * Pas de `console.log` en production
+4. **Server Components first**
+   * Préférer Server Component par défaut
+   * `'use client'` uniquement quand nécessaire
 
 ---
 
 ## 🔒 8. Sécurité & données
 
 1. **RLS obligatoire**
-   * Toute table Supabase doit avoir une policy `USING (org_id = auth.jwt() →> 'org_id')`
-   * Les outils ne doivent jamais interroger `service_role` côté client
+   * Toute table Supabase doit avoir des policies
+   * Jamais de `service_role` côté client
 2. **Middleware de sécurité**
-   * Vérifie les rôles pour `/tool-x/**`
-   * Le shell redirige vers `/forbidden` si non autorisé
+   * Vérifie les permissions pour `/tools/*`
+   * Redirige vers `/login` si non authentifié
 3. **Env & secrets**
    * `.env.local` jamais commité
-   * Variables validées par `env.mjs` avec Zod
+   * Variables validées avec Zod si possible
 
 ---
 
-## 🧭 9. Ajout d’un nouveau Tool
+## 🧭 9. Ajout d'un nouveau Tool - Checklist rapide
 
-Pour créer un nouveau tool, suivre le **Document 2** (guide de création).
+### Préparation (5 min)
 
-Résumé rapide :
+* [ ] Créer le dossier `packages/tools/mon-tool/`
+* [ ] Créer `package.json` minimal
+* [ ] Créer `src/index.tsx` avec composant test
+* [ ] Ajouter exports dans `pnpm-workspace.yaml` si besoin
 
-1️⃣ `packages/tools/tool-x` → création du package
+### Installation (5 min)
 
-2️⃣ `src/manifest.ts` → manifest du tool
+* [ ] `pnpm install` à la racine
+* [ ] `cd apps/admin && pnpm add @repo/tools-mon-tool@workspace:*`
+* [ ] Ajouter dans `transpilePackages` de next.config.ts
 
-3️⃣ `src/routes/` → composants (Home, List, Detail…)
+### Intégration (10 min)
 
-4️⃣ `apps/web/app/(tools)/tool-x/` → pages minces Next
+* [ ] Créer `apps/admin/app/(tools)/mon-tool/page.tsx`
+* [ ] Importer et utiliser le composant
+* [ ] Tester dans le navigateur (`/mon-tool`)
 
-5️⃣ `tool-registry.ts` → ajout du manifest
+### Vérification finale
 
-6️⃣ `middleware.ts` → mise à jour des rôles
+* [ ] `pnpm type-check` → OK
+* [ ] `pnpm lint` → OK
+* [ ] `pnpm build` → OK
+* [ ] Navigateur → composant s'affiche
 
-7️⃣ Supabase → création du schéma `tool_x` + RLS
-
-> 🔁 Les tools sont montés automatiquement dans le shell via le registre global.
+**Total : ~20 minutes pour un tool basique**
 
 ---
 
 ## 🧩 10. Stratégie de tests
 
-| Niveau       | Outil                 | Objectif                                  |
-| ------------ | --------------------- | ----------------------------------------- |
-| Unitaire     | Vitest / Jest         | Vérifier les hooks et composants isolés |
-| Intégration | React Testing Library | Vérifier la cohérence UI + logique      |
-| E2E          | Playwright            | Tester les parcours utilisateur complets  |
-| Typecheck    | TypeScript            | Vérifier les types partagés et exports  |
+| Niveau       | Outil                 | Objectif                                 |
+| ------------ | --------------------- | ---------------------------------------- |
+| Unitaire     | Vitest                | Vérifier les hooks et API isolés       |
+| Intégration | React Testing Library | Vérifier la cohérence UI + logique     |
+| E2E          | Playwright            | Tester les parcours utilisateur complets |
+| Typecheck    | TypeScript            | Vérifier les types partagés            |
 
 ### Bonnes pratiques :
 
 * Un test = une responsabilité
 * Nommer les fichiers `.test.ts` ou `.spec.tsx`
-* Placer les tests à côté du code :
-
-  `src/routes/__tests__/list.test.tsx`
+* Placer les tests à côté du code : `src/__tests__/`
 
 ---
 
 ## 🔄 11. Pull Requests & Review
 
 1. **Ouvrir une PR par fonctionnalité**
-   * `feature/tool-c-filtering`
+   * `feature/tool-analytics-dashboard`
 2. **Inclure un résumé clair**
    * Description
    * Impact
@@ -230,10 +307,9 @@ Résumé rapide :
    * [ ] Lint OK
    * [ ] Typecheck OK
    * [ ] Tests passent
-   * [ ] RLS vérifié (si Supabase)
    * [ ] Screenshots (si UI)
 4. **Review**
-   * Deux reviewers minimum
+   * Au moins un reviewer
    * Aucune merge sans approbation
 
 ---
@@ -242,79 +318,124 @@ Résumé rapide :
 
 ### Pipelines Turborepo
 
-<pre class="overflow-visible!" data-start="7343" data-end="7566"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-json"><span><span>{</span><span>
-  </span><span>"pipeline"</span><span>:</span><span></span><span>{</span><span>
-    </span><span>"build"</span><span>:</span><span></span><span>{</span><span></span><span>"dependsOn"</span><span>:</span><span></span><span>[</span><span>"^build"</span><span>]</span><span>,</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>".next/**"</span><span>,</span><span></span><span>"dist/**"</span><span>]</span><span></span><span>}</span><span>,</span><span>
-    </span><span>"lint"</span><span>:</span><span></span><span>{</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>]</span><span></span><span>}</span><span>,</span><span>
-    </span><span>"typecheck"</span><span>:</span><span></span><span>{</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>]</span><span></span><span>}</span><span>,</span><span>
-    </span><span>"test"</span><span>:</span><span></span><span>{</span><span></span><span>"outputs"</span><span>:</span><span></span><span>[</span><span>"coverage/**"</span><span>]</span><span></span><span>}</span><span>
-  </span><span>}</span><span>
-</span><span>}</span><span>
-</span></span></code></div></div></pre>
+```json
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**"]
+    },
+    "lint": {},
+    "type-check": {},
+    "test": {
+      "outputs": ["coverage/**"]
+    }
+  }
+}
+```
 
 ### Intégration continue
 
-* Lancement auto de `lint`, `test`, `typecheck` sur chaque PR
-* Prévisualisation Vercel (`vercel preview`) par branche
-* Build de production seulement sur `main`
+* Lancement auto de `lint`, `test`, `type-check` sur chaque PR
+* Prévisualisation Vercel par branche
+* Build de production sur `main`
 
 ---
 
-## 🧱 13. Guidelines de versioning (Changesets)
+## 🐛 13. Debugging - Guide rapide
 
-* Chaque package peut évoluer indépendamment (`@acme/tool-a@1.2.0`)
-* Utiliser `pnpm changeset` :
-  <pre class="overflow-visible!" data-start="7910" data-end="7940"><div class="contain-inline-size rounded-2xl relative bg-token-sidebar-surface-primary"><div class="sticky top-9"><div class="absolute end-0 bottom-0 flex h-9 items-center pe-2"><div class="bg-token-bg-elevated-secondary text-token-text-secondary flex items-center gap-4 rounded-sm px-2 font-sans text-xs"></div></div></div><div class="overflow-y-auto p-4" dir="ltr"><code class="whitespace-pre! language-bash"><span><span>pnpm changeset
-  </span></span></code></div></div></pre>
-* Version sémantique :
-  * `major` : breaking change
-  * `minor` : ajout de feature
-  * `patch` : bugfix ou amélioration interne
-* Les releases sont agrégées dans le changelog global
+### Le composant ne s'affiche pas ("default export is not a React Component")
+
+**PRIORITÉ 1 : Vérifier les layouts**
+
+```powershell
+# 1. Vérifier le layout du groupe
+Get-Content "apps/admin/app/(tools)/layout.tsx"
+
+# S'il est vide ou ne retourne rien → C'EST LE PROBLÈME
+# Remplacer par :
+$layout = @'
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>
+}
+'@
+```
+
+**PRIORITÉ 2 : Tester hors du groupe**
+
+```powershell
+# Créer une page de test à la racine
+mkdir apps/admin/app/test-mon-tool
+# Si ça marche là → Le problème vient du groupe (tools)
+```
+
+**PRIORITÉ 3 : Vérifier le package**
+
+1. **Vérifier l'extension** : `.tsx` pour JSX, pas `.ts`
+2. **Vérifier transpilePackages** : Tool ajouté dans next.config.ts ?
+3. **Nettoyer le cache** : `rm -rf apps/admin/.next`
+
+### Le composant ne s'affiche pas
+
+1. **Vérifier le symlink** :
+   ```bash
+   ls -la apps/admin/node_modules/@repo/tools-xxx
+   ```
+2. **Vérifier l'export** : Composant bien exporté dans `index.ts` ?
+3. **Vérifier l'import** : Import correct dans la page ?
+
+### Erreur TypeScript
+
+1. **Type-check le tool** :
+   ```bash
+   cd packages/tools/xxxpnpm type-check
+   ```
+2. **Régénérer les types Supabase** :
+   ```bash
+   cd packages/databasepnpm generate:types
+   ```
 
 ---
 
-## 🧭 14. Workflow de développement recommandé
+## ✅ 14. Résumé des règles d'or
 
-1️⃣ Créer une branche `feature/...`
-
-2️⃣ Développer le code localement
-
-3️⃣ Lancer `pnpm dev` pour voir le tool monté
-
-4️⃣ Ajouter les tests (`pnpm test`)
-
-5️⃣ Vérifier lint + types (`pnpm lint && pnpm typecheck`)
-
-6️⃣ Commit propre avec message conventionnel
-
-7️⃣ Ouvrir une PR → Review → Merge → Preview auto
+| Domaine                | Règle                                          |
+| ---------------------- | ----------------------------------------------- |
+| **Architecture** | Isoler le métier par tool, mutualiser le reste |
+| **Extensions**   | `.tsx`pour JSX,`.ts`pour logic pure         |
+| **Installation** | `pnpm add @repo/xxx@workspace:*`OBLIGATOIRE   |
+| **Next.js**      | Tool dans `transpilePackages`OBLIGATOIRE      |
+| **UI**           | Utiliser exclusivement `@repo/ui`             |
+| **Database**     | Client centralisé + RLS strict                 |
+| **Tests**        | Unitaires sur API pure minimum                  |
+| **Commits**      | Conventionnels et explicites                    |
 
 ---
 
-## 📚 15. Documentation
+## 📚 15. Documentation connexe
 
-* Chaque package a un `README.md` avec :
-  * Objectif
-  * Exemple d’utilisation
-  * Points d’intégration
-* Le shell (`apps/web`) a un `docs/architecture.md` détaillant :
-  * Le rôle du shell
-  * La logique du routage
-  * La configuration Supabase
-  * La gestion du thème
+* **ARCHITECTURE-AJOUTER-TOOL.md** : Guide complet de création d'un tool
+* **ARCHITECTURE-CIBLE.md** : Architecture finale du monorepo
+* **ARCHITECTURE-MIGRATION.md** : Plan de migration
+* **README.md** : Vue d'ensemble du projet
 
 ---
 
-## ✅ 16. Résumé
+## 🎓 16. Ressources externes
 
-| Domaine                | Bon réflexe                                         |
-| ---------------------- | ---------------------------------------------------- |
-| **Architecture** | Isoler le métier par tool, mutualiser tout le reste |
-| **UI**           | Utiliser exclusivement `@acme/ui`                  |
-| **Supabase**     | Client mutualisé + RLS strict                       |
-| **Routing**      | Layout global (shell) + layout local (tool)          |
-| **Sécurité**   | RBAC via middleware                                  |
-| **Tests**        | Unitaires + e2e systématiques                       |
-| **Commits**      | Conventionnels et explicites                         |
-| **CI/CD**        | Turborepo + Vercel (preview sur PR)                  |
+* [Next.js 15 Documentation](https://nextjs.org/docs)
+* [pnpm Workspaces](https://pnpm.io/workspaces)
+* [Turborepo](https://turbo.build/repo/docs)
+* [Vitest](https://vitest.dev/)
+* [Supabase](https://supabase.com/docs)
+
+---
+
+## 📝 Changelog
+
+* **2025-11-02** : Ajout section "Points critiques validés" + guide debugging
+* **2025-10-29** : Version initiale du document
+
+---
+
+**Document validé et testé** ✅

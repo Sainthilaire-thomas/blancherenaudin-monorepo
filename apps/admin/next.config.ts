@@ -1,18 +1,16 @@
-// next.config.ts
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   
-  // Transpiler les packages du monorepo
   transpilePackages: [
-    '@repo/admin-shell',
     '@repo/ui',
     '@repo/database',
     '@repo/auth',
+    '@repo/tools-categories',
+    '@repo/tools-newsletter',
   ],
-
-  // Configuration images Supabase
+  
   images: {
     remotePatterns: [
       {
