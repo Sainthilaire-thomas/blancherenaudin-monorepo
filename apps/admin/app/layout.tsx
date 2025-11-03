@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import { Archivo_Narrow, Archivo_Black } from 'next/font/google'
 import { AdminLayout } from '@/components/shell/AdminLayout'
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { tools } from '@/admin.config'
 import Script from 'next/script'
 import './globals.css'
@@ -31,9 +32,11 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${archivoNarrow.variable} ${archivoBlack.variable}`}>
       <body>
-        <AdminLayout modules={tools}>
-          {children}
-        </AdminLayout>
+        <ThemeProvider>
+          <AdminLayout modules={tools}>
+            {children}
+          </AdminLayout>
+        </ThemeProvider>
         <Script
           id="vercel-analytics"
           strategy="afterInteractive"
