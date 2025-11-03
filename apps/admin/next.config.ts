@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     '@repo/auth',
     '@repo/tools-categories',
     '@repo/tools-newsletter',
+    '@repo/tools-products',
   ],
   
   images: {

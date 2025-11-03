@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@repo/ui'
 import * as Icons from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import type { ToolDefinition } from '../../lib/types/tool'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -41,7 +42,7 @@ export function AdminLayout({ children, modules }: AdminLayoutProps) {
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               >
-                {sidebarOpen ? '?' : '?'}
+                {sidebarOpen ? '◀' : '▶'}
               </button>
             </div>
           </div>
@@ -50,7 +51,8 @@ export function AdminLayout({ children, modules }: AdminLayoutProps) {
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1 px-2">
               {enabledTools.map((tool) => {
-                const Icon = Icons[tool.icon as keyof typeof Icons] as any
+                // ✅ FIX: Cast vers LucideIcon pour TypeScript
+                const Icon = Icons[tool.icon as keyof typeof Icons] as LucideIcon
                 const isActive = pathname.startsWith(tool.path)
 
                 return (

@@ -15,3 +15,5 @@ export * from './utils/types-helpers'
 // === STOCK MANAGEMENT ===
 export { decrementStockForOrder } from './stock/decrement-stock'
 export type { StockDecrementResult } from './stock/decrement-stock'
+
+export * from './validations'

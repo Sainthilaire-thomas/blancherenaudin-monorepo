@@ -55,3 +55,7 @@ export { ToggleGroup, ToggleGroupItem } from "./components/toggle-group"
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./components/tooltip"
 export { useToast, toast } from "./hooks/use-toast"
 
+
+export * from './admin-product-image'
+
+export { AdminProductImage } from './admin-product-image'

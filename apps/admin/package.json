@@ -13,6 +13,7 @@
         "@repo/auth": "workspace:^",
         "@repo/database": "workspace:^",
         "@repo/tools-categories": "workspace:*",
+        "@repo/tools-products": "workspace:^",
         "@repo/ui": "workspace:^",
         "lucide-react": "^0.548.0",
         "next": "15.0.3",

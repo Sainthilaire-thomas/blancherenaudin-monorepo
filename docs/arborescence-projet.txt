@@ -1,7 +1,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                    ARBORESCENCE DU PROJET - MONOREPO                        ║
 ║                                                                              ║
-║  Généré le: 03/11/2025 13:29:43                                       ║
+║  Généré le: 03/11/2025 18:38:56                                       ║
 ║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -24,10 +24,20 @@
     │   │   │   │   │   └── 📁 campaigns/
     │   │   │   │   │       ├── 📁 [id]/
     │   │   │   │   │       └── 📁 new/
+    │   │   │   │   ├── 📁 products/
+    │   │   │   │   │   ├── 📁 [id]/
+    │   │   │   │   │   │   └── ⚛️ page.tsx
+    │   │   │   │   │   ├── 📁 new/
+    │   │   │   │   │   │   └── ⚛️ page.tsx
+    │   │   │   │   │   └── ⚛️ page.tsx
     │   │   │   │   └── ⚛️ layout.tsx
     │   │   │   ├── 📁 api/
     │   │   │   │   └── 📁 admin/
-    │   │   │   │       └── 📁 categories/
+    │   │   │   │       ├── 📁 categories/
+    │   │   │   │       │   ├── 📁 [id]/
+    │   │   │   │       │   │   └── 🔷 route.ts
+    │   │   │   │       │   └── 🔷 route.ts
+    │   │   │   │       └── 📁 products/
     │   │   │   │           ├── 📁 [id]/
     │   │   │   │           │   └── 🔷 route.ts
     │   │   │   │           └── 🔷 route.ts
@@ -259,46 +269,52 @@
     │       └── 📁 storefront/
     │           └── 📄 tsconfig.tsbuildinfo
     ├── 📁 docs/
-    │   ├── 📁 analytics/
-    │   │   └── 📝 Analytics_Custom_Doc.md
-    │   ├── 📁 CIBLE/
-    │   │   ├── 📝 ALIGNEMENT-ARCHITECTURE.md
-    │   │   ├── 📝 ARCHITECTURE-CIBLE-V2.md
-    │   │   ├── 📝 ARCHITECTURE-CIBLE.md
-    │   │   ├── 📝 CIBLE-EVOLUTIONS-11.md
-    │   │   ├── 📝 MIGRATION-DATABASE.md
-    │   │   ├── 📝 PLAN-NETTOYAGE-MONOREPO.md
-    │   │   └── 📝 ROADMAP-MIGRATION-POST-NETTOYAGE.md
+    │   ├── 📁 01-ARCHITECTURE/
+    │   │   ├── 📝 20251022-ARCHITECTURE-maj-phase5.md
+    │   │   ├── 📝 20251022-ARCHITECTURE-migrtion-phase-5.md
+    │   │   ├── 📝 20251025-Verif-migration.md
+    │   │   ├── 📝 20251101-ALIGNEMENT-ARCHITECTURE.md
+    │   │   ├── 📝 20251101-Analytics_Custom_Doc.md
+    │   │   ├── 📝 20251101-ARCHITECTURE-CIBLE.md
+    │   │   ├── 📝 20251101-ARCHITECTURE-migration-archi-modulaire.md
+    │   │   ├── 📝 20251101-ARCHITECTURE-MONOREPO.md
+    │   │   ├── 📝 20251101-ARCHITECTURE-PLAN-EVOL-MONOREPO.md
+    │   │   ├── 📝 20251101-CIBLE-EVOLUTIONS-11.md
+    │   │   ├── 📝 20251101-PLAN-NETTOYAGE-MONOREPO.md
+    │   │   ├── 📝 20251101-STANDARD-CREATION-TOOL.md
+    │   │   ├── 📝 20251103-ARCHITECTURE-AJOUTER-TOOL.md
+    │   │   ├── 📝 20251103-ARCHITECTURE-BONNES-PRATIQUES-TOOLS.md
+    │   │   └── 📝 20251103-ARCHITECTURE-CIBLE-V2.md
+    │   ├── 📁 02-MIGRATION/
+    │   │   ├── 📝 20251026-MIGRATION-STATUS copy.md
+    │   │   ├── 📝 20251027-MIGRATION-REPORT-2025-10-27.md
+    │   │   ├── 📝 20251031-MIGRATION-DATABASE.md
+    │   │   ├── 📝 20251101-MIGRATION-DATABASE-COMPLETE.md
+    │   │   ├── 📝 20251101-MIGRATION-NEWSLETTER.md
+    │   │   ├── 📝 20251101-MIGRATION-STATUS-products.md
+    │   │   ├── 📝 20251101-MIGRATION-STATUS.md
+    │   │   ├── 📝 20251101-NETTOYAGE-PRODUCTS.md
+    │   │   ├── 📝 20251101-PHASE9.md
+    │   │   ├── 📝 20251101-ROADMAP-MIGRATION-POST-NETTOYAGE.md
+    │   │   └── 📝 20251101-ROADMAP-MIGRATION.md
+    │   ├── 📁 03-PACKAGES/
+    │   │   ├── 📝 20251025-PACKAGES.md
+    │   │   ├── 📝 20251101-PACKAGE-EMAIL.md
+    │   │   ├── 📝 20251101-PACKAGE-UI.md
+    │   │   └── 📝 20251101-PACKAGE-UTILS.md
+    │   ├── 📁 04-TROUBLESHOOTING/
+    │   │   ├── 📝 20251101-FIX-MONOREPO-supabase.md
+    │   │   ├── 📝 20251101-PROBLEMES-STOREFRONT.md
+    │   │   └── 📝 20251103-DEBUG-CATEGORIES.md
+    │   ├── 📁 05-SESSIONS/
+    │   │   ├── 📝 20251027-ETAT-LIEUX-26oct.md
+    │   │   ├── 📝 20251101-SESSION-TOOLS-2025-11-01.md
+    │   │   ├── 📝 20251103-recap-session-categories-02-11-2025.md
+    │   │   ├── 📝 20251103-SESSION-3NOV.md
+    │   │   ├── 📝 migration-products-20251103.md
+    │   │   └── 📝 session-migration-products-20251103-1506.md
     │   ├── 📄 arborescence-projet.txt
-    │   ├── 📝 ARCHITECTURE-AJOUTER-TOOL.md
-    │   ├── 📝 ARCHITECTURE-BONNES-PRATIQUES-TOOLS.md
-    │   ├── 📝 ARCHITECTURE-maj-phase5.md
-    │   ├── 📝 ARCHITECTURE-migration-archi-modulaire.md
-    │   ├── 📝 ARCHITECTURE-migrtion-phase-5.md
-    │   ├── 📝 ARCHITECTURE-MONOREPO.md
-    │   ├── 📝 ARCHITECTURE-PLAN-EVOL-MONOREPO.md
-    │   ├── 📝 DEBUG-CATEGORIES.md
-    │   ├── 📝 ETAT-LIEUX-26oct.md
-    │   ├── 📝 FIX-MONOREPO-supabase.md
-    │   ├── 📝 MIGRATION-DATABASE-COMPLETE.md
-    │   ├── 📝 MIGRATION-NEWSLETTER.md
-    │   ├── 📝 MIGRATION-REPORT-2025-10-27.md
-    │   ├── 📝 MIGRATION-STATUS copy.md
-    │   ├── 📝 MIGRATION-STATUS-products.md
-    │   ├── 📝 MIGRATION-STATUS.md
-    │   ├── 📝 NETTOYAGE-PRODUCTS.md
-    │   ├── 📝 PACKAGE-EMAIL.md
-    │   ├── 📝 PACKAGE-UI.md
-    │   ├── 📝 PACKAGE-UTILS.md
-    │   ├── 📝 PACKAGES.md
-    │   ├── 📝 PHASE9.md
-    │   ├── 📝 PROBLEMES-STOREFRONT.md
-    │   ├── 📝 recap-session-categories-02-11-2025.md
-    │   ├── 📝 ROADMAP-MIGRATION.md
-    │   ├── 📝 SESSION-3NOV.md
-    │   ├── 📝 SESSION-TOOLS-2025-11-01.md
-    │   ├── 📝 STANDARD-CREATION-TOOL.md
-    │   └── 📝 Verif-migration.md
+    │   └── 📝 README-REORGANISATION.md
     ├── 📁 packages/
     │   ├── 📁 analytics/
     │   │   ├── 📁 src/
@@ -339,6 +355,9 @@
     │   │   │   │   └── 🔷 index.ts
     │   │   │   ├── 📁 utils/
     │   │   │   │   └── 🔷 types-helpers.ts
+    │   │   │   ├── 📁 validations/
+    │   │   │   │   ├── 🔷 admin-products.ts
+    │   │   │   │   └── 🔷 index.ts
     │   │   │   ├── 🔷 index.ts
     │   │   │   └── 🔷 types.ts
     │   │   ├── 📋 package.json
@@ -477,12 +496,24 @@
     │   │       │   ├── 📁 components/
     │   │       │   └── 🔷 products.test.ts
     │   │       ├── 📁 src/
+    │   │       │   ├── 📁 actions/
+    │   │       │   │   ├── 🔷 index.ts
+    │   │       │   │   ├── 🔷 product-actions.ts
+    │   │       │   │   └── 🔷 products-actions.ts
     │   │       │   ├── 📁 api/
     │   │       │   │   ├── 🔷 index.ts
     │   │       │   │   └── 🔷 products.ts
     │   │       │   ├── 📁 components/
+    │   │       │   │   ├── 🔷 index.ts
+    │   │       │   │   ├── ⚛️ product-form.tsx
+    │   │       │   │   ├── ⚛️ products-filter.tsx
+    │   │       │   │   └── ⚛️ products-list.tsx
     │   │       │   ├── 📁 hooks/
     │   │       │   ├── 📁 routes/
+    │   │       │   │   ├── ⚛️ edit.tsx
+    │   │       │   │   ├── 🔷 index.ts
+    │   │       │   │   ├── ⚛️ list.tsx
+    │   │       │   │   └── ⚛️ new.tsx
     │   │       │   ├── 🔷 constants.ts
     │   │       │   ├── 🔷 index.ts
     │   │       │   └── 🔷 types.ts
@@ -544,6 +575,7 @@
     │   │   │   │   └── 🔷 use-toast.ts
     │   │   │   ├── 📁 lib/
     │   │   │   │   └── 🔷 utils.ts
+    │   │   │   ├── ⚛️ admin-product-image.tsx
     │   │   │   └── 🔷 index.ts
     │   │   ├── 📋 package.json
     │   │   ├── 📄 package.json.backup-20251027-174944
@@ -580,6 +612,7 @@
     │   ├── 📄 cleanup-monorepo.ps1
     │   ├── 📄 complete-admin-shell.ps1
     │   ├── 📄 create-signed-url-route.ps1
+    │   ├── 📄 debug-admin-build.ps1
     │   ├── 📄 deep-check.ps1
     │   ├── 📄 deploy-stripe-webhook.ps1
     │   ├── 📄 diagnose-product-images.ps1
@@ -589,6 +622,7 @@
     │   ├── 📄 fix-database-complete.ps1
     │   ├── 📄 fix-image-imports.ps1
     │   ├── 📄 fix-imports.ps1
+    │   ├── 📄 fix-react-hook-form.ps1
     │   ├── 📄 fix-stripe-export.ps1
     │   ├── 📄 full-audit.ps1
     │   ├── 📄 generate-doc.ps1
@@ -612,6 +646,7 @@
     │   └── 📁 e2e/
     ├── 📄 .env.example
     ├── 📄 .gitignore
+    ├── 📄 build-debug.txt
     ├── 📄 build-errors.txt
     ├── 📋 package.json
     ├── 📄 package.json.bak
@@ -623,8 +658,8 @@
 
 
 📈 Statistiques :
-   • Dossiers : 205
-   • Fichiers : 406
-   • Total : 611 éléments
+   • Dossiers : 215
+   • Fichiers : 431
+   • Total : 646 éléments
 
 💡 Fichiers ignorés : node_modules, .next, .turbo, dist, build, .git, etc.
